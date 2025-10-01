@@ -15,7 +15,7 @@ export const listDatabasesOperation: INodeProperties[] = [
 		},
 		placeholder: '11',
 		default: '',
-		description: 'Server identifier to list databases for',
+		description: 'The numeric server ID (e.g., 11)',
 	},
 ];
 

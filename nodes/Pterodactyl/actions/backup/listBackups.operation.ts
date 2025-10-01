@@ -15,7 +15,7 @@ export const listBackupsOperation: INodeProperties[] = [
 		},
 		placeholder: '11',
 		default: '',
-		description: 'Server identifier to list backups for',
+		description: 'The numeric server ID (e.g., 11)',
 	},
 ];
 
