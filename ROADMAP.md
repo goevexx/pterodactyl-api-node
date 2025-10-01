@@ -22,7 +22,7 @@ All essential Pterodactyl Panel operations are implemented and tested:
 
 **Goal:** Make the node easily accessible to the n8n community
 
-- [ ] Set up GitHub Actions CI/CD
+- [x] Set up GitHub Actions CI/CD
   - Automated testing on pull requests
   - Automated npm publishing on releases
   - PR validation
