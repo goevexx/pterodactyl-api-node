@@ -1,0 +1,17 @@
+node_modules
+.git
+.github
+*.md
+.eslintrc.js
+.prettierrc
+tsconfig.json
+jest.config.js
+gulpfile.js
+test-node.js
+tests
+.env
+.env.*
+*.log
+coverage
+.vscode
+.idea
