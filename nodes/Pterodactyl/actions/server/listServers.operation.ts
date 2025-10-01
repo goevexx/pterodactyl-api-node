@@ -45,7 +45,13 @@ export async function listServers(this: IExecuteFunctions, index: number): Promi
 		return await pterodactylApiRequestAllItems.call(this, 'GET', '/servers');
 	} else {
 		const limit = this.getNodeParameter('limit', index) as number;
-		const response = await pterodactylApiRequest.call(this, 'GET', '/servers', {}, { per_page: limit });
+		const response = await pterodactylApiRequest.call(
+			this,
+			'GET',
+			'/servers',
+			{},
+			{ per_page: limit },
+		);
 		return response.data || [];
 	}
 }

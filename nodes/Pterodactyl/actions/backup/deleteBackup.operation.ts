@@ -35,10 +35,6 @@ export async function deleteBackup(this: IExecuteFunctions, index: number): Prom
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const backupId = this.getNodeParameter('backupId', index) as string;
 
-	await pterodactylApiRequest.call(
-		this,
-		'DELETE',
-		`/servers/${serverId}/backups/${backupId}`,
-	);
+	await pterodactylApiRequest.call(this, 'DELETE', `/servers/${serverId}/backups/${backupId}`);
 	return { success: true, backupId };
 }

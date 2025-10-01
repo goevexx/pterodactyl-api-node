@@ -113,13 +113,10 @@ export async function pterodactylApiRequestAllItems(
 	const allItems: any[] = [];
 
 	while (hasMorePages) {
-		const response = await pterodactylApiRequest.call(
-			this,
-			method,
-			endpoint,
-			body,
-			{ ...qs, page },
-		);
+		const response = await pterodactylApiRequest.call(this, method, endpoint, body, {
+			...qs,
+			page,
+		});
 
 		// Handle paginated response
 		if (response.data) {

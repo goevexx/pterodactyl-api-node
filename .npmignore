@@ -1,0 +1,49 @@
+# Source files (only publish dist/)
+nodes/
+credentials/
+*.ts
+!*.d.ts
+tsconfig.json
+
+# Development files
+.github/
+PRPs/
+PRDs/
+.claude/
+CLAUDE.md
+CONTRIBUTING.md
+QUICKSTART.md
+README-TESTING.md
+
+# Tests
+test/
+tests/
+*.test.ts
+*.spec.ts
+jest.config.js
+coverage/
+
+# Development tools
+.eslintrc.js
+.prettierrc
+gulpfile.js
+
+# Environment
+.env*
+n8n.env
+
+# Temporary
+*.log
+*.tmp
+.temp/
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db

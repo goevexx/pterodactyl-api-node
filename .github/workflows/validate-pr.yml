@@ -1,0 +1,23 @@
+name: Validate PR
+
+on:
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Check PR title format
+        run: |
+          if [[ ! "${{ github.event.pull_request.title }}" =~ ^(feat|fix|docs|chore|refactor|test|ci|perf|style|build)(\(.+\))?: ]]; then
+            echo "PR title must follow Conventional Commits format"
+            exit 1
+          fi
+
+      - name: Security audit
+        run: npm audit --audit-level=moderate
+        continue-on-error: true

@@ -20,10 +20,6 @@ export const getResourcesOperation: INodeProperties[] = [
 
 export async function getResources(this: IExecuteFunctions, index: number): Promise<any> {
 	const serverId = this.getNodeParameter('serverId', index) as string;
-	const response = await pterodactylApiRequest.call(
-		this,
-		'GET',
-		`/servers/${serverId}/resources`,
-	);
+	const response = await pterodactylApiRequest.call(this, 'GET', `/servers/${serverId}/resources`);
 	return response.attributes || response;
 }
