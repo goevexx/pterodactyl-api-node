@@ -37,3 +37,7 @@ yarn-error.log*
 # Temporary
 *.tmp
 .temp/
+
+# Planning documents (keep local)
+PRPs/
+PRDs/
