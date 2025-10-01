@@ -94,6 +94,7 @@ export async function pterodactylApiRequest(
 			// Create clean error without circular references
 			const cleanError = new Error(error.message || 'Unknown error occurred');
 			cleanError.name = error.name || 'Error';
+			cleanError.stack = error.stack; // Preserve stack trace for debugging
 			if (error.statusCode) {
 				(cleanError as any).statusCode = error.statusCode;
 			}
