@@ -3,7 +3,7 @@ import { pterodactylApiRequest } from '../../transport/PterodactylApiRequest';
 
 export const sendCommandOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Identifier',
+		displayName: 'Server ID',
 		name: 'serverId',
 		type: 'string',
 		required: true,
@@ -13,8 +13,9 @@ export const sendCommandOperation: INodeProperties[] = [
 				operation: ['sendCommand'],
 			},
 		},
+		placeholder: '11',
 		default: '',
-		description: 'The unique identifier of the server',
+		description: 'The numeric server ID (e.g., 11)',
 	},
 	{
 		displayName: 'Command',

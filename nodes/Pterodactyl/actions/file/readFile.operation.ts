@@ -3,7 +3,7 @@ import { pterodactylApiRequest } from '../../transport/PterodactylApiRequest';
 
 export const readFileOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Identifier',
+		displayName: 'Server ID',
 		name: 'serverId',
 		type: 'string',
 		required: true,
@@ -13,7 +13,9 @@ export const readFileOperation: INodeProperties[] = [
 				operation: ['read'],
 			},
 		},
+		placeholder: '11',
 		default: '',
+		description: 'The numeric server ID (e.g., 11)',
 	},
 	{
 		displayName: 'File Path',
