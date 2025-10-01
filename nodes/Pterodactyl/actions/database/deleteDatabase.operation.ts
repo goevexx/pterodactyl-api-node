@@ -15,6 +15,7 @@ export const deleteDatabaseOperation: INodeProperties[] = [
 		},
 		placeholder: '11',
 		default: '',
+		description: 'The numeric server ID (e.g., 11)',
 	},
 	{
 		displayName: 'Database ID',
