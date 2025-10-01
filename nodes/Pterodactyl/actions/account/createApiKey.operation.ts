@@ -29,7 +29,8 @@ export const createApiKeyOperation: INodeProperties[] = [
 		},
 		default: '',
 		placeholder: '192.168.1.1,10.0.0.0/8',
-		description: 'Comma-separated list of allowed IP addresses/ranges (leave empty for no restriction)',
+		description:
+			'Comma-separated list of allowed IP addresses/ranges (leave empty for no restriction)',
 	},
 ];
 

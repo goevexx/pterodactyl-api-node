@@ -1,66 +1,70 @@
 {
-  "name": "n8n-nodes-pterodactyl",
-  "version": "1.0.0",
-  "description": "n8n node for Pterodactyl Panel API integration",
-  "keywords": [
-    "n8n-community-node-package",
-    "pterodactyl",
-    "game-server",
-    "automation",
-    "api"
-  ],
-  "license": "MIT",
-  "homepage": "https://github.com/nico-on-github/pterodactyl-api-node",
-  "author": {
-    "name": "Nicolas Morawietz",
-    "email": "contact@morawietz.dev"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/nico-on-github/pterodactyl-api-node.git"
-  },
-  "main": "index.js",
-  "scripts": {
-    "build": "tsc && gulp build:icons",
-    "dev": "tsc --watch",
-    "format": "prettier --write .",
-    "lint": "eslint . --ext .ts",
-    "lintfix": "eslint . --ext .ts --fix",
-    "test": "jest",
-    "test:watch": "jest --watch",
-    "test:cov": "jest --coverage"
-  },
-  "files": [
-    "dist"
-  ],
-  "n8n": {
-    "n8nNodesApiVersion": 1,
-    "credentials": [
-      "dist/credentials/PterodactylClientApi.credentials.js",
-      "dist/credentials/PterodactylApplicationApi.credentials.js"
-    ],
-    "nodes": [
-      "dist/nodes/Pterodactyl/Pterodactyl.node.js"
-    ]
-  },
-  "devDependencies": {
-    "@types/jest": "^29.5.0",
-    "@types/node": "^20.0.0",
-    "@typescript-eslint/parser": "^6.0.0",
-    "eslint": "^8.0.0",
-    "eslint-config-prettier": "^9.0.0",
-    "eslint-plugin-n8n-nodes-base": "^1.0.0",
-    "gulp": "^4.0.2",
-    "jest": "^29.0.0",
-    "n8n-workflow": "^1.0.0",
-    "prettier": "^3.0.0",
-    "ts-jest": "^29.0.0",
-    "typescript": "~5.2.0"
-  },
-  "peerDependencies": {
-    "n8n-workflow": "*"
-  },
-  "engines": {
-    "node": ">=18.10.0"
-  }
+	"name": "n8n-nodes-pterodactyl",
+	"version": "1.0.0",
+	"description": "n8n node for Pterodactyl Panel API integration",
+	"keywords": [
+		"n8n-community-node-package",
+		"pterodactyl",
+		"game-server",
+		"automation",
+		"api"
+	],
+	"license": "MIT",
+	"homepage": "https://github.com/nico-on-github/pterodactyl-api-node",
+	"author": {
+		"name": "Nicolas Morawietz",
+		"email": "contact@morawietz.dev"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/nico-on-github/pterodactyl-api-node.git"
+	},
+	"bugs": {
+		"url": "https://github.com/nico-on-github/pterodactyl-api-node/issues"
+	},
+	"main": "index.js",
+	"scripts": {
+		"build": "tsc && gulp build:icons",
+		"dev": "tsc --watch",
+		"format": "prettier --write .",
+		"lint": "eslint . --ext .ts",
+		"lintfix": "eslint . --ext .ts --fix",
+		"test": "jest",
+		"test:watch": "jest --watch",
+		"test:cov": "jest --coverage"
+	},
+	"files": [
+		"dist"
+	],
+	"n8n": {
+		"n8nNodesApiVersion": 1,
+		"credentials": [
+			"dist/credentials/PterodactylClientApi.credentials.js",
+			"dist/credentials/PterodactylApplicationApi.credentials.js"
+		],
+		"nodes": [
+			"dist/nodes/Pterodactyl/Pterodactyl.node.js"
+		]
+	},
+	"devDependencies": {
+		"@types/jest": "^29.5.0",
+		"@types/node": "^20.0.0",
+		"@typescript-eslint/eslint-plugin": "^6.21.0",
+		"@typescript-eslint/parser": "^6.0.0",
+		"eslint": "^8.0.0",
+		"eslint-config-prettier": "^9.0.0",
+		"eslint-plugin-n8n-nodes-base": "^1.0.0",
+		"gulp": "^4.0.2",
+		"jest": "^29.0.0",
+		"n8n-workflow": "^1.0.0",
+		"prettier": "^3.0.0",
+		"ts-jest": "^29.0.0",
+		"typescript": "~5.2.0"
+	},
+	"peerDependencies": {
+		"n8n-workflow": "*"
+	},
+	"engines": {
+		"node": ">=18.10.0"
+	}
 }

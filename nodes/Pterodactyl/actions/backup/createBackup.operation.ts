@@ -69,6 +69,11 @@ export async function createBackup(this: IExecuteFunctions, index: number): Prom
 	if (ignoredStr) body.ignored = ignoredStr;
 	if (isLocked) body.is_locked = isLocked;
 
-	const response = await pterodactylApiRequest.call(this, 'POST', `/servers/${serverId}/backups`, body);
+	const response = await pterodactylApiRequest.call(
+		this,
+		'POST',
+		`/servers/${serverId}/backups`,
+		body,
+	);
 	return response;
 }

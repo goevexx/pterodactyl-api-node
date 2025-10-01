@@ -7,6 +7,7 @@ This document outlines the planned development for the n8n Pterodactyl Node. Thi
 ✅ **v1.0.0 - Core Functionality Complete**
 
 All essential Pterodactyl Panel operations are implemented and tested:
+
 - Server Management (5 operations)
 - File Operations (8 operations)
 - Database Management (4 operations)
@@ -53,15 +54,18 @@ All essential Pterodactyl Panel operations are implemented and tested:
 ### Advanced Features (Based on Demand)
 
 **User Management**
+
 - Server-level subuser operations (permissions, invites)
 - Panel-wide user management (Application API)
 
 **Server Automation**
+
 - Schedule management (cron tasks)
 - Startup variable configuration
 - Network allocation management
 
 **Administrative Operations**
+
 - Nest & Egg browsing (server types/configs)
 - Location management
 - Node management (infrastructure)
@@ -77,6 +81,7 @@ All essential Pterodactyl Panel operations are implemented and tested:
 ## Contributing
 
 Community feedback drives this roadmap! If you have:
+
 - **Feature requests** - Open an issue describing your use case
 - **Bug reports** - Help us improve reliability
 - **Example workflows** - Share your creative automations
@@ -90,5 +95,5 @@ This is a community-maintained project. While we strive for quality, this node i
 
 ---
 
-*Last updated: 2025-10-01*
-*Status: Active development*
+_Last updated: 2025-10-01_
+_Status: Active development_

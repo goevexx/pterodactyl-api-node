@@ -52,9 +52,14 @@ export async function compressFiles(this: IExecuteFunctions, index: number): Pro
 	const filesStr = this.getNodeParameter('files', index) as string;
 	const files = filesStr.split(',').map((f) => f.trim());
 
-	const response = await pterodactylApiRequest.call(this, 'POST', `/servers/${serverId}/files/compress`, {
-		root,
-		files,
-	});
+	const response = await pterodactylApiRequest.call(
+		this,
+		'POST',
+		`/servers/${serverId}/files/compress`,
+		{
+			root,
+			files,
+		},
+	);
 	return response;
 }

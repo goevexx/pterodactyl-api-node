@@ -19,15 +19,15 @@ console.log(`   Version: ${description.version}`);
 console.log(`   Type: ${description.name}\n`);
 
 // Count resources
-const resources = description.properties.find(p => p.name === 'resource');
+const resources = description.properties.find((p) => p.name === 'resource');
 console.log(`✅ Resources: ${resources.options.length}`);
-resources.options.forEach(r => console.log(`   - ${r.name} (${r.value})`));
+resources.options.forEach((r) => console.log(`   - ${r.name} (${r.value})`));
 
 // Count operations per resource
-const operations = description.properties.filter(p => p.name === 'operation');
+const operations = description.properties.filter((p) => p.name === 'operation');
 console.log(`\n✅ Total operation groups: ${operations.length}`);
 
-operations.forEach(op => {
+operations.forEach((op) => {
 	const resourceName = op.displayOptions?.show?.resource?.[0];
 	if (resourceName) {
 		console.log(`   ${resourceName}: ${op.options.length} operations`);
@@ -37,13 +37,15 @@ operations.forEach(op => {
 // Count credentials
 const credentials = description.credentials;
 console.log(`\n✅ Credentials: ${credentials.length}`);
-credentials.forEach(c => console.log(`   - ${c.name}`));
+credentials.forEach((c) => console.log(`   - ${c.name}`));
 
 // Verify execute method exists
 console.log(`\n✅ Execute method: ${typeof node.execute === 'function' ? 'Present' : 'MISSING'}`);
 
 console.log('\n✨ All basic checks passed! Node structure is valid.');
 console.log('\n📝 Next steps:');
-console.log('   1. Install in n8n: npm link (in this dir), then npm link n8n-nodes-pterodactyl (in ~/.n8n/nodes)');
+console.log(
+	'   1. Install in n8n: npm link (in this dir), then npm link n8n-nodes-pterodactyl (in ~/.n8n/nodes)',
+);
 console.log('   2. Restart n8n and look for "Pterodactyl" in the node list');
 console.log('   3. Add credentials and test with your Pterodactyl panel');

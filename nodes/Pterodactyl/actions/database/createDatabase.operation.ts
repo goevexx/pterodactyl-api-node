@@ -52,9 +52,14 @@ export async function createDatabase(this: IExecuteFunctions, index: number): Pr
 	const database = this.getNodeParameter('database', index) as string;
 	const remote = this.getNodeParameter('remote', index) as string;
 
-	const response = await pterodactylApiRequest.call(this, 'POST', `/servers/${serverId}/databases`, {
-		database,
-		remote,
-	});
+	const response = await pterodactylApiRequest.call(
+		this,
+		'POST',
+		`/servers/${serverId}/databases`,
+		{
+			database,
+			remote,
+		},
+	);
 	return response;
 }
