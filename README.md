@@ -65,3 +65,7 @@ This project is under active development. Contributions are welcome!
 ## License
 
 [MIT](LICENSE)
+
+## Trademark Notice
+
+Pterodactyl® is a registered trademark of Dane Everitt and contributors. This project is not officially affiliated with or endorsed by Pterodactyl Panel. The Pterodactyl logo is used under nominative fair use to indicate compatibility with the Pterodactyl Panel API.
