@@ -38,6 +38,8 @@ yarn-error.log*
 *.tmp
 .temp/
 
-# Planning documents (keep local)
+# Planning documents and AI instructions (keep local)
 PRPs/
 PRDs/
+.claude/
+CLAUDE.md
