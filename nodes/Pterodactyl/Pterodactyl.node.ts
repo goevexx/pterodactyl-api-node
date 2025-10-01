@@ -200,7 +200,7 @@ export class Pterodactyl implements INodeType {
 					{
 						name: 'Get Resources',
 						value: 'getResources',
-						description: 'Get server resource usage',
+						description: 'Get server resource usage (Client API only)',
 						action: 'Get server resources',
 					},
 				],

@@ -3,7 +3,7 @@ import { pterodactylApiRequest } from '../../transport/PterodactylApiRequest';
 
 export const listDatabasesOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Identifier',
+		displayName: 'Server ID',
 		name: 'serverId',
 		type: 'string',
 		required: true,
@@ -13,6 +13,7 @@ export const listDatabasesOperation: INodeProperties[] = [
 				operation: ['list'],
 			},
 		},
+		placeholder: '11',
 		default: '',
 		description: 'Server identifier to list databases for',
 	},

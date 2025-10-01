@@ -3,7 +3,7 @@ import { pterodactylApiRequest } from '../../transport/PterodactylApiRequest';
 
 export const deleteDatabaseOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Identifier',
+		displayName: 'Server ID',
 		name: 'serverId',
 		type: 'string',
 		required: true,
@@ -13,6 +13,7 @@ export const deleteDatabaseOperation: INodeProperties[] = [
 				operation: ['delete'],
 			},
 		},
+		placeholder: '11',
 		default: '',
 	},
 	{
