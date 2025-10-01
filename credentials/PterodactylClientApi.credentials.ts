@@ -46,7 +46,7 @@ export class PterodactylClientApi implements ICredentialType {
 	test: ICredentialTestRequest = {
 		request: {
 			baseURL: '={{$credentials.panelUrl}}',
-			url: '/api/client/account',
+			url: '/api/client',
 			method: 'GET',
 		},
 	};
