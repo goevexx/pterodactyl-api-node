@@ -10,7 +10,7 @@ This is an n8n community node that lets you interact with the Pterodactyl Panel 
 
 [Pterodactyl](https://pterodactyl.io/) is an open-source game server management panel built with PHP, React, and Go.
 
-[n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/reference/license/) workflow automation platform.
+[n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/sustainable-use-license/) workflow automation platform.
 
 ## Table of Contents
 
@@ -85,7 +85,7 @@ This node requires either:
 - **Pterodactyl Client API** credentials (user-level access)
 - **Pterodactyl Application API** credentials (admin-level access)
 
-See the [Pterodactyl API documentation](https://pterodactyl.io/api/) for information on generating API keys.
+See the [Pterodactyl API documentation](https://pterodactyl-api-docs.netvpx.com/) for information on generating API keys.
 
 ## Compatibility
 
@@ -122,7 +122,7 @@ More examples coming in the `examples/` directory.
 
 - [n8n community nodes documentation](https://docs.n8n.io/integrations/community-nodes/)
 - [Pterodactyl Panel](https://pterodactyl.io/)
-- [Pterodactyl API Documentation](https://pterodactyl.io/api/)
+- [Pterodactyl API Documentation](https://pterodactyl-api-docs.netvpx.com/)
 
 ## Development
 
