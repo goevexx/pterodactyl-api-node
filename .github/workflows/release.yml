@@ -1,12 +1,10 @@
 name: Release
 
 on:
+  push:
+    branches:
+      - main
   workflow_dispatch:
-    inputs:
-      release-type:
-        description: 'Release type (one of): patch, minor, major'
-        required: true
-        default: 'patch'
 
 jobs:
   release:
@@ -41,6 +39,7 @@ jobs:
           output-file: 'CHANGELOG.md'
           skip-on-empty: true
           skip-git-pull: false
+          version-path: 'version'
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
