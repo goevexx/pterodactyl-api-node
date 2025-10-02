@@ -49,10 +49,5 @@ jobs:
           skip-git-pull: false
           version-path: 'version'
 
-      - name: Create Release
-        uses: softprops/action-gh-release@v2
-        if: ${{ steps.changelog.outputs.skipped == 'false' }}
-        with:
-          tag_name: ${{ steps.changelog.outputs.tag }}
-          name: Release ${{ steps.changelog.outputs.version }}
-          body: ${{ steps.changelog.outputs.clean_changelog }}
+      # Note: GitHub Release is created by publish.yml when the tag is pushed
+      # This workflow only creates the version bump commit and tag
