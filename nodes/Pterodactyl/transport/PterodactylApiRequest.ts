@@ -13,18 +13,20 @@ interface RateLimitState {
 // Rate limit state storage per credential
 const rateLimitState = new Map<string, RateLimitState>();
 
-// Cleanup old rate limit entries every 5 minutes to prevent memory leaks
-const CLEANUP_INTERVAL = 5 * 60 * 1000; // 5 minutes
-const ENTRY_MAX_AGE = 10 * 60 * 1000; // 10 minutes
+// Maximum age for rate limit entries (10 minutes) - cleanup happens lazily
+const ENTRY_MAX_AGE = 10 * 60 * 1000;
 
-setInterval(() => {
-	const now = Date.now();
+/**
+ * Lazy cleanup of stale rate limit entries to prevent memory leaks
+ * Called during rate limit checks rather than on a timer
+ */
+function cleanupStaleRateLimitEntries(now: number): void {
 	for (const [key, state] of rateLimitState.entries()) {
 		if (now - state.windowStart > ENTRY_MAX_AGE) {
 			rateLimitState.delete(key);
 		}
 	}
-}, CLEANUP_INTERVAL);
+}
 
 /**
  * Enhance error message with helpful context based on HTTP status code
@@ -104,6 +106,9 @@ export async function pterodactylApiRequest(
 	// Default rate limit is 240/min for both APIs (configurable via APP_API_CLIENT_RATELIMIT and APP_API_APPLICATION_RATELIMIT)
 	const maxRequests = 240;
 
+	// Lazy cleanup of stale entries (prevents memory leaks)
+	cleanupStaleRateLimitEntries(now);
+
 	let limitState = rateLimitState.get(credentialKey);
 	if (!limitState || now - limitState.windowStart > windowDuration) {
 		limitState = { requestCount: 0, windowStart: now };
@@ -111,8 +116,10 @@ export async function pterodactylApiRequest(
 	}
 
 	if (limitState.requestCount >= maxRequests) {
-		const waitTime = windowDuration - (now - limitState.windowStart);
-		await new Promise((resolve) => setTimeout(resolve, waitTime));
+		const waitTime = Math.max(0, windowDuration - (now - limitState.windowStart));
+		if (waitTime > 0) {
+			await new Promise((resolve) => setTimeout(resolve, waitTime));
+		}
 		limitState.requestCount = 0;
 		limitState.windowStart = Date.now();
 	}
