@@ -3,7 +3,7 @@ import { pterodactylApiRequest } from '../../transport/PterodactylApiRequest';
 
 export const restoreBackupOperation: INodeProperties[] = [
 	{
-		displayName: 'Server ID',
+		displayName: 'Server Identifier',
 		name: 'serverId',
 		type: 'string',
 		required: true,
@@ -13,9 +13,9 @@ export const restoreBackupOperation: INodeProperties[] = [
 				operation: ['restore'],
 			},
 		},
-		placeholder: '11',
+		placeholder: 'abc12def',
 		default: '',
-		description: 'The numeric server ID (e.g., 11)',
+		description: 'The server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL or use the List Servers operation.',
 	},
 	{
 		displayName: 'Backup ID',
@@ -59,6 +59,9 @@ export async function restoreBackup(this: IExecuteFunctions, index: number): Pro
 		'POST',
 		`/servers/${serverId}/backups/${backupId}/restore`,
 		body,
+		{},
+		{},
+		index,
 	);
 	return { success: true, backupId, truncate };
 }

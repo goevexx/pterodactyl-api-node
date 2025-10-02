@@ -64,6 +64,6 @@ export async function updatePassword(this: IExecuteFunctions, index: number): Pr
 		current_password: currentPassword,
 		password,
 		password_confirmation: passwordConfirmation,
-	});
+	}, {}, {}, index);
 	return { success: true };
 }

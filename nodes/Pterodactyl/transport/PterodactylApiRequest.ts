@@ -23,11 +23,20 @@ export async function pterodactylApiRequest(
 	body: IDataObject = {},
 	qs: IDataObject = {},
 	option: IDataObject = {},
+	itemIndex: number = 0,
 ): Promise<any> {
-	const authentication = this.getNodeParameter('authentication', 0) as string;
+	const authentication = this.getNodeParameter('authentication', itemIndex) as string;
 	const credentialType =
 		authentication === 'clientApi' ? 'pterodactylClientApi' : 'pterodactylApplicationApi';
-	const credentials = await this.getCredentials(credentialType);
+	const credentials = await this.getCredentials(credentialType, itemIndex);
+
+	if (!credentials.panelUrl) {
+		throw new Error('Panel URL is not configured in credentials. Please configure your Pterodactyl credentials in the node settings.');
+	}
+
+	if (!credentials.apiKey) {
+		throw new Error('API Key is not configured in credentials');
+	}
 
 	const panelUrl = (credentials.panelUrl as string).replace(/\/$/, '');
 	const apiBase = authentication === 'clientApi' ? '/api/client' : '/api/application';
@@ -117,16 +126,25 @@ export async function pterodactylApiRequestAllItems(
 	endpoint: string,
 	body: IDataObject = {},
 	qs: IDataObject = {},
+	itemIndex: number = 0,
 ): Promise<any[]> {
 	let page = 1;
 	let hasMorePages = true;
 	const allItems: any[] = [];
 
 	while (hasMorePages) {
-		const response = await pterodactylApiRequest.call(this, method, endpoint, body, {
-			...qs,
-			page,
-		});
+		const response = await pterodactylApiRequest.call(
+			this,
+			method,
+			endpoint,
+			body,
+			{
+				...qs,
+				page,
+			},
+			{},
+			itemIndex,
+		);
 
 		// Handle paginated response
 		if (response.data) {

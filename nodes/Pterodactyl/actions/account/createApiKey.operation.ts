@@ -43,6 +43,6 @@ export async function createApiKey(this: IExecuteFunctions, index: number): Prom
 		body.allowed_ips = allowedIpsStr.split(',').map((ip) => ip.trim());
 	}
 
-	const response = await pterodactylApiRequest.call(this, 'POST', '/account/api-keys', body);
+	const response = await pterodactylApiRequest.call(this, 'POST', '/account/api-keys', body, {}, {}, index);
 	return response;
 }
