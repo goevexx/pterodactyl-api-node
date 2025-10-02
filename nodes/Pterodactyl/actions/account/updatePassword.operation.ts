@@ -60,10 +60,18 @@ export async function updatePassword(this: IExecuteFunctions, index: number): Pr
 	const password = this.getNodeParameter('password', index) as string;
 	const passwordConfirmation = this.getNodeParameter('passwordConfirmation', index) as string;
 
-	await pterodactylApiRequest.call(this, 'PUT', '/account/password', {
-		current_password: currentPassword,
-		password,
-		password_confirmation: passwordConfirmation,
-	}, {}, {}, index);
+	await pterodactylApiRequest.call(
+		this,
+		'PUT',
+		'/account/password',
+		{
+			current_password: currentPassword,
+			password,
+			password_confirmation: passwordConfirmation,
+		},
+		{},
+		{},
+		index,
+	);
 	return { success: true };
 }

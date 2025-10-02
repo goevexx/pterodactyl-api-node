@@ -40,6 +40,14 @@ export async function updateEmail(this: IExecuteFunctions, index: number): Promi
 	const email = this.getNodeParameter('email', index) as string;
 	const password = this.getNodeParameter('password', index) as string;
 
-	await pterodactylApiRequest.call(this, 'PUT', '/account/email', { email, password }, {}, {}, index);
+	await pterodactylApiRequest.call(
+		this,
+		'PUT',
+		'/account/email',
+		{ email, password },
+		{},
+		{},
+		index,
+	);
 	return { success: true, email };
 }
