@@ -15,7 +15,8 @@ export const writeFileOperation: INodeProperties[] = [
 		},
 		placeholder: 'abc12def',
 		default: '',
-		description: 'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
+		description:
+			'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
 	},
 	{
 		displayName: 'File Path',

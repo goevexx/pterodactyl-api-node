@@ -15,7 +15,8 @@ export const sendCommandOperation: INodeProperties[] = [
 		},
 		placeholder: 'abc12def',
 		default: '',
-		description: 'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
+		description:
+			'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
 	},
 	{
 		displayName: 'Command',
@@ -38,9 +39,17 @@ export async function sendCommand(this: IExecuteFunctions, index: number): Promi
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const command = this.getNodeParameter('command', index) as string;
 
-	await pterodactylApiRequest.call(this, 'POST', `/servers/${serverId}/command`, {
-		command,
-	}, {}, {}, index);
+	await pterodactylApiRequest.call(
+		this,
+		'POST',
+		`/servers/${serverId}/command`,
+		{
+			command,
+		},
+		{},
+		{},
+		index,
+	);
 
 	return { success: true, command, serverId };
 }

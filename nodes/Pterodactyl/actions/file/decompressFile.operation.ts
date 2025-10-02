@@ -15,7 +15,8 @@ export const decompressFileOperation: INodeProperties[] = [
 		},
 		placeholder: 'abc12def',
 		default: '',
-		description: 'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
+		description:
+			'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
 	},
 	{
 		displayName: 'Root Directory',
@@ -53,9 +54,17 @@ export async function decompressFile(this: IExecuteFunctions, index: number): Pr
 	const root = this.getNodeParameter('root', index) as string;
 	const file = this.getNodeParameter('file', index) as string;
 
-	await pterodactylApiRequest.call(this, 'POST', `/servers/${serverId}/files/decompress`, {
-		root,
-		file,
-	}, {}, {}, index);
+	await pterodactylApiRequest.call(
+		this,
+		'POST',
+		`/servers/${serverId}/files/decompress`,
+		{
+			root,
+			file,
+		},
+		{},
+		{},
+		index,
+	);
 	return { success: true, file };
 }

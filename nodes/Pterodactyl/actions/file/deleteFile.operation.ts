@@ -15,7 +15,8 @@ export const deleteFileOperation: INodeProperties[] = [
 		},
 		placeholder: 'abc12def',
 		default: '',
-		description: 'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
+		description:
+			'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
 	},
 	{
 		displayName: 'Root Directory',
@@ -52,9 +53,17 @@ export async function deleteFile(this: IExecuteFunctions, index: number): Promis
 	const filesStr = this.getNodeParameter('files', index) as string;
 	const files = filesStr.split(',').map((f) => f.trim());
 
-	await pterodactylApiRequest.call(this, 'POST', `/servers/${serverId}/files/delete`, {
-		root,
-		files,
-	}, {}, {}, index);
+	await pterodactylApiRequest.call(
+		this,
+		'POST',
+		`/servers/${serverId}/files/delete`,
+		{
+			root,
+			files,
+		},
+		{},
+		{},
+		index,
+	);
 	return { success: true, deleted: files };
 }
