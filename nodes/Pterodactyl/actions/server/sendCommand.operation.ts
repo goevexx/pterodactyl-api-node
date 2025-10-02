@@ -3,7 +3,7 @@ import { pterodactylApiRequest } from '../../transport/PterodactylApiRequest';
 
 export const sendCommandOperation: INodeProperties[] = [
 	{
-		displayName: 'Server ID',
+		displayName: 'Server Identifier',
 		name: 'serverId',
 		type: 'string',
 		required: true,
@@ -13,9 +13,9 @@ export const sendCommandOperation: INodeProperties[] = [
 				operation: ['sendCommand'],
 			},
 		},
-		placeholder: '11',
+		placeholder: 'abc12def',
 		default: '',
-		description: 'The numeric server ID (e.g., 11)',
+		description: 'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
 	},
 	{
 		displayName: 'Command',
@@ -40,7 +40,7 @@ export async function sendCommand(this: IExecuteFunctions, index: number): Promi
 
 	await pterodactylApiRequest.call(this, 'POST', `/servers/${serverId}/command`, {
 		command,
-	});
+	}, {}, {}, index);
 
 	return { success: true, command, serverId };
 }

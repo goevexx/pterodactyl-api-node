@@ -13,9 +13,9 @@ export const getServerOperation: INodeProperties[] = [
 				operation: ['get'],
 			},
 		},
-		placeholder: '11',
+		placeholder: '11 or abc12def',
 		default: '',
-		description: 'The numeric server ID (e.g., 11)',
+		description: 'Application API: numeric server ID (e.g., 11). Client API: alphanumeric identifier (e.g., abc12def).',
 	},
 ];
 

@@ -510,13 +510,13 @@ export class Pterodactyl implements INodeType {
 					}
 				} else if (resource === 'account') {
 					if (operation === 'getAccount') {
-						responseData = await getAccount.call(this);
+						responseData = await getAccount.call(this, i);
 					} else if (operation === 'updateEmail') {
 						responseData = await updateEmail.call(this, i);
 					} else if (operation === 'updatePassword') {
 						responseData = await updatePassword.call(this, i);
 					} else if (operation === 'listApiKeys') {
-						responseData = await listApiKeys.call(this);
+						responseData = await listApiKeys.call(this, i);
 					} else if (operation === 'createApiKey') {
 						responseData = await createApiKey.call(this, i);
 					} else if (operation === 'deleteApiKey') {

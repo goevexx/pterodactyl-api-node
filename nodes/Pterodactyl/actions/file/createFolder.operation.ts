@@ -3,7 +3,7 @@ import { pterodactylApiRequest } from '../../transport/PterodactylApiRequest';
 
 export const createFolderOperation: INodeProperties[] = [
 	{
-		displayName: 'Server ID',
+		displayName: 'Server Identifier',
 		name: 'serverId',
 		type: 'string',
 		required: true,
@@ -13,9 +13,9 @@ export const createFolderOperation: INodeProperties[] = [
 				operation: ['createFolder'],
 			},
 		},
-		placeholder: '11',
+		placeholder: 'abc12def',
 		default: '',
-		description: 'The numeric server ID (e.g., 11)',
+		description: 'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
 	},
 	{
 		displayName: 'Root Directory',
@@ -56,6 +56,6 @@ export async function createFolder(this: IExecuteFunctions, index: number): Prom
 	await pterodactylApiRequest.call(this, 'POST', `/servers/${serverId}/files/create-folder`, {
 		root,
 		name,
-	});
+	}, {}, {}, index);
 	return { success: true, folder: `${root}/${name}` };
 }

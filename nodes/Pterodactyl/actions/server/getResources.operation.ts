@@ -3,7 +3,7 @@ import { pterodactylApiRequest } from '../../transport/PterodactylApiRequest';
 
 export const getResourcesOperation: INodeProperties[] = [
 	{
-		displayName: 'Server ID',
+		displayName: 'Server Identifier',
 		name: 'serverId',
 		type: 'string',
 		required: true,
@@ -13,9 +13,10 @@ export const getResourcesOperation: INodeProperties[] = [
 				operation: ['getResources'],
 			},
 		},
-		placeholder: '11',
+		placeholder: 'abc12def',
 		default: '',
-		description: 'The numeric server ID (e.g., 11). Note: This operation requires Client API authentication.',
+		description:
+			'The server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL or use the List Servers operation. Note: This operation requires Client API authentication.',
 	},
 ];
 
@@ -23,7 +24,9 @@ export async function getResources(this: IExecuteFunctions, index: number): Prom
 	const authentication = this.getNodeParameter('authentication', index) as string;
 
 	if (authentication === 'applicationApi') {
-		throw new Error('Get Resources operation requires Client API authentication. Please use Client API credentials or choose a different operation.');
+		throw new Error(
+			'Get Resources operation requires Client API authentication. Please use Client API credentials or choose a different operation.',
+		);
 	}
 
 	const serverId = this.getNodeParameter('serverId', index) as string;
