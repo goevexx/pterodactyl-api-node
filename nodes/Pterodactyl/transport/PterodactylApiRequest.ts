@@ -13,6 +13,44 @@ interface RateLimitState {
 // Rate limit state storage per credential
 const rateLimitState = new Map<string, RateLimitState>();
 
+// Cleanup old rate limit entries every 5 minutes to prevent memory leaks
+const CLEANUP_INTERVAL = 5 * 60 * 1000; // 5 minutes
+const ENTRY_MAX_AGE = 10 * 60 * 1000; // 10 minutes
+
+setInterval(() => {
+	const now = Date.now();
+	for (const [key, state] of rateLimitState.entries()) {
+		if (now - state.windowStart > ENTRY_MAX_AGE) {
+			rateLimitState.delete(key);
+		}
+	}
+}, CLEANUP_INTERVAL);
+
+/**
+ * Enhance error message with helpful context based on HTTP status code
+ */
+function enhanceErrorMessage(baseMessage: string, statusCode?: number): string {
+	let errorMessage = baseMessage;
+
+	if (statusCode === 401) {
+		errorMessage += ' - API key invalid/expired. Check n8n credentials.';
+	} else if (statusCode === 403) {
+		errorMessage += ' - Insufficient permissions, server suspended, or API key lacks access.';
+	} else if (statusCode === 404) {
+		errorMessage += ' - Resource not found. Check server ID/identifier or endpoint URL.';
+	} else if (statusCode === 409) {
+		errorMessage += ' - Server suspended, power action in progress, or would exceed disk limits.';
+	} else if (statusCode === 422) {
+		errorMessage += ' - Validation error. Check input parameters.';
+	} else if (statusCode === 500) {
+		errorMessage += ' - Pterodactyl panel error. Check panel logs.';
+	} else if (statusCode === 502) {
+		errorMessage += ' - Wings daemon down/unreachable.';
+	}
+
+	return errorMessage;
+}
+
 /**
  * Make authenticated HTTP request to Pterodactyl API with rate limiting and retry logic
  */
@@ -103,49 +141,14 @@ export async function pterodactylApiRequest(
 				// Parse Pterodactyl error format
 				if (response.body?.errors) {
 					const pterodactylError = response.body.errors[0];
-					let errorMessage = `Pterodactyl API Error [${pterodactylError.code}]: ${pterodactylError.detail}`;
-
-					// Add helpful context for common errors
-					if (response.statusCode === 401) {
-						errorMessage += ' - API key invalid/expired. Check n8n credentials.';
-					} else if (response.statusCode === 403) {
-						errorMessage +=
-							' - Insufficient permissions, server suspended, or API key lacks access.';
-					} else if (response.statusCode === 404) {
-						errorMessage += ' - Resource not found. Check server ID/identifier or endpoint URL.';
-					} else if (response.statusCode === 409) {
-						errorMessage +=
-							' - Server suspended, power action in progress, or would exceed disk limits.';
-					} else if (response.statusCode === 422) {
-						errorMessage += ' - Validation error. Check input parameters.';
-					} else if (response.statusCode === 500) {
-						errorMessage += ' - Pterodactyl panel error. Check panel logs.';
-					} else if (response.statusCode === 502) {
-						errorMessage += ' - Wings daemon down/unreachable.';
-					}
-
+					const baseMessage = `Pterodactyl API Error [${pterodactylError.code}]: ${pterodactylError.detail}`;
+					const errorMessage = enhanceErrorMessage(baseMessage, response.statusCode);
 					throw new Error(errorMessage);
 				}
 
 				// Handle common HTTP status codes with user-friendly messages
-				let errorMessage = response.statusMessage || `HTTP ${response.statusCode} error`;
-
-				if (response.statusCode === 401) {
-					errorMessage += ' - API key invalid/expired. Check n8n credentials.';
-				} else if (response.statusCode === 403) {
-					errorMessage += ' - Insufficient permissions, server suspended, or API key lacks access.';
-				} else if (response.statusCode === 404) {
-					errorMessage += ' - Resource not found. Check server ID/identifier or endpoint URL.';
-				} else if (response.statusCode === 409) {
-					errorMessage +=
-						' - Server suspended, power action in progress, or would exceed disk limits.';
-				} else if (response.statusCode === 422) {
-					errorMessage += ' - Validation error. Check input parameters.';
-				} else if (response.statusCode === 500) {
-					errorMessage += ' - Pterodactyl panel error. Check panel logs.';
-				} else if (response.statusCode === 502) {
-					errorMessage += ' - Wings daemon down/unreachable.';
-				}
+				const baseMessage = response.statusMessage || `HTTP ${response.statusCode} error`;
+				const errorMessage = enhanceErrorMessage(baseMessage, response.statusCode);
 
 				const error = new Error(errorMessage);
 				(error as any).statusCode = response.statusCode;
@@ -166,25 +169,8 @@ export async function pterodactylApiRequest(
 			// Parse Pterodactyl error format from error.response
 			if (error.response?.body?.errors) {
 				const pterodactylError = error.response.body.errors[0];
-				let errorMessage = `Pterodactyl API Error [${pterodactylError.code}]: ${pterodactylError.detail}`;
-
-				if (error.statusCode === 401) {
-					errorMessage += ' - API key invalid/expired. Check n8n credentials.';
-				} else if (error.statusCode === 403) {
-					errorMessage += ' - Insufficient permissions, server suspended, or API key lacks access.';
-				} else if (error.statusCode === 404) {
-					errorMessage += ' - Resource not found. Check server ID/identifier or endpoint URL.';
-				} else if (error.statusCode === 409) {
-					errorMessage +=
-						' - Server suspended, power action in progress, or would exceed disk limits.';
-				} else if (error.statusCode === 422) {
-					errorMessage += ' - Validation error. Check input parameters.';
-				} else if (error.statusCode === 500) {
-					errorMessage += ' - Pterodactyl panel error. Check panel logs.';
-				} else if (error.statusCode === 502) {
-					errorMessage += ' - Wings daemon down/unreachable.';
-				}
-
+				const baseMessage = `Pterodactyl API Error [${pterodactylError.code}]: ${pterodactylError.detail}`;
+				const errorMessage = enhanceErrorMessage(baseMessage, error.statusCode);
 				throw new Error(errorMessage);
 			}
 
