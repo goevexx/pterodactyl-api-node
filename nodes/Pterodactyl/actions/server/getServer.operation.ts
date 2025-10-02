@@ -3,7 +3,7 @@ import { pterodactylApiRequest } from '../../transport/PterodactylApiRequest';
 
 export const getServerOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Identifier',
+		displayName: 'Server ID',
 		name: 'serverId',
 		type: 'string',
 		required: true,
@@ -13,9 +13,9 @@ export const getServerOperation: INodeProperties[] = [
 				operation: ['get'],
 			},
 		},
-		placeholder: 'abc12def',
+		placeholder: '11 or abc12def',
 		default: '',
-		description: 'The server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL or use the List Servers operation.',
+		description: 'Application API: numeric server ID (e.g., 11). Client API: alphanumeric identifier (e.g., abc12def).',
 	},
 ];
 
