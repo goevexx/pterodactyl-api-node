@@ -34,7 +34,6 @@ Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes
 
 This node supports both Client API and Application API operations for comprehensive Pterodactyl Panel automation.
 
-<a id="server-management"></a>
 ### Server Management
 
 - **List Servers** - Get all accessible servers
@@ -43,7 +42,6 @@ This node supports both Client API and Application API operations for comprehens
 - **Send Command** - Execute console command
 - **Get Resources** - Get server resource usage
 
-<a id="file-operations"></a>
 ### File Operations
 
 - **List Files** - List files in directory
@@ -55,7 +53,6 @@ This node supports both Client API and Application API operations for comprehens
 - **Create Folder** - Create directory
 - **Get Upload URL** - Get file upload URL
 
-<a id="database-management"></a>
 ### Database Management
 
 - **List Databases** - Get all databases
@@ -63,7 +60,6 @@ This node supports both Client API and Application API operations for comprehens
 - **Rotate Password** - Generate new password
 - **Delete Database** - Remove database
 
-<a id="backup-operations"></a>
 ### Backup Operations
 
 - **List Backups** - Get all backups
@@ -73,7 +69,6 @@ This node supports both Client API and Application API operations for comprehens
 - **Restore Backup** - Restore from backup
 - **Delete Backup** - Remove backup
 
-<a id="account-operations"></a>
 ### Account Operations
 
 - **Get Account** - Get account details

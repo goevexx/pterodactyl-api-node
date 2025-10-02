@@ -47,7 +47,6 @@ jobs:
           output-file: 'CHANGELOG.md'
           skip-on-empty: true
           skip-git-pull: false
-          version-path: 'version'
 
       # Note: GitHub Release is created by publish.yml when the tag is pushed
       # This workflow only creates the version bump commit and tag
