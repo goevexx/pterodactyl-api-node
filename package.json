@@ -1,6 +1,6 @@
 {
 	"name": "n8n-nodes-pterodactyl",
-	"version": "1.0.1",
+	"version": "1.0.0",
 	"description": "n8n node for Pterodactyl Panel API integration",
 	"keywords": [
 		"n8n-community-node-package",

@@ -5,17 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.1] - 2025-10-02
-
-### Fixed
-
-- Repository URLs in package.json now point to correct GitHub organization (goevexx/pterodactyl-api-node)
-- Outdated Pterodactyl API documentation links (updated to https://pterodactyl-api-docs.netvpx.com/)
-- Broken n8n license documentation link (updated to /sustainable-use-license/)
-- GitHub Actions workflow permissions for creating releases
-- README table of contents now displays as tree structure
-- GitHub badges now reference correct repository
-
 ## [1.0.0] - 2025-10-01
 
 ### Added
@@ -67,5 +56,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Operation descriptions
 - Usage examples
 
-[1.0.1]: https://github.com/goevexx/pterodactyl-api-node/releases/tag/v1.0.1
 [1.0.0]: https://github.com/goevexx/pterodactyl-api-node/releases/tag/v1.0.0
