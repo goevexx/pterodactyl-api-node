@@ -10,17 +10,17 @@
 		"api"
 	],
 	"license": "MIT",
-	"homepage": "https://github.com/nico-on-github/pterodactyl-api-node",
+	"homepage": "https://github.com/goevexx/pterodactyl-api-node",
 	"author": {
 		"name": "Nicolas Morawietz",
 		"email": "contact@morawietz.dev"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/nico-on-github/pterodactyl-api-node.git"
+		"url": "https://github.com/goevexx/pterodactyl-api-node.git"
 	},
 	"bugs": {
-		"url": "https://github.com/nico-on-github/pterodactyl-api-node/issues"
+		"url": "https://github.com/goevexx/pterodactyl-api-node/issues"
 	},
 	"main": "index.js",
 	"scripts": {

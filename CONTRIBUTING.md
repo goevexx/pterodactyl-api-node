@@ -151,7 +151,7 @@ npm test
 
 ## Need Help?
 
-- Check existing [issues](https://github.com/nico-on-github/pterodactyl-api-node/issues)
+- Check existing [issues](https://github.com/goevexx/pterodactyl-api-node/issues)
 - Review [n8n node documentation](https://docs.n8n.io/integrations/creating-nodes/)
 - Ask in the PR or issue
 

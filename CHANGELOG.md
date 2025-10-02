@@ -56,4 +56,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Operation descriptions
 - Usage examples
 
-[1.0.0]: https://github.com/nico-on-github/pterodactyl-api-node/releases/tag/v1.0.0
+[1.0.0]: https://github.com/goevexx/pterodactyl-api-node/releases/tag/v1.0.0

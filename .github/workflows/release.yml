@@ -1,0 +1,52 @@
+name: Release
+
+# This workflow generates releases from conventional commits
+# Workflow relationship:
+#   1. release.yml (this) -> Creates version bump, CHANGELOG, and git tag
+#   2. publish.yml -> Triggered by tag push -> Publishes to npm + GitHub Release
+#
+# Trigger strategy: Manual only to avoid creating releases for non-feature commits
+# Run this workflow manually from Actions tab when ready to release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.x'
+
+      - name: Conventional Changelog Action
+        id: changelog
+        uses: TriPSs/conventional-changelog-action@v5
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          release-count: 0
+          version-file: './package.json'
+          skip-version-file: false
+          skip-commit: false
+          skip-ci: false
+          skip-tag: false
+          git-push: true
+          git-message: 'chore(release): {version}'
+          preset: 'conventionalcommits'
+          tag-prefix: 'v'
+          output-file: 'CHANGELOG.md'
+          skip-on-empty: true
+          skip-git-pull: false
+
+      # Note: GitHub Release is created by publish.yml when the tag is pushed
+      # This workflow only creates the version bump commit and tag
