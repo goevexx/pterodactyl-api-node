@@ -15,7 +15,8 @@ export const getResourcesOperation: INodeProperties[] = [
 		},
 		placeholder: '11',
 		default: '',
-		description: 'The numeric server ID (e.g., 11). Note: This operation requires Client API authentication.',
+		description:
+			'The numeric server ID (e.g., 11). Note: This operation requires Client API authentication.',
 	},
 ];
 
@@ -23,7 +24,9 @@ export async function getResources(this: IExecuteFunctions, index: number): Prom
 	const authentication = this.getNodeParameter('authentication', index) as string;
 
 	if (authentication === 'applicationApi') {
-		throw new Error('Get Resources operation requires Client API authentication. Please use Client API credentials or choose a different operation.');
+		throw new Error(
+			'Get Resources operation requires Client API authentication. Please use Client API credentials or choose a different operation.',
+		);
 	}
 
 	const serverId = this.getNodeParameter('serverId', index) as string;
