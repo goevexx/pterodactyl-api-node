@@ -96,12 +96,40 @@ export async function pterodactylApiRequest(
 			// Parse Pterodactyl error format
 			if (error.response?.body?.errors) {
 				const pterodactylError = error.response.body.errors[0];
-				const errorMessage = `Pterodactyl API Error [${pterodactylError.code}]: ${pterodactylError.detail}`;
+				let errorMessage = `Pterodactyl API Error [${pterodactylError.code}]: ${pterodactylError.detail}`;
+
+				// Add helpful context for common errors
+				if (error.statusCode === 409) {
+					errorMessage += '\n\n💡 This usually means:\n';
+					errorMessage += '• Server is suspended - unsuspend it first via Application API\n';
+					errorMessage += '• Another power action is already in progress - wait for it to complete\n';
+					errorMessage += '• Server state conflicts with the requested action';
+				} else if (error.statusCode === 403) {
+					errorMessage += '\n\n💡 This usually means:\n';
+					errorMessage += '• Server is suspended - unsuspend it first via Application API\n';
+					errorMessage += '• You lack permissions for this operation\n';
+					errorMessage += '• Check your API key has the required access level';
+				}
+
 				throw new Error(errorMessage);
 			}
 
+			// Handle common HTTP status codes with user-friendly messages
+			let errorMessage = error.message || 'Unknown error occurred';
+
+			if (error.statusCode === 409) {
+				errorMessage = `Conflict (409): ${errorMessage}\n\n💡 The server state conflicts with this action. Common causes:\n`;
+				errorMessage += '• Server is suspended - unsuspend it first\n';
+				errorMessage += '• Another power action is in progress - wait for it to complete';
+			} else if (error.statusCode === 403) {
+				errorMessage = `Forbidden (403): ${errorMessage}\n\n💡 Access denied. Common causes:\n`;
+				errorMessage += '• Server is suspended\n';
+				errorMessage += '• Insufficient permissions for this operation\n';
+				errorMessage += '• API key lacks required access level';
+			}
+
 			// Create clean error without circular references
-			const cleanError = new Error(error.message || 'Unknown error occurred');
+			const cleanError = new Error(errorMessage);
 			cleanError.name = error.name || 'Error';
 			cleanError.stack = error.stack; // Preserve stack trace for debugging
 			if (error.statusCode) {
