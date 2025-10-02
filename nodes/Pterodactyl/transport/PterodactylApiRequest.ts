@@ -105,35 +105,19 @@ export async function pterodactylApiRequest(
 
 				// Add helpful context for common errors
 				if (response.statusCode === 401) {
-					errorMessage += '<br><br>💡 This usually means:<br>';
-					errorMessage += '• API key is invalid or expired<br>';
-					errorMessage += '• Check your credentials configuration in n8n';
+					errorMessage += ' - API key invalid/expired. Check n8n credentials.';
 				} else if (response.statusCode === 403) {
-					errorMessage += '<br><br>💡 This usually means:<br>';
-					errorMessage += '• Insufficient permissions for this operation<br>';
-					errorMessage += '• Server is suspended (use Application API to unsuspend)<br>';
-					errorMessage += '• API key lacks required access level';
+					errorMessage += ' - Insufficient permissions, server suspended, or API key lacks access.';
 				} else if (response.statusCode === 404) {
-					errorMessage += '<br><br>💡 This usually means:<br>';
-					errorMessage += '• Resource does not exist (check server ID, file path, etc.)<br>';
-					errorMessage += '• Endpoint URL may be incorrect';
+					errorMessage += ' - Resource not found. Check server ID/identifier or endpoint URL.';
 				} else if (response.statusCode === 409) {
-					errorMessage += '<br><br>💡 This usually means:<br>';
-					errorMessage += '• Server is suspended - unsuspend it first using Application API<br>';
-					errorMessage += '• Another power action is already in progress - wait a moment and try again<br>';
-					errorMessage += '• Operation would exceed disk space limits (for file operations)';
+					errorMessage += ' - Server suspended, power action in progress, or would exceed disk limits.';
 				} else if (response.statusCode === 422) {
-					errorMessage += '<br><br>💡 This usually means:<br>';
-					errorMessage += '• Validation failed - check your input parameters<br>';
-					errorMessage += '• Required fields may be missing or invalid';
+					errorMessage += ' - Validation error. Check input parameters.';
 				} else if (response.statusCode === 500) {
-					errorMessage += '<br><br>💡 This usually means:<br>';
-					errorMessage += '• Server encountered an internal error<br>';
-					errorMessage += '• Check Pterodactyl panel logs for details';
+					errorMessage += ' - Pterodactyl panel error. Check panel logs.';
 				} else if (response.statusCode === 502) {
-					errorMessage += '<br><br>💡 This usually means:<br>';
-					errorMessage += '• Wings daemon is down or unreachable<br>';
-					errorMessage += '• Check Wings service status on the node';
+					errorMessage += ' - Wings daemon down/unreachable.';
 				}
 
 					throw new Error(errorMessage);
@@ -143,35 +127,19 @@ export async function pterodactylApiRequest(
 				let errorMessage = response.statusMessage || `HTTP ${response.statusCode} error`;
 
 				if (response.statusCode === 401) {
-					errorMessage = `Unauthorized (401): ${errorMessage}<br><br>💡 Authentication failed:<br>`;
-					errorMessage += '• API key is invalid or expired<br>';
-					errorMessage += '• Check your credentials configuration';
+					errorMessage += ' - API key invalid/expired. Check n8n credentials.';
 				} else if (response.statusCode === 403) {
-					errorMessage = `Forbidden (403): ${errorMessage}<br><br>💡 Access denied:<br>`;
-					errorMessage += '• Insufficient permissions for this operation<br>';
-					errorMessage += '• Server may be suspended<br>';
-					errorMessage += '• API key lacks required access level';
+					errorMessage += ' - Insufficient permissions, server suspended, or API key lacks access.';
 				} else if (response.statusCode === 404) {
-					errorMessage = `Not Found (404): ${errorMessage}<br><br>💡 Resource not found:<br>`;
-					errorMessage += '• Check server ID, file path, or resource identifier<br>';
-					errorMessage += '• Endpoint URL may be incorrect';
+					errorMessage += ' - Resource not found. Check server ID/identifier or endpoint URL.';
 				} else if (response.statusCode === 409) {
-					errorMessage = `Conflict (409): ${errorMessage}<br><br>💡 State conflict:<br>`;
-					errorMessage += '• Server is suspended - unsuspend it first using Application API<br>';
-					errorMessage += '• Another power action is in progress - wait a moment and try again<br>';
-					errorMessage += '• Operation would exceed resource limits';
+					errorMessage += ' - Server suspended, power action in progress, or would exceed disk limits.';
 				} else if (response.statusCode === 422) {
-					errorMessage = `Validation Error (422): ${errorMessage}<br><br>💡 Invalid input:<br>`;
-					errorMessage += '• Check your input parameters<br>';
-					errorMessage += '• Required fields may be missing or invalid';
+				errorMessage += ' - Validation error. Check input parameters.';
 				} else if (response.statusCode === 500) {
-					errorMessage = `Internal Server Error (500): ${errorMessage}<br><br>💡 Server error:<br>`;
-					errorMessage += '• Pterodactyl panel encountered an error<br>';
-					errorMessage += '• Check panel logs for details';
+					errorMessage += ' - Pterodactyl panel error. Check panel logs.';
 				} else if (response.statusCode === 502) {
-					errorMessage = `Bad Gateway (502): ${errorMessage}<br><br>💡 Service unavailable:<br>`;
-					errorMessage += '• Wings daemon is down or unreachable<br>';
-					errorMessage += '• Check Wings service status';
+					errorMessage += ' - Wings daemon down/unreachable.';
 				}
 
 				const error = new Error(errorMessage);
@@ -182,10 +150,6 @@ export async function pterodactylApiRequest(
 			// Return body for successful responses
 			return response.body;
 		} catch (error: any) {
-			// Re-throw if it's already our formatted error
-			if (error.message?.includes('💡')) {
-				throw error;
-			}
 
 			// Handle legacy error format (fallback for network errors, etc.)
 			if (error.statusCode === 429 && retries < maxRetries) {
@@ -201,35 +165,19 @@ export async function pterodactylApiRequest(
 				let errorMessage = `Pterodactyl API Error [${pterodactylError.code}]: ${pterodactylError.detail}`;
 
 				if (error.statusCode === 401) {
-					errorMessage += '<br><br>💡 This usually means:<br>';
-					errorMessage += '• API key is invalid or expired<br>';
-					errorMessage += '• Check your credentials configuration in n8n';
+				errorMessage += ' - API key invalid/expired. Check n8n credentials.';
 				} else if (error.statusCode === 403) {
-					errorMessage += '<br><br>💡 This usually means:<br>';
-					errorMessage += '• Insufficient permissions for this operation<br>';
-					errorMessage += '• Server is suspended (use Application API to unsuspend)<br>';
-					errorMessage += '• API key lacks required access level';
+				errorMessage += ' - Insufficient permissions, server suspended, or API key lacks access.';
 				} else if (error.statusCode === 404) {
-					errorMessage += '<br><br>💡 This usually means:<br>';
-					errorMessage += '• Resource does not exist (check server ID, file path, etc.)<br>';
-					errorMessage += '• Endpoint URL may be incorrect';
+				errorMessage += ' - Resource not found. Check server ID/identifier or endpoint URL.';
 				} else if (error.statusCode === 409) {
-					errorMessage += '<br><br>💡 This usually means:<br>';
-					errorMessage += '• Server is suspended - unsuspend it first using Application API<br>';
-					errorMessage += '• Another power action is already in progress - wait a moment and try again<br>';
-					errorMessage += '• Operation would exceed disk space limits (for file operations)';
+				errorMessage += ' - Server suspended, power action in progress, or would exceed disk limits.';
 				} else if (error.statusCode === 422) {
-					errorMessage += '<br><br>💡 This usually means:<br>';
-					errorMessage += '• Validation failed - check your input parameters<br>';
-					errorMessage += '• Required fields may be missing or invalid';
+				errorMessage += ' - Validation error. Check input parameters.';
 				} else if (error.statusCode === 500) {
-					errorMessage += '<br><br>💡 This usually means:<br>';
-					errorMessage += '• Server encountered an internal error<br>';
-					errorMessage += '• Check Pterodactyl panel logs for details';
+				errorMessage += ' - Pterodactyl panel error. Check panel logs.';
 				} else if (error.statusCode === 502) {
-					errorMessage += '<br><br>💡 This usually means:<br>';
-					errorMessage += '• Wings daemon is down or unreachable<br>';
-					errorMessage += '• Check Wings service status on the node';
+				errorMessage += ' - Wings daemon down/unreachable.';
 				}
 
 				throw new Error(errorMessage);
