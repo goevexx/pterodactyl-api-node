@@ -1,5 +1,12 @@
 name: Publish to npm
 
+# This workflow publishes to npm and creates GitHub Release
+# Workflow relationship:
+#   1. release.yml -> Creates version bump, CHANGELOG, and git tag (manual trigger)
+#   2. publish.yml (this) -> Triggered by tag push -> Publishes to npm + GitHub Release
+#
+# This workflow is triggered automatically when release.yml pushes a version tag
+
 on:
   push:
     tags:

@@ -1,9 +1,14 @@
 name: Release
 
+# This workflow generates releases from conventional commits
+# Workflow relationship:
+#   1. release.yml (this) -> Creates version bump, CHANGELOG, and git tag
+#   2. publish.yml -> Triggered by tag push -> Publishes to npm + GitHub Release
+#
+# Trigger strategy: Manual only to avoid creating releases for non-feature commits
+# Run this workflow manually from Actions tab when ready to release
+
 on:
-  push:
-    branches:
-      - main
   workflow_dispatch:
 
 jobs:
@@ -33,6 +38,9 @@ jobs:
           version-file: './package.json'
           skip-version-file: false
           skip-commit: false
+          skip-ci: false
+          skip-tag: false
+          git-push: true
           git-message: 'chore(release): {version}'
           preset: 'conventionalcommits'
           tag-prefix: 'v'
