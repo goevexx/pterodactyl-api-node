@@ -1,0 +1,318 @@
+{
+  "name": "User Onboarding",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "onboard-customer",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "e5f6a7b8-c9d0-1234-5555-000000000001",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 300],
+      "webhookId": "00000000-0000-0000-0000-000000000003"
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "server_id",
+              "name": "server_id",
+              "value": "={{ $json.body.server_id }}",
+              "type": "string"
+            },
+            {
+              "id": "customer_name",
+              "name": "customer_name",
+              "value": "={{ $json.body.customer_name }}",
+              "type": "string"
+            },
+            {
+              "id": "customer_email",
+              "name": "customer_email",
+              "value": "={{ $json.body.customer_email }}",
+              "type": "string"
+            },
+            {
+              "id": "server_type",
+              "name": "server_type",
+              "value": "={{ $json.body.server_type || 'Game Server' }}",
+              "type": "string"
+            },
+            {
+              "id": "plan_name",
+              "name": "plan_name",
+              "value": "={{ $json.body.plan_name || 'Standard' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e5f6a7b8-c9d0-1234-5555-000000000002",
+      "name": "Extract Customer Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "server",
+        "operation": "get",
+        "serverId": "={{ $json.server_id }}"
+      },
+      "id": "e5f6a7b8-c9d0-1234-5555-000000000003",
+      "name": "Validate Server",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [680, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "file",
+        "operation": "createFolder",
+        "serverId": "={{ $node['Extract Customer Data'].json.server_id }}",
+        "folderPath": "/setup"
+      },
+      "id": "e5f6a7b8-c9d0-1234-5555-000000000004",
+      "name": "Create Setup Folder",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [900, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "file",
+        "operation": "write",
+        "serverId": "={{ $node['Extract Customer Data'].json.server_id }}",
+        "filePath": "/setup/welcome.txt",
+        "fileContent": "=Welcome to {{ $node['Extract Customer Data'].json.server_type }}!\n\nCustomer: {{ $node['Extract Customer Data'].json.customer_name }}\nPlan: {{ $node['Extract Customer Data'].json.plan_name }}\nServer ID: {{ $node['Extract Customer Data'].json.server_id }}\nProvisioned: {{ $now.toFormat('yyyy-MM-dd HH:mm:ss') }}\n\n========================================\nGETTING STARTED\n========================================\n\n1. Your server has been provisioned and is ready to use\n2. Database credentials are stored in /.env.database\n3. Check /setup/readme.md for configuration instructions\n4. Visit our support portal for additional help\n\n========================================\nIMPORTANT INFORMATION\n========================================\n\n- Server Name: {{ $node['Validate Server'].json.name }}\n- Server UUID: {{ $node['Validate Server'].json.uuid }}\n- Memory Limit: {{ $node['Validate Server'].json.limits.memory }} MB\n- Disk Limit: {{ $node['Validate Server'].json.limits.disk }} MB\n- CPU Limit: {{ $node['Validate Server'].json.limits.cpu }}%\n\n========================================\nNEXT STEPS\n========================================\n\n1. Configure your application using the database credentials\n2. Upload your files via FTP or the file manager\n3. Start your server from the control panel\n4. Monitor resource usage in real-time\n\nThank you for choosing our hosting service!\n"
+      },
+      "id": "e5f6a7b8-c9d0-1234-5555-000000000005",
+      "name": "Write Welcome File",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [1120, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "database",
+        "operation": "create",
+        "serverId": "={{ $node['Extract Customer Data'].json.server_id }}",
+        "databaseName": "={{ 'db_' + $node['Extract Customer Data'].json.server_id.replace(/[^a-zA-Z0-9]/g, '_') }}",
+        "remote": "%"
+      },
+      "id": "e5f6a7b8-c9d0-1234-5555-000000000006",
+      "name": "Provision Database",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [1340, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "file",
+        "operation": "write",
+        "serverId": "={{ $node['Extract Customer Data'].json.server_id }}",
+        "filePath": "/.env.database",
+        "fileContent": "=# Database Configuration\n# Provisioned: {{ $now.toISO() }}\n\nDB_HOST={{ $json.host.address }}\nDB_PORT={{ $json.host.port }}\nDB_DATABASE={{ $json.name }}\nDB_USERNAME={{ $json.username }}\nDB_PASSWORD={{ $json.password }}\n\n# Connection String\nDATABASE_URL=mysql://{{ $json.username }}:{{ $json.password }}@{{ $json.host.address }}:{{ $json.host.port }}/{{ $json.name }}\n"
+      },
+      "id": "e5f6a7b8-c9d0-1234-5555-000000000007",
+      "name": "Write Database Credentials",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [1560, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "email_data",
+              "name": "email_data",
+              "value": "={\n  \"to\": \"{{ $node['Extract Customer Data'].json.customer_email }}\",\n  \"customer_name\": \"{{ $node['Extract Customer Data'].json.customer_name }}\",\n  \"server_name\": \"{{ $node['Validate Server'].json.name }}\",\n  \"server_id\": \"{{ $node['Extract Customer Data'].json.server_id }}\",\n  \"plan_name\": \"{{ $node['Extract Customer Data'].json.plan_name }}\",\n  \"database_host\": \"{{ $node['Provision Database'].json.host.address }}\",\n  \"database_port\": {{ $node['Provision Database'].json.host.port }},\n  \"database_name\": \"{{ $node['Provision Database'].json.name }}\",\n  \"database_username\": \"{{ $node['Provision Database'].json.username }}\",\n  \"database_password\": \"{{ $node['Provision Database'].json.password }}\",\n  \"panel_url\": \"https://panel.example.com/server/{{ $node['Validate Server'].json.identifier }}\"\n}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "e5f6a7b8-c9d0-1234-5555-000000000008",
+      "name": "Prepare Email Data",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [1780, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-webhook-url.com/send-welcome-email",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ $json.email_data }}",
+        "options": {}
+      },
+      "id": "e5f6a7b8-c9d0-1234-5555-000000000009",
+      "name": "Send Welcome Email",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [2000, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"message\": \"Customer onboarded successfully\",\n  \"server_id\": \"{{ $node['Extract Customer Data'].json.server_id }}\",\n  \"customer_email\": \"{{ $node['Extract Customer Data'].json.customer_email }}\",\n  \"database_provisioned\": true\n}",
+        "options": {}
+      },
+      "id": "e5f6a7b8-c9d0-1234-5555-000000000010",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [2220, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract Customer Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Customer Data": {
+      "main": [
+        [
+          {
+            "node": "Validate Server",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Server": {
+      "main": [
+        [
+          {
+            "node": "Create Setup Folder",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Setup Folder": {
+      "main": [
+        [
+          {
+            "node": "Write Welcome File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Welcome File": {
+      "main": [
+        [
+          {
+            "node": "Provision Database",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Provision Database": {
+      "main": [
+        [
+          {
+            "node": "Write Database Credentials",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Database Credentials": {
+      "main": [
+        [
+          {
+            "node": "Prepare Email Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Prepare Email Data": {
+      "main": [
+        [
+          {
+            "node": "Send Welcome Email",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Welcome Email": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {}
+}

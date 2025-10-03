@@ -116,7 +116,20 @@ Deploy config files when Git repository updates:
 3. Pterodactyl: Write File
 4. Pterodactyl: Send Command (reload config)
 
-More examples coming in the `examples/` directory.
+## Example Workflows
+
+Check out the [`examples/`](./examples/) directory for **6 production-ready workflow templates**:
+
+- 🔄 **[Automated Server Backup](./examples/01-automated-server-backup/)** - Daily scheduled backups with verification
+- 📊 **[Server Resource Monitoring](./examples/02-server-resource-monitoring/)** - Real-time CPU/memory alerting
+- 🚀 **[File Deployment Pipeline](./examples/03-file-deployment-ci-cd/)** - Git-based CI/CD automation
+- 🗄️ **[Database Provisioning](./examples/04-database-provisioning/)** - Automated database creation
+- 👤 **[User Onboarding](./examples/05-user-onboarding/)** - Complete customer setup automation
+- 🏥 **[Health Check Auto-Recovery](./examples/06-health-check-auto-recovery/)** - Self-healing server monitoring
+
+Each example includes a complete, importable workflow JSON file and comprehensive documentation. Perfect for learning or jumpstarting your automation projects!
+
+**[Browse all examples →](./examples/)**
 
 ## Resources
 
