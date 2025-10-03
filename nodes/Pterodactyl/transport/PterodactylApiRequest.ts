@@ -5,29 +5,6 @@ import {
 	IHttpRequestOptions,
 } from 'n8n-workflow';
 
-interface RateLimitState {
-	requestCount: number;
-	windowStart: number;
-}
-
-// Rate limit state storage per credential
-const rateLimitState = new Map<string, RateLimitState>();
-
-// Maximum age for rate limit entries (10 minutes) - cleanup happens lazily
-const ENTRY_MAX_AGE = 10 * 60 * 1000;
-
-/**
- * Lazy cleanup of stale rate limit entries to prevent memory leaks
- * Called during rate limit checks rather than on a timer
- */
-function cleanupStaleRateLimitEntries(now: number): void {
-	for (const [key, state] of rateLimitState.entries()) {
-		if (now - state.windowStart > ENTRY_MAX_AGE) {
-			rateLimitState.delete(key);
-		}
-	}
-}
-
 /**
  * Enhance error message with helpful context based on HTTP status code
  */
@@ -44,6 +21,9 @@ function enhanceErrorMessage(baseMessage: string, statusCode?: number): string {
 		errorMessage += ' - Server suspended, power action in progress, or would exceed disk limits.';
 	} else if (statusCode === 422) {
 		errorMessage += ' - Validation error. Check input parameters.';
+	} else if (statusCode === 429) {
+		errorMessage +=
+			' - Rate limit exceeded. Enable "Retry On Fail" in node settings (5 tries, 5000ms wait).';
 	} else if (statusCode === 500) {
 		errorMessage += ' - Pterodactyl panel error. Check panel logs.';
 	} else if (statusCode === 502) {
@@ -54,7 +34,7 @@ function enhanceErrorMessage(baseMessage: string, statusCode?: number): string {
 }
 
 /**
- * Make authenticated HTTP request to Pterodactyl API with rate limiting and retry logic
+ * Make authenticated HTTP request to Pterodactyl API
  */
 export async function pterodactylApiRequest(
 	this: IExecuteFunctions,
@@ -99,100 +79,48 @@ export async function pterodactylApiRequest(
 		...option,
 	};
 
-	// Rate limiting check
-	const credentialKey = `${panelUrl}-${credentials.apiKey}`;
-	const now = Date.now();
-	const windowDuration = 60000; // 1 minute
-	// Default rate limit is 240/min for both APIs (configurable via APP_API_CLIENT_RATELIMIT and APP_API_APPLICATION_RATELIMIT)
-	const maxRequests = 240;
+	try {
+		const response = await this.helpers.httpRequest(options);
 
-	// Lazy cleanup of stale entries (prevents memory leaks)
-	cleanupStaleRateLimitEntries(now);
-
-	let limitState = rateLimitState.get(credentialKey);
-	if (!limitState || now - limitState.windowStart > windowDuration) {
-		limitState = { requestCount: 0, windowStart: now };
-		rateLimitState.set(credentialKey, limitState);
-	}
-
-	if (limitState.requestCount >= maxRequests) {
-		const waitTime = Math.max(0, windowDuration - (now - limitState.windowStart));
-		if (waitTime > 0) {
-			await new Promise((resolve) => setTimeout(resolve, waitTime));
-		}
-		limitState.requestCount = 0;
-		limitState.windowStart = Date.now();
-	}
-
-	limitState.requestCount++;
-
-	// Retry logic for 429 errors with exponential backoff
-	let retries = 0;
-	const maxRetries = 5;
-	const baseDelay = 5000;
-
-	while (retries <= maxRetries) {
-		try {
-			const response = await this.helpers.httpRequest(options);
-
-			// Check for error status codes when ignoreHttpStatusErrors is true
-			if (response.statusCode && response.statusCode >= 400) {
-				// Handle 429 with retry logic
-				if (response.statusCode === 429 && retries < maxRetries) {
-					const delay = baseDelay * Math.pow(2, retries);
-					await new Promise((resolve) => setTimeout(resolve, delay));
-					retries++;
-					continue;
-				}
-
-				// Parse Pterodactyl error format
-				if (response.body?.errors) {
-					const pterodactylError = response.body.errors[0];
-					const baseMessage = `Pterodactyl API Error [${pterodactylError.code}]: ${pterodactylError.detail}`;
-					const errorMessage = enhanceErrorMessage(baseMessage, response.statusCode);
-					throw new Error(errorMessage);
-				}
-
-				// Handle common HTTP status codes with user-friendly messages
-				const baseMessage = response.statusMessage || `HTTP ${response.statusCode} error`;
-				const errorMessage = enhanceErrorMessage(baseMessage, response.statusCode);
-
-				const error = new Error(errorMessage);
-				(error as any).statusCode = response.statusCode;
-				throw error;
-			}
-
-			// Return body for successful responses
-			return response.body;
-		} catch (error: any) {
-			// Handle legacy error format (fallback for network errors, etc.)
-			if (error.statusCode === 429 && retries < maxRetries) {
-				const delay = baseDelay * Math.pow(2, retries);
-				await new Promise((resolve) => setTimeout(resolve, delay));
-				retries++;
-				continue;
-			}
-
-			// Parse Pterodactyl error format from error.response
-			if (error.response?.body?.errors) {
-				const pterodactylError = error.response.body.errors[0];
+		// Check for error status codes when ignoreHttpStatusErrors is true
+		if (response.statusCode && response.statusCode >= 400) {
+			// Parse Pterodactyl error format
+			if (response.body?.errors) {
+				const pterodactylError = response.body.errors[0];
 				const baseMessage = `Pterodactyl API Error [${pterodactylError.code}]: ${pterodactylError.detail}`;
-				const errorMessage = enhanceErrorMessage(baseMessage, error.statusCode);
+				const errorMessage = enhanceErrorMessage(baseMessage, response.statusCode);
 				throw new Error(errorMessage);
 			}
 
-			// Create clean error without circular references
-			const cleanError = new Error(error.message || 'Unknown error occurred');
-			cleanError.name = error.name || 'Error';
-			cleanError.stack = error.stack;
-			if (error.statusCode) {
-				(cleanError as any).statusCode = error.statusCode;
-			}
-			throw cleanError;
-		}
-	}
+			// Handle common HTTP status codes with user-friendly messages
+			const baseMessage = response.statusMessage || `HTTP ${response.statusCode} error`;
+			const errorMessage = enhanceErrorMessage(baseMessage, response.statusCode);
 
-	throw new Error('Max retries exceeded for rate-limited request');
+			const error = new Error(errorMessage);
+			(error as any).statusCode = response.statusCode;
+			throw error;
+		}
+
+		// Return body for successful responses
+		return response.body;
+	} catch (error: any) {
+		// Parse Pterodactyl error format from error.response
+		if (error.response?.body?.errors) {
+			const pterodactylError = error.response.body.errors[0];
+			const baseMessage = `Pterodactyl API Error [${pterodactylError.code}]: ${pterodactylError.detail}`;
+			const errorMessage = enhanceErrorMessage(baseMessage, error.statusCode);
+			throw new Error(errorMessage);
+		}
+
+		// Create clean error without circular references
+		const cleanError = new Error(error.message || 'Unknown error occurred');
+		cleanError.name = error.name || 'Error';
+		cleanError.stack = error.stack;
+		if (error.statusCode) {
+			(cleanError as any).statusCode = error.statusCode;
+		}
+		throw cleanError;
+	}
 }
 
 /**
