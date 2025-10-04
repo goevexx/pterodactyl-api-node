@@ -138,7 +138,7 @@
         "operation": "write",
         "serverId": "={{ $node['Set Provisioning Parameters'].json.server_id }}",
         "filePath": "/.env.database",
-        "fileContent": "=# Database Configuration\n# Auto-generated: {{ $now.toISO() }}\n\nDB_HOST={{ $json.host.address }}\nDB_PORT={{ $json.host.port }}\nDB_DATABASE={{ $json.name }}\nDB_USERNAME={{ $json.username }}\nDB_PASSWORD={{ $json.connections_from }}\n\n# Connection String\nDATABASE_URL=mysql://{{ $json.username }}:{{ $json.password }}@{{ $json.host.address }}:{{ $json.host.port }}/{{ $json.name }}\n"
+        "fileContent": "=# Database Configuration\n# Auto-generated: {{ $now.toISO() }}\n\nDB_HOST={{ $json.host.address }}\nDB_PORT={{ $json.host.port }}\nDB_DATABASE={{ $json.name }}\nDB_USERNAME={{ $json.username }}\nDB_PASSWORD={{ $json.password }}\n\n# Connection String\nDATABASE_URL=mysql://{{ $json.username }}:{{ $json.password }}@{{ $json.host.address }}:{{ $json.host.port }}/{{ $json.name }}\n"
       },
       "id": "d4e5f6a7-b8c9-0123-4444-000000000007",
       "name": "Write Credentials to File",
