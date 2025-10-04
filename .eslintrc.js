@@ -13,5 +13,5 @@ module.exports = {
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'@typescript-eslint/no-non-null-assertion': 'warn',
 	},
-	ignorePatterns: ['dist', 'node_modules', '*.js'],
+	ignorePatterns: ['dist', 'node_modules', '*.js', 'tests/**/*'],
 };
