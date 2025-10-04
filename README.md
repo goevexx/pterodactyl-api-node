@@ -2,6 +2,7 @@
 
 [![npm version](https://img.shields.io/npm/v/n8n-nodes-pterodactyl.svg)](https://www.npmjs.com/package/n8n-nodes-pterodactyl)
 [![npm downloads](https://img.shields.io/npm/dm/n8n-nodes-pterodactyl.svg)](https://www.npmjs.com/package/n8n-nodes-pterodactyl)
+[![Test Coverage](https://img.shields.io/badge/coverage-85.71%25-brightgreen.svg)](https://github.com/goevexx/pterodactyl-api-node)
 [![GitHub issues](https://img.shields.io/github/issues/goevexx/pterodactyl-api-node.svg)](https://github.com/goevexx/pterodactyl-api-node/issues)
 [![GitHub stars](https://img.shields.io/github/stars/goevexx/pterodactyl-api-node.svg)](https://github.com/goevexx/pterodactyl-api-node/stargazers)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
