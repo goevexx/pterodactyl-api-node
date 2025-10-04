@@ -4,9 +4,9 @@ This document outlines the planned development for the n8n Pterodactyl Node. Thi
 
 ## Current Status
 
-✅ **v1.0.0 - Core Functionality Complete**
+✅ **v1.0.2 - Published & Available** (October 2025)
 
-All essential Pterodactyl Panel operations are implemented and tested:
+All essential Pterodactyl Panel operations are implemented and published:
 
 - Server Management (5 operations)
 - File Operations (8 operations)
@@ -16,67 +16,110 @@ All essential Pterodactyl Panel operations are implemented and tested:
 
 **Total: 29 operations across 5 resources**
 
-## Upcoming Milestones
+**Package Status:**
+- ✅ Published on npm: [n8n-nodes-pterodactyl](https://www.npmjs.com/package/n8n-nodes-pterodactyl) v1.0.2
+- ✅ Passes n8n security scanner
+- ⚠️ n8n Community Nodes verification: **LOW PRIORITY** (requires demo video, package works perfectly on dedicated n8n)
 
-### Publication & Distribution
+## Completed Milestones
 
-**Goal:** Make the node easily accessible to the n8n community
+### ✅ Tier 1: Publication & Distribution
 
-- [x] Set up GitHub Actions CI/CD
+- ✅ Set up GitHub Actions CI/CD
   - Automated testing on pull requests
   - Automated npm publishing on releases
-  - PR validation
-- [ ] Publish to npm registry
-- [ ] Submit to n8n Community Nodes catalog
+  - PR validation (Validate PR, Test, Claude Code workflows)
+- ✅ Publish to npm registry (v1.0.0 Oct 2, v1.0.1 Oct 2, v1.0.2 Oct 3)
+- ✅ Fix n8n verification blocker (removed setTimeout for rate limiting/retry)
+- 🔄 Submit to n8n Community Nodes catalog - **On hold** (low priority, requires demo video)
+
+## Next Up: Tier 2
 
 ### Documentation & Examples
 
 **Goal:** Help users get started quickly and discover powerful use cases
+**Priority:** ⭐⭐⭐⭐ HIGH
+**Timeline:** Next milestone
 
-- [ ] Create example workflows
-  - Automated server backups
-  - Server monitoring and alerts
-  - Automated file deployment
-  - Database provisioning
-  - User onboarding automation
-  - Health check workflows
-- [ ] Comprehensive usage documentation
-- [ ] Video tutorials (community contributions welcome!)
+- [ ] Create 6 example workflows
+  - Automated server backups (daily schedule)
+  - Server monitoring and alerts (resource thresholds)
+  - Automated file deployment (CI/CD pipeline)
+  - Database provisioning automation
+  - User onboarding workflow
+  - Health check with auto-recovery
+- [ ] Workflow documentation for each example
+- [ ] Usage guides and tutorials
 
-### Testing & Quality
+## Future Milestones
+
+### Tier 3: Testing & Quality (Month 1)
 
 **Goal:** Ensure reliability and maintainability
+**Priority:** ⭐⭐⭐ MEDIUM-HIGH
+**Timeline:** ~Month 1 (November 2025)
 
-- [ ] Unit tests for core functionality (80%+ coverage)
+- [ ] Unit tests for core functionality
+  - Transport layer (API requests, error handling)
+  - Credentials validation
+  - Operation parameter validation
+  - Target: 80%+ code coverage
 - [ ] Integration tests with test Pterodactyl instance
-- [ ] Automated test workflows
+  - End-to-end operation testing
+  - Authentication flows
+  - Error scenarios
+- [ ] Automated test workflows in CI/CD
+- [ ] Coverage reporting and badges
 
-### Advanced Features (Based on Demand)
+**Note:** Test tasks need updating since rate limiting/retry logic was removed in v1.0.2
 
-**User Management**
+### Tier 4: Advanced Features - User Management (Month 2-3)
 
-- Server-level subuser operations (permissions, invites)
-- Panel-wide user management (Application API)
+**Priority:** ⭐⭐⭐ MEDIUM-HIGH
+**Timeline:** Based on community demand
 
-**Server Automation**
+- [ ] Server-level subuser operations
+  - List, create, get, update, delete subusers
+  - Permission management system
+  - Use case: Team access control, contractor permissions
+- [ ] Panel-wide user management (Application API)
+  - Full user CRUD operations
+  - Use case: Hosting provider automation
 
-- Schedule management (cron tasks)
-- Startup variable configuration
-- Network allocation management
+### Tier 5: Advanced Features - Server Automation (Future)
 
-**Administrative Operations**
+**Priority:** ⭐⭐ MEDIUM
+**Timeline:** Based on community demand
 
-- Nest & Egg browsing (server types/configs)
-- Location management
-- Node management (infrastructure)
-- Full server CRUD (Application API)
+- [ ] Schedule management (cron tasks)
+  - Create automated server tasks
+  - Task chaining support
+- [ ] Startup variable configuration
+  - Dynamic server configuration
+  - Environment variable management
+- [ ] Network allocation management
+  - Port and IP assignment
+  - Multi-IP server configuration
+
+### Tier 6: Administrative Operations (Future)
+
+**Priority:** ⭐ LOW (Niche - hosting providers only)
+**Timeline:** As requested by community
+
+- [ ] Nest & Egg browsing (server types/configs)
+- [ ] Location management (geographic organization)
+- [ ] Node management (infrastructure)
+- [ ] Full server CRUD (Application API)
 
 ## Version Planning
 
-- **v1.0.x** - Bug fixes and documentation improvements
-- **v1.1.x** - User management features
-- **v1.2.x** - Advanced automation (schedules, startup vars)
-- **v2.0.x** - Administrative operations (Application API focus)
+- ✅ **v1.0.0** (Oct 2, 2025) - Initial publication
+- ✅ **v1.0.1** (Oct 2, 2025) - Repository URL fixes
+- ✅ **v1.0.2** (Oct 3, 2025) - n8n verification fixes (removed setTimeout)
+- 🔄 **v1.1.0** (Next) - Example workflows + enhanced documentation
+- 📅 **v1.2.0** (Month 1) - Unit tests + Integration tests + Code quality
+- 📅 **v1.3.0** (Month 2-3) - User management features (based on demand)
+- 📅 **v2.0.0** (Quarter 2) - Advanced automation + Breaking changes (if any)
 
 ## Contributing
 
@@ -95,5 +138,6 @@ This is a community-maintained project. While we strive for quality, this node i
 
 ---
 
-_Last updated: 2025-10-01_
-_Status: Active development_
+_Last updated: 2025-10-03_
+_Current version: v1.0.2_
+_Status: Published & Active Development_
