@@ -1,0 +1,296 @@
+{
+  "name": "Health Check with Auto-Recovery",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 10
+            }
+          ]
+        }
+      },
+      "id": "f6a7b8c9-d0e1-2345-6666-000000000001",
+      "name": "Every 10 Minutes",
+      "type": "n8n-nodes-base.schedule",
+      "typeVersion": 1.1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "server",
+        "operation": "getResources",
+        "serverId": "={{ $env.SERVER_ID || 'your-server-id' }}"
+      },
+      "id": "f6a7b8c9-d0e1-2345-6666-000000000002",
+      "name": "Check Server Status",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [460, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "server_running",
+              "leftValue": "={{ $json.current_state }}",
+              "rightValue": "running",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f6a7b8c9-d0e1-2345-6666-000000000003",
+      "name": "Is Server Running?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "log_entry",
+              "name": "log_entry",
+              "value": "={\n  \"timestamp\": \"{{ $now.toISO() }}\",\n  \"status\": \"healthy\",\n  \"state\": \"{{ $json.current_state }}\",\n  \"cpu\": {{ $json.resources.cpu_absolute }},\n  \"memory_mb\": {{ ($json.resources.memory_bytes / 1024 / 1024).toFixed(0) }},\n  \"uptime\": {{ $json.resources.uptime }}\n}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "f6a7b8c9-d0e1-2345-6666-000000000004",
+      "name": "Log Healthy Status",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [900, 200]
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "server",
+        "operation": "sendPowerAction",
+        "serverId": "={{ $env.SERVER_ID || 'your-server-id' }}",
+        "action": "restart"
+      },
+      "id": "f6a7b8c9-d0e1-2345-6666-000000000005",
+      "name": "Restart Server",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [900, 400],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "minutes"
+      },
+      "id": "f6a7b8c9-d0e1-2345-6666-000000000006",
+      "name": "Wait for Restart",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1120, 400],
+      "webhookId": "00000000-0000-0000-0000-000000000004"
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "server",
+        "operation": "getResources",
+        "serverId": "={{ $env.SERVER_ID || 'your-server-id' }}"
+      },
+      "id": "f6a7b8c9-d0e1-2345-6666-000000000007",
+      "name": "Check Status After Restart",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [1340, 400],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "recovery_successful",
+              "leftValue": "={{ $json.current_state }}",
+              "rightValue": "running",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "f6a7b8c9-d0e1-2345-6666-000000000008",
+      "name": "Recovery Successful?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1560, 400]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-webhook-url.com/server-recovered",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"alert_type\": \"server_recovered\",\n  \"severity\": \"info\",\n  \"server_id\": \"{{ $env.SERVER_ID }}\",\n  \"message\": \"Server automatically restarted and recovered successfully\",\n  \"previous_state\": \"{{ $node['Check Server Status'].json.current_state }}\",\n  \"current_state\": \"{{ $json.current_state }}\",\n  \"downtime_minutes\": 2,\n  \"timestamp\": \"{{ $now.toISO() }}\"\n}",
+        "options": {}
+      },
+      "id": "f6a7b8c9-d0e1-2345-6666-000000000009",
+      "name": "Send Recovery Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1780, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-webhook-url.com/server-critical",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"alert_type\": \"server_down\",\n  \"severity\": \"critical\",\n  \"server_id\": \"{{ $env.SERVER_ID }}\",\n  \"message\": \"Server failed to recover after automatic restart - manual intervention required\",\n  \"initial_state\": \"{{ $node['Check Server Status'].json.current_state }}\",\n  \"state_after_restart\": \"{{ $json.current_state }}\",\n  \"restart_attempted\": true,\n  \"timestamp\": \"{{ $now.toISO() }}\"\n}",
+        "options": {}
+      },
+      "id": "f6a7b8c9-d0e1-2345-6666-000000000010",
+      "name": "Send Critical Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1780, 500]
+    }
+  ],
+  "connections": {
+    "Every 10 Minutes": {
+      "main": [
+        [
+          {
+            "node": "Check Server Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Server Status": {
+      "main": [
+        [
+          {
+            "node": "Is Server Running?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Is Server Running?": {
+      "main": [
+        [
+          {
+            "node": "Log Healthy Status",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Restart Server",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Restart Server": {
+      "main": [
+        [
+          {
+            "node": "Wait for Restart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait for Restart": {
+      "main": [
+        [
+          {
+            "node": "Check Status After Restart",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Status After Restart": {
+      "main": [
+        [
+          {
+            "node": "Recovery Successful?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Recovery Successful?": {
+      "main": [
+        [
+          {
+            "node": "Send Recovery Notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Critical Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {}
+}

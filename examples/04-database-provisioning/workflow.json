@@ -1,0 +1,273 @@
+{
+  "name": "Database Provisioning",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "d4e5f6a7-b8c9-0123-4444-000000000001",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "server_id",
+              "name": "server_id",
+              "value": "={{ $json.server_id || 'your-server-id' }}",
+              "type": "string"
+            },
+            {
+              "id": "database_name",
+              "name": "database_name",
+              "value": "={{ $json.database_name || 'app_db_' + $now.toFormat('yyyyMMdd_HHmmss') }}",
+              "type": "string"
+            },
+            {
+              "id": "remote_access",
+              "name": "remote_access",
+              "value": "={{ $json.remote_access || '%' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "d4e5f6a7-b8c9-0123-4444-000000000002",
+      "name": "Set Provisioning Parameters",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "server",
+        "operation": "get",
+        "serverId": "={{ $json.server_id }}"
+      },
+      "id": "d4e5f6a7-b8c9-0123-4444-000000000003",
+      "name": "Validate Server Exists",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [680, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "database",
+        "operation": "list",
+        "serverId": "={{ $node['Set Provisioning Parameters'].json.server_id }}"
+      },
+      "id": "d4e5f6a7-b8c9-0123-4444-000000000004",
+      "name": "List Existing Databases",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [900, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "database_limit",
+              "leftValue": "={{ $json.length }}",
+              "rightValue": "={{ $node['Validate Server Exists'].json.feature_limits.databases }}",
+              "operator": {
+                "type": "number",
+                "operation": "smaller"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "d4e5f6a7-b8c9-0123-4444-000000000005",
+      "name": "Can Create Database?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "database",
+        "operation": "create",
+        "serverId": "={{ $node['Set Provisioning Parameters'].json.server_id }}",
+        "databaseName": "={{ $node['Set Provisioning Parameters'].json.database_name }}",
+        "remote": "={{ $node['Set Provisioning Parameters'].json.remote_access }}"
+      },
+      "id": "d4e5f6a7-b8c9-0123-4444-000000000006",
+      "name": "Create Database",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [1340, 200],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "file",
+        "operation": "write",
+        "serverId": "={{ $node['Set Provisioning Parameters'].json.server_id }}",
+        "filePath": "/.env.database",
+        "fileContent": "=# Database Configuration\n# Auto-generated: {{ $now.toISO() }}\n\nDB_HOST={{ $json.host.address }}\nDB_PORT={{ $json.host.port }}\nDB_DATABASE={{ $json.name }}\nDB_USERNAME={{ $json.username }}\nDB_PASSWORD={{ $json.password }}\n\n# Connection String\nDATABASE_URL=mysql://{{ $json.username }}:{{ $json.password }}@{{ $json.host.address }}:{{ $json.host.port }}/{{ $json.name }}\n"
+      },
+      "id": "d4e5f6a7-b8c9-0123-4444-000000000007",
+      "name": "Write Credentials to File",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [1560, 200],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-webhook-url.com/database-provisioned",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"status\": \"success\",\n  \"server_id\": \"{{ $node['Set Provisioning Parameters'].json.server_id }}\",\n  \"database_name\": \"{{ $node['Create Database'].json.name }}\",\n  \"database_host\": \"{{ $node['Create Database'].json.host.address }}\",\n  \"database_port\": {{ $node['Create Database'].json.host.port }},\n  \"database_username\": \"{{ $node['Create Database'].json.username }}\",\n  \"credentials_file\": \"/.env.database\",\n  \"timestamp\": \"{{ $now.toISO() }}\"\n}",
+        "options": {}
+      },
+      "id": "d4e5f6a7-b8c9-0123-4444-000000000008",
+      "name": "Send Success Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1780, 200]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-webhook-url.com/database-limit-reached",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"status\": \"error\",\n  \"error\": \"database_limit_reached\",\n  \"server_id\": \"{{ $node['Set Provisioning Parameters'].json.server_id }}\",\n  \"current_count\": {{ $node['List Existing Databases'].json.length }},\n  \"limit\": {{ $node['Validate Server Exists'].json.feature_limits.databases }},\n  \"timestamp\": \"{{ $now.toISO() }}\"\n}",
+        "options": {}
+      },
+      "id": "d4e5f6a7-b8c9-0123-4444-000000000009",
+      "name": "Send Limit Error",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1340, 400]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "Set Provisioning Parameters",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Set Provisioning Parameters": {
+      "main": [
+        [
+          {
+            "node": "Validate Server Exists",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Validate Server Exists": {
+      "main": [
+        [
+          {
+            "node": "List Existing Databases",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List Existing Databases": {
+      "main": [
+        [
+          {
+            "node": "Can Create Database?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Can Create Database?": {
+      "main": [
+        [
+          {
+            "node": "Create Database",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Limit Error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Database": {
+      "main": [
+        [
+          {
+            "node": "Write Credentials to File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write Credentials to File": {
+      "main": [
+        [
+          {
+            "node": "Send Success Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {}
+}

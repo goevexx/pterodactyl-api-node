@@ -1,0 +1,262 @@
+{
+  "name": "Automated Server Backup",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "hours",
+              "hoursInterval": 24
+            }
+          ]
+        },
+        "triggerTimes": {
+          "item": [
+            {
+              "hour": 3,
+              "minute": 0
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-e5f6-7890-1111-000000000001",
+      "name": "Daily at 3 AM",
+      "type": "n8n-nodes-base.schedule",
+      "typeVersion": 1.1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "server",
+        "operation": "list",
+        "returnAll": true
+      },
+      "id": "a1b2c3d4-e5f6-7890-1111-000000000002",
+      "name": "List All Servers",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [460, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "batchSize": 1,
+        "options": {}
+      },
+      "id": "a1b2c3d4-e5f6-7890-1111-000000000003",
+      "name": "Process One Server at a Time",
+      "type": "n8n-nodes-base.splitInBatches",
+      "typeVersion": 3,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "backup",
+        "operation": "create",
+        "serverId": "={{ $json.identifier }}"
+      },
+      "id": "a1b2c3d4-e5f6-7890-1111-000000000004",
+      "name": "Create Backup",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [900, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 5,
+        "unit": "minutes"
+      },
+      "id": "a1b2c3d4-e5f6-7890-1111-000000000005",
+      "name": "Wait 5 Minutes",
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [1120, 300],
+      "webhookId": "00000000-0000-0000-0000-000000000001"
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "backup",
+        "operation": "get",
+        "serverId": "={{ $json.identifier }}",
+        "backupId": "={{ $node['Create Backup'].json.uuid }}"
+      },
+      "id": "a1b2c3d4-e5f6-7890-1111-000000000006",
+      "name": "Check Backup Status",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [1340, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "string": [
+            {
+              "value1": "={{ $json.is_successful }}",
+              "operation": "equals",
+              "value2": "true"
+            }
+          ]
+        }
+      },
+      "id": "a1b2c3d4-e5f6-7890-1111-000000000007",
+      "name": "Backup Successful?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 1,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "url": "https://your-webhook-url.com/backup-success",
+        "options": {},
+        "bodyParametersJson": "={\n  \"server\": \"{{ $node['Create Backup'].json.server_name }}\",\n  \"backup_id\": \"{{ $node['Create Backup'].json.uuid }}\",\n  \"status\": \"success\",\n  \"timestamp\": \"{{ $now.toISO() }}\"\n}"
+      },
+      "id": "a1b2c3d4-e5f6-7890-1111-000000000008",
+      "name": "Send Success Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1780, 200]
+    },
+    {
+      "parameters": {
+        "url": "https://your-webhook-url.com/backup-failure",
+        "options": {},
+        "bodyParametersJson": "={\n  \"server\": \"{{ $node['Create Backup'].json.server_name }}\",\n  \"backup_id\": \"{{ $node['Create Backup'].json.uuid }}\",\n  \"status\": \"failed\",\n  \"timestamp\": \"{{ $now.toISO() }}\"\n}"
+      },
+      "id": "a1b2c3d4-e5f6-7890-1111-000000000009",
+      "name": "Send Failure Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1780, 400]
+    }
+  ],
+  "connections": {
+    "Daily at 3 AM": {
+      "main": [
+        [
+          {
+            "node": "List All Servers",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "List All Servers": {
+      "main": [
+        [
+          {
+            "node": "Process One Server at a Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Process One Server at a Time": {
+      "main": [
+        [
+          {
+            "node": "Create Backup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Backup": {
+      "main": [
+        [
+          {
+            "node": "Wait 5 Minutes",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait 5 Minutes": {
+      "main": [
+        [
+          {
+            "node": "Check Backup Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Check Backup Status": {
+      "main": [
+        [
+          {
+            "node": "Backup Successful?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Backup Successful?": {
+      "main": [
+        [
+          {
+            "node": "Send Success Notification",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Send Failure Alert",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Success Notification": {
+      "main": [
+        [
+          {
+            "node": "Process One Server at a Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Failure Alert": {
+      "main": [
+        [
+          {
+            "node": "Process One Server at a Time",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {}
+}

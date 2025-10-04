@@ -1,0 +1,258 @@
+{
+  "name": "Server Resource Monitoring",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "minutes",
+              "minutesInterval": 5
+            }
+          ]
+        }
+      },
+      "id": "b2c3d4e5-f6a7-8901-2222-000000000001",
+      "name": "Every 5 Minutes",
+      "type": "n8n-nodes-base.schedule",
+      "typeVersion": 1.1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "server",
+        "operation": "get",
+        "serverId": "={{ $env.SERVER_ID || 'your-server-id' }}"
+      },
+      "id": "b2c3d4e5-f6a7-8901-2222-000000000002",
+      "name": "Get Server Details",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [460, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "server",
+        "operation": "getResources",
+        "serverId": "={{ $json.identifier }}"
+      },
+      "id": "b2c3d4e5-f6a7-8901-2222-000000000003",
+      "name": "Get Server Resources",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [680, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cpu_usage",
+              "name": "cpu_usage",
+              "value": "={{ $json.resources.cpu_absolute }}",
+              "type": "number"
+            },
+            {
+              "id": "memory_usage_mb",
+              "name": "memory_usage_mb",
+              "value": "={{ $json.resources.memory_bytes / 1024 / 1024 }}",
+              "type": "number"
+            },
+            {
+              "id": "memory_limit_mb",
+              "name": "memory_limit_mb",
+              "value": "={{ $json.resources.memory_limit_bytes / 1024 / 1024 }}",
+              "type": "number"
+            },
+            {
+              "id": "memory_percent",
+              "name": "memory_percent",
+              "value": "={{ ($json.resources.memory_bytes / $json.resources.memory_limit_bytes) * 100 }}",
+              "type": "number"
+            },
+            {
+              "id": "disk_usage_mb",
+              "name": "disk_usage_mb",
+              "value": "={{ $json.resources.disk_bytes / 1024 / 1024 }}",
+              "type": "number"
+            },
+            {
+              "id": "server_name",
+              "name": "server_name",
+              "value": "={{ $node['Get Server Details'].json.name }}",
+              "type": "string"
+            },
+            {
+              "id": "server_state",
+              "name": "server_state",
+              "value": "={{ $json.current_state }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b2c3d4e5-f6a7-8901-2222-000000000004",
+      "name": "Extract Metrics",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [900, 300]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict"
+          },
+          "conditions": [
+            {
+              "id": "cpu_threshold",
+              "leftValue": "={{ $json.cpu_usage }}",
+              "rightValue": 80,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            },
+            {
+              "id": "memory_threshold",
+              "leftValue": "={{ $json.memory_percent }}",
+              "rightValue": 90,
+              "operator": {
+                "type": "number",
+                "operation": "gt"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "id": "b2c3d4e5-f6a7-8901-2222-000000000005",
+      "name": "High Resource Usage?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [1120, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-webhook-url.com/alerts",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"alert_type\": \"high_resource_usage\",\n  \"server\": \"{{ $json.server_name }}\",\n  \"cpu_usage\": {{ $json.cpu_usage }},\n  \"memory_usage_percent\": {{ $json.memory_percent.toFixed(2) }},\n  \"memory_usage_mb\": {{ $json.memory_usage_mb.toFixed(0) }},\n  \"memory_limit_mb\": {{ $json.memory_limit_mb.toFixed(0) }},\n  \"disk_usage_mb\": {{ $json.disk_usage_mb.toFixed(0) }},\n  \"server_state\": \"{{ $json.server_state }}\",\n  \"timestamp\": \"{{ $now.toISO() }}\",\n  \"severity\": \"{{ $json.cpu_usage > 90 || $json.memory_percent > 95 ? 'critical' : 'warning' }}\"\n}",
+        "options": {}
+      },
+      "id": "b2c3d4e5-f6a7-8901-2222-000000000006",
+      "name": "Send Alert",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1340, 200]
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "log_entry",
+              "name": "log_entry",
+              "value": "={\n  \"timestamp\": \"{{ $now.toISO() }}\",\n  \"server\": \"{{ $json.server_name }}\",\n  \"status\": \"healthy\",\n  \"cpu\": {{ $json.cpu_usage }},\n  \"memory_percent\": {{ $json.memory_percent.toFixed(2) }},\n  \"state\": \"{{ $json.server_state }}\"\n}",
+              "type": "object"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "b2c3d4e5-f6a7-8901-2222-000000000007",
+      "name": "Log Healthy Status",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [1340, 400]
+    }
+  ],
+  "connections": {
+    "Every 5 Minutes": {
+      "main": [
+        [
+          {
+            "node": "Get Server Details",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Server Details": {
+      "main": [
+        [
+          {
+            "node": "Get Server Resources",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get Server Resources": {
+      "main": [
+        [
+          {
+            "node": "Extract Metrics",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Metrics": {
+      "main": [
+        [
+          {
+            "node": "High Resource Usage?",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "High Resource Usage?": {
+      "main": [
+        [
+          {
+            "node": "Send Alert",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Log Healthy Status",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {}
+}

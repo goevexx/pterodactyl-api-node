@@ -1,0 +1,249 @@
+{
+  "name": "File Deployment Pipeline",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "pterodactyl-deploy",
+        "responseMode": "responseNode",
+        "options": {}
+      },
+      "id": "c3d4e5f6-a7b8-9012-3333-000000000001",
+      "name": "Webhook Trigger",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 1.1,
+      "position": [240, 300],
+      "webhookId": "00000000-0000-0000-0000-000000000002"
+    },
+    {
+      "parameters": {
+        "mode": "manual",
+        "duplicateItem": false,
+        "assignments": {
+          "assignments": [
+            {
+              "id": "server_id",
+              "name": "server_id",
+              "value": "={{ $json.body.server_id }}",
+              "type": "string"
+            },
+            {
+              "id": "file_url",
+              "name": "file_url",
+              "value": "={{ $json.body.file_url }}",
+              "type": "string"
+            },
+            {
+              "id": "file_path",
+              "name": "file_path",
+              "value": "={{ $json.body.file_path || '/config/server.properties' }}",
+              "type": "string"
+            },
+            {
+              "id": "reload_command",
+              "name": "reload_command",
+              "value": "={{ $json.body.reload_command || 'reload' }}",
+              "type": "string"
+            },
+            {
+              "id": "commit_sha",
+              "name": "commit_sha",
+              "value": "={{ $json.body.commit_sha || $json.body.after || 'unknown' }}",
+              "type": "string"
+            },
+            {
+              "id": "commit_message",
+              "name": "commit_message",
+              "value": "={{ $json.body.commit_message || $json.body.head_commit?.message || 'Configuration update' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "c3d4e5f6-a7b8-9012-3333-000000000002",
+      "name": "Extract Deployment Info",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.3,
+      "position": [460, 300]
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.file_url }}",
+        "options": {}
+      },
+      "id": "c3d4e5f6-a7b8-9012-3333-000000000003",
+      "name": "Download File",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "backup",
+        "operation": "create",
+        "serverId": "={{ $node['Extract Deployment Info'].json.server_id }}"
+      },
+      "id": "c3d4e5f6-a7b8-9012-3333-000000000004",
+      "name": "Create Safety Backup",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [900, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "file",
+        "operation": "write",
+        "serverId": "={{ $node['Extract Deployment Info'].json.server_id }}",
+        "filePath": "={{ $node['Extract Deployment Info'].json.file_path }}",
+        "fileContent": "={{ $node['Download File'].json.data }}"
+      },
+      "id": "c3d4e5f6-a7b8-9012-3333-000000000005",
+      "name": "Write File to Server",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [1120, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "authentication": "clientApi",
+        "resource": "server",
+        "operation": "sendCommand",
+        "serverId": "={{ $node['Extract Deployment Info'].json.server_id }}",
+        "command": "={{ $node['Extract Deployment Info'].json.reload_command }}"
+      },
+      "id": "c3d4e5f6-a7b8-9012-3333-000000000006",
+      "name": "Execute Reload Command",
+      "type": "n8n-nodes-pterodactyl.pterodactyl",
+      "typeVersion": 1,
+      "position": [1340, 300],
+      "credentials": {
+        "pterodactylApi": {
+          "id": "1",
+          "name": "Pterodactyl Account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://your-webhook-url.com/deployment-success",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"status\": \"success\",\n  \"server_id\": \"{{ $node['Extract Deployment Info'].json.server_id }}\",\n  \"file_path\": \"{{ $node['Extract Deployment Info'].json.file_path }}\",\n  \"commit_sha\": \"{{ $node['Extract Deployment Info'].json.commit_sha }}\",\n  \"commit_message\": \"{{ $node['Extract Deployment Info'].json.commit_message }}\",\n  \"backup_id\": \"{{ $node['Create Safety Backup'].json.uuid }}\",\n  \"timestamp\": \"{{ $now.toISO() }}\"\n}",
+        "options": {}
+      },
+      "id": "c3d4e5f6-a7b8-9012-3333-000000000007",
+      "name": "Send Deployment Notification",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.1,
+      "position": [1560, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "json",
+        "responseBody": "={\n  \"success\": true,\n  \"message\": \"Deployment completed successfully\",\n  \"server_id\": \"{{ $node['Extract Deployment Info'].json.server_id }}\",\n  \"file_path\": \"{{ $node['Extract Deployment Info'].json.file_path }}\",\n  \"backup_id\": \"{{ $node['Create Safety Backup'].json.uuid }}\"\n}",
+        "options": {}
+      },
+      "id": "c3d4e5f6-a7b8-9012-3333-000000000008",
+      "name": "Respond to Webhook",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1780, 300]
+    }
+  ],
+  "connections": {
+    "Webhook Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract Deployment Info",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Deployment Info": {
+      "main": [
+        [
+          {
+            "node": "Download File",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download File": {
+      "main": [
+        [
+          {
+            "node": "Create Safety Backup",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Safety Backup": {
+      "main": [
+        [
+          {
+            "node": "Write File to Server",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Write File to Server": {
+      "main": [
+        [
+          {
+            "node": "Execute Reload Command",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Execute Reload Command": {
+      "main": [
+        [
+          {
+            "node": "Send Deployment Notification",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Send Deployment Notification": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {}
+}
