@@ -3,7 +3,7 @@ module.exports = {
 	parserOptions: {
 		ecmaVersion: 2022,
 		sourceType: 'module',
-		project: './tsconfig.json',
+		project: ['./tsconfig.json', './tsconfig.test.json'],
 	},
 	plugins: ['@typescript-eslint'],
 	extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'prettier'],
@@ -13,5 +13,5 @@ module.exports = {
 		'@typescript-eslint/explicit-module-boundary-types': 'off',
 		'@typescript-eslint/no-non-null-assertion': 'warn',
 	},
-	ignorePatterns: ['dist', 'node_modules', '*.js', 'tests/**/*'],
+	ignorePatterns: ['dist', 'node_modules', '*.js'],
 };
