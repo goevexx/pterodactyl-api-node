@@ -45,14 +45,3 @@ jobs:
           flags: unittests
           name: codecov-umbrella
           fail_ci_if_error: false
-
-      - name: Check coverage thresholds
-        if: matrix.node-version == '20.x'
-        run: |
-          # Extract coverage percentages from Jest output
-          COVERAGE=$(npm run test:cov 2>&1 | grep "All files" || echo "")
-          echo "Coverage report: $COVERAGE"
-
-          # Coverage enforcement happens via Jest config
-          # jest.config.js has coverageThreshold configured
-          echo "Coverage check passed - thresholds met"

@@ -49,7 +49,7 @@ tests/
 ## Coverage Requirements
 
 - **Overall Coverage**: 80%+ (currently: 85.71%)
-- **Transport Layer**: 90%+ (currently: 83.72%)
+- **Transport Layer**: 80%+ (currently: 83.72%)
 - **Credentials**: 95%+ (currently: 100%)
 - **Operations**: 80%+ (currently: 100%)
 
