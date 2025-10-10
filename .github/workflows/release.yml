@@ -1,11 +1,11 @@
 name: Release
 
-# This workflow generates releases from conventional commits
+# This workflow generates release PRs from conventional commits
 # Workflow relationship:
-#   1. release.yml (this) -> Creates version bump, CHANGELOG, and git tag
-#   2. publish.yml -> Triggered by tag push -> Publishes to npm + GitHub Release
+#   1. release.yml (this) -> Creates PR with version bump & CHANGELOG
+#   2. After PR merge -> Manually create tag -> publish.yml runs
 #
-# Trigger strategy: Manual only to avoid creating releases for non-feature commits
+# Trigger strategy: Manual only
 # Run this workflow manually from Actions tab when ready to release
 
 on:
@@ -39,8 +39,8 @@ jobs:
           skip-version-file: false
           skip-commit: false
           skip-ci: false
-          skip-tag: false
-          git-push: true
+          skip-tag: true           # Don't create tag yet
+          git-push: false          # Don't push directly
           git-message: 'chore(release): {version}'
           preset: 'conventionalcommits'
           tag-prefix: 'v'
@@ -48,5 +48,50 @@ jobs:
           skip-on-empty: true
           skip-git-pull: false
 
-      # Note: GitHub Release is created by publish.yml when the tag is pushed
-      # This workflow only creates the version bump commit and tag
+      - name: Create Release PR
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        uses: peter-evans/create-pull-request@v6
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: 'chore(release): v${{ steps.changelog.outputs.version }}'
+          branch: release/v${{ steps.changelog.outputs.version }}
+          delete-branch: true
+          title: 'chore(release): v${{ steps.changelog.outputs.version }}'
+          body: |
+            ## Release v${{ steps.changelog.outputs.version }}
+
+            Automated release PR generated from conventional commits.
+
+            ### Changelog
+            ${{ steps.changelog.outputs.clean_changelog }}
+
+            ### After Merge
+            **Important**: After merging this PR, manually create and push the tag:
+            ```bash
+            git checkout main
+            git pull origin main
+            git tag v${{ steps.changelog.outputs.version }}
+            git push origin v${{ steps.changelog.outputs.version }}
+            ```
+
+            This will trigger the `publish.yml` workflow to publish to npm and create the GitHub release.
+
+            ---
+
+            📦 **Version**: ${{ steps.changelog.outputs.version }}
+            📝 **Changelog**: Updated
+            🏷️ **Tag**: Will be created after merge
+          labels: |
+            release
+            automated
+
+      - name: PR Creation Summary
+        if: ${{ steps.changelog.outputs.skipped == 'false' }}
+        run: |
+          echo "✅ Release PR created for v${{ steps.changelog.outputs.version }}"
+          echo "📋 Review and merge the PR, then manually create the tag"
+
+      - name: No Release Needed
+        if: ${{ steps.changelog.outputs.skipped == 'true' }}
+        run: |
+          echo "ℹ️ No changes detected - release skipped"
