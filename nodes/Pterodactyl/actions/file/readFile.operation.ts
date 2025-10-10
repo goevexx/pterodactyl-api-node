@@ -35,6 +35,14 @@ export const readFileOperation: INodeProperties[] = [
 ];
 
 export async function readFile(this: IExecuteFunctions, index: number): Promise<any> {
+	const authentication = this.getNodeParameter('authentication', index) as string;
+
+	if (authentication === 'applicationApi') {
+		throw new Error(
+			'Read File operation requires Client API authentication. Please use Client API credentials or choose a different operation.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const filePath = this.getNodeParameter('filePath', index) as string;
 

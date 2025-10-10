@@ -29,6 +29,7 @@ export const deleteFileOperation: INodeProperties[] = [
 			},
 		},
 		default: '/',
+		description: 'Parent directory of the files to be removed',
 	},
 	{
 		displayName: 'Files',
@@ -48,6 +49,14 @@ export const deleteFileOperation: INodeProperties[] = [
 ];
 
 export async function deleteFile(this: IExecuteFunctions, index: number): Promise<any> {
+	const authentication = this.getNodeParameter('authentication', index) as string;
+
+	if (authentication === 'applicationApi') {
+		throw new Error(
+			'Delete File operation requires Client API authentication. Please use Client API credentials or choose a different operation.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const root = this.getNodeParameter('root', index) as string;
 	const filesStr = this.getNodeParameter('files', index) as string;

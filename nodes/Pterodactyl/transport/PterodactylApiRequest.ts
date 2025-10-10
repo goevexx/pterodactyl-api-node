@@ -63,6 +63,9 @@ export async function pterodactylApiRequest(
 	const panelUrl = (credentials.panelUrl as string).replace(/\/$/, '');
 	const apiBase = authentication === 'clientApi' ? '/api/client' : '/api/application';
 
+	// Destructure option to separate headers from other options
+	const { headers: customHeaders, ...otherOptions } = option;
+
 	const options: IHttpRequestOptions = {
 		method,
 		url: `${panelUrl}${apiBase}${endpoint}`,
@@ -70,13 +73,14 @@ export async function pterodactylApiRequest(
 			Authorization: `Bearer ${credentials.apiKey}`,
 			Accept: 'application/vnd.pterodactyl.v1+json',
 			'Content-Type': 'application/json',
+			...(customHeaders as object),
 		},
 		qs,
 		body,
 		json: true,
 		returnFullResponse: true, // Need full response to access status codes
 		ignoreHttpStatusErrors: true, // Don't throw on non-2xx status codes
-		...option,
+		...otherOptions,
 	};
 
 	try {

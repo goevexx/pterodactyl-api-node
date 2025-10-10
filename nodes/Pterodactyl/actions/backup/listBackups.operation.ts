@@ -21,6 +21,14 @@ export const listBackupsOperation: INodeProperties[] = [
 ];
 
 export async function listBackups(this: IExecuteFunctions, index: number): Promise<any> {
+	const authentication = this.getNodeParameter('authentication', index) as string;
+
+	if (authentication === 'applicationApi') {
+		throw new Error(
+			'List Backups operation requires Client API authentication. Please use Client API credentials or choose a different operation.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 
 	const response = await pterodactylApiRequest.call(

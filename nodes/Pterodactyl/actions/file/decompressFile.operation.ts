@@ -50,6 +50,14 @@ export const decompressFileOperation: INodeProperties[] = [
 ];
 
 export async function decompressFile(this: IExecuteFunctions, index: number): Promise<any> {
+	const authentication = this.getNodeParameter('authentication', index) as string;
+
+	if (authentication === 'applicationApi') {
+		throw new Error(
+			'Decompress File operation requires Client API authentication. Please use Client API credentials or choose a different operation.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const root = this.getNodeParameter('root', index) as string;
 	const file = this.getNodeParameter('file', index) as string;

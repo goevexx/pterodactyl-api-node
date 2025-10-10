@@ -35,6 +35,14 @@ export const downloadBackupOperation: INodeProperties[] = [
 ];
 
 export async function downloadBackup(this: IExecuteFunctions, index: number): Promise<any> {
+	const authentication = this.getNodeParameter('authentication', index) as string;
+
+	if (authentication === 'applicationApi') {
+		throw new Error(
+			'Download Backup operation requires Client API authentication. Please use Client API credentials or choose a different operation.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const backupId = this.getNodeParameter('backupId', index) as string;
 
