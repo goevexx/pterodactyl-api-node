@@ -62,6 +62,14 @@ export const createBackupOperation: INodeProperties[] = [
 ];
 
 export async function createBackup(this: IExecuteFunctions, index: number): Promise<any> {
+	const authentication = this.getNodeParameter('authentication', index) as string;
+
+	if (authentication === 'applicationApi') {
+		throw new Error(
+			'Create Backup operation requires Client API authentication. Please use Client API credentials or choose a different operation.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const name = this.getNodeParameter('name', index, '') as string;
 	const ignoredStr = this.getNodeParameter('ignored', index, '') as string;

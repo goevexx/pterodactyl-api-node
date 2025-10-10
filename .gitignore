@@ -48,3 +48,11 @@ QUICKSTART.md
 README-TESTING.md
 test/
 *.tgz
+.network-logs/
+analysis/
+CREDENTIALS.md
+wings-config.yml
+.serena/
+screenshots/
+docker-compose.dev.yml
+*.sh

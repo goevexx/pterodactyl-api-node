@@ -40,15 +40,19 @@ export const listServersOperation: INodeProperties[] = [
 
 export async function listServers(this: IExecuteFunctions, index: number): Promise<any> {
 	const returnAll = this.getNodeParameter('returnAll', index) as boolean;
+	const authentication = this.getNodeParameter('authentication', index) as string;
+
+	// Client API uses /api/client, Application API uses /api/application/servers
+	const endpoint = authentication === 'clientApi' ? '' : '/servers';
 
 	if (returnAll) {
-		return await pterodactylApiRequestAllItems.call(this, 'GET', '/servers', {}, {}, index);
+		return await pterodactylApiRequestAllItems.call(this, 'GET', endpoint, {}, {}, index);
 	} else {
 		const limit = this.getNodeParameter('limit', index) as number;
 		const response = await pterodactylApiRequest.call(
 			this,
 			'GET',
-			'/servers',
+			endpoint,
 			{},
 			{ per_page: limit },
 			{},

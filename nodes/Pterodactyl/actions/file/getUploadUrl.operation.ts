@@ -34,6 +34,14 @@ export const getUploadUrlOperation: INodeProperties[] = [
 ];
 
 export async function getUploadUrl(this: IExecuteFunctions, index: number): Promise<any> {
+	const authentication = this.getNodeParameter('authentication', index) as string;
+
+	if (authentication === 'applicationApi') {
+		throw new Error(
+			'Get Upload URL operation requires Client API authentication. Please use Client API credentials or choose a different operation.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const directory = this.getNodeParameter('directory', index) as string;
 

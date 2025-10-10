@@ -51,6 +51,14 @@ export const createDatabaseOperation: INodeProperties[] = [
 ];
 
 export async function createDatabase(this: IExecuteFunctions, index: number): Promise<any> {
+	const authentication = this.getNodeParameter('authentication', index) as string;
+
+	if (authentication === 'applicationApi') {
+		throw new Error(
+			'Create Database operation requires Client API authentication. Please use Client API credentials or choose a different operation.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const database = this.getNodeParameter('database', index) as string;
 	const remote = this.getNodeParameter('remote', index) as string;
