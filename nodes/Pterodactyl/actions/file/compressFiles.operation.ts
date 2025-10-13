@@ -50,11 +50,12 @@ export const compressFilesOperation: INodeProperties[] = [
 ];
 
 export async function compressFiles(this: IExecuteFunctions, index: number): Promise<any> {
-	const authentication = this.getNodeParameter('authentication', index) as string;
-
-	if (authentication === 'applicationApi') {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
 		throw new Error(
-			'Compress Files operation requires Client API authentication. Please use Client API credentials or choose a different operation.',
+			'Compress Files operation requires Client API credentials. Please configure and select Client API credentials.',
 		);
 	}
 

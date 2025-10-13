@@ -37,6 +37,15 @@ export const updateEmailOperation: INodeProperties[] = [
 ];
 
 export async function updateEmail(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Update Email operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const email = this.getNodeParameter('email', index) as string;
 	const password = this.getNodeParameter('password', index) as string;
 
