@@ -79,7 +79,7 @@ export class Pterodactyl implements INodeType {
 		name: 'pterodactyl',
 		icon: 'file:pterodactyl.svg',
 		group: ['transform'],
-		version: 2,
+		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
 		description: 'Interact with Pterodactyl Panel API',
 		defaults: {
