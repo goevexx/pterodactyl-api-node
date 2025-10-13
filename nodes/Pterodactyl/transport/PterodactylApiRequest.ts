@@ -45,10 +45,23 @@ export async function pterodactylApiRequest(
 	option: IDataObject = {},
 	itemIndex: number = 0,
 ): Promise<any> {
-	const authentication = this.getNodeParameter('authentication', itemIndex) as string;
+	// Get authentication method from node parameter
+	const authentication = this.getNodeParameter('authentication', itemIndex) as
+		| 'clientApi'
+		| 'applicationApi';
+
+	// Get credentials based on authentication selection
 	const credentialType =
 		authentication === 'clientApi' ? 'pterodactylClientApi' : 'pterodactylApplicationApi';
-	const credentials = await this.getCredentials(credentialType, itemIndex);
+
+	let credentials;
+	try {
+		credentials = await this.getCredentials(credentialType, itemIndex);
+	} catch (error) {
+		throw new Error(
+			`${authentication === 'clientApi' ? 'Client' : 'Application'} API credentials not configured. Please add the credentials in node settings.`,
+		);
+	}
 
 	if (!credentials.panelUrl) {
 		throw new Error(

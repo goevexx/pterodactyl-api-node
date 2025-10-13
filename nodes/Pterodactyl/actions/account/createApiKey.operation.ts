@@ -35,6 +35,15 @@ export const createApiKeyOperation: INodeProperties[] = [
 ];
 
 export async function createApiKey(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Create API Key operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const description = this.getNodeParameter('description', index) as string;
 	const allowedIpsStr = this.getNodeParameter('allowedIps', index, '') as string;
 
@@ -42,7 +51,6 @@ export async function createApiKey(this: IExecuteFunctions, index: number): Prom
 	if (allowedIpsStr) {
 		body.allowed_ips = allowedIpsStr.split(',').map((ip) => ip.trim());
 	}
-
 	const response = await pterodactylApiRequest.call(
 		this,
 		'POST',

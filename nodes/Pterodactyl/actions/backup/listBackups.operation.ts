@@ -21,11 +21,12 @@ export const listBackupsOperation: INodeProperties[] = [
 ];
 
 export async function listBackups(this: IExecuteFunctions, index: number): Promise<any> {
-	const authentication = this.getNodeParameter('authentication', index) as string;
-
-	if (authentication === 'applicationApi') {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
 		throw new Error(
-			'List Backups operation requires Client API authentication. Please use Client API credentials or choose a different operation.',
+			'List Backups operation requires Client API credentials. Please configure and select Client API credentials.',
 		);
 	}
 
