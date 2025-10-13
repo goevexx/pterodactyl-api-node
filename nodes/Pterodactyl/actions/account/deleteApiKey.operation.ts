@@ -19,6 +19,15 @@ export const deleteApiKeyOperation: INodeProperties[] = [
 ];
 
 export async function deleteApiKey(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Delete API Key operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const identifier = this.getNodeParameter('identifier', index) as string;
 
 	await pterodactylApiRequest.call(this, 'DELETE', `/account/api-keys/${identifier}`);

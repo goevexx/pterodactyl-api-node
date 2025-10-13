@@ -56,6 +56,15 @@ export const updatePasswordOperation: INodeProperties[] = [
 ];
 
 export async function updatePassword(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Update Password operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const currentPassword = this.getNodeParameter('currentPassword', index) as string;
 	const password = this.getNodeParameter('password', index) as string;
 	const passwordConfirmation = this.getNodeParameter('passwordConfirmation', index) as string;

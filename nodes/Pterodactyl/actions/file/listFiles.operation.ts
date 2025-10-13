@@ -34,11 +34,12 @@ export const listFilesOperation: INodeProperties[] = [
 ];
 
 export async function listFiles(this: IExecuteFunctions, index: number): Promise<any> {
-	const authentication = this.getNodeParameter('authentication', index) as string;
-
-	if (authentication === 'applicationApi') {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
 		throw new Error(
-			'List Files operation requires Client API authentication. Please use Client API credentials or choose a different operation.',
+			'List Files operation requires Client API credentials. Please configure and select Client API credentials.',
 		);
 	}
 

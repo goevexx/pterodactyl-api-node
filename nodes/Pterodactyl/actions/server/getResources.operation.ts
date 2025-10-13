@@ -16,16 +16,17 @@ export const getResourcesOperation: INodeProperties[] = [
 		placeholder: 'abc12def',
 		default: '',
 		description:
-			'The server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL or use the List Servers operation. Note: This operation requires Client API authentication.',
+			'The server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL or use the List Servers operation. Note: This operation requires Client API credentials.',
 	},
 ];
 
 export async function getResources(this: IExecuteFunctions, index: number): Promise<any> {
-	const authentication = this.getNodeParameter('authentication', index) as string;
-
-	if (authentication === 'applicationApi') {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
 		throw new Error(
-			'Get Resources operation requires Client API authentication. Please use Client API credentials or choose a different operation.',
+			'Get Resources operation requires Client API credentials. Please configure and select Client API credentials.',
 		);
 	}
 
