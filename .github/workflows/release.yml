@@ -3,7 +3,8 @@ name: Release
 # This workflow generates release PRs from conventional commits
 # Workflow relationship:
 #   1. release.yml (this) -> Creates PR with version bump & CHANGELOG
-#   2. After PR merge -> Manually create tag -> publish.yml runs
+#   2. After PR merge -> auto-tag-release.yml creates tag automatically
+#   3. Tag push triggers publish.yml -> Publishes to npm + GitHub Release
 #
 # Trigger strategy: Manual only
 # Run this workflow manually from Actions tab when ready to release
@@ -66,15 +67,14 @@ jobs:
             ${{ steps.changelog.outputs.clean_changelog }}
 
             ### After Merge
-            **Important**: After merging this PR, manually create and push the tag:
-            ```bash
-            git checkout main
-            git pull origin main
-            git tag v${{ steps.changelog.outputs.version }}
-            git push origin v${{ steps.changelog.outputs.version }}
-            ```
+            **Automated**: After merging this PR, the tag will be created automatically by the `auto-tag-release.yml` workflow.
 
-            This will trigger the `publish.yml` workflow to publish to npm and create the GitHub release.
+            The workflow will:
+            1. ✅ Automatically create tag `v${{ steps.changelog.outputs.version }}`
+            2. ✅ Push the tag to trigger `publish.yml`
+            3. ✅ Publish to npm and create GitHub release
+
+            No manual intervention required!
 
             ---
 

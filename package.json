@@ -59,7 +59,8 @@
     "n8n-workflow": "^1.0.0",
     "prettier": "^3.0.0",
     "ts-jest": "^29.0.0",
-    "typescript": "~5.2.0"
+    "typescript": "~5.2.0",
+    "yaml": "^2.8.1"
   },
   "peerDependencies": {
     "n8n-workflow": "*"
