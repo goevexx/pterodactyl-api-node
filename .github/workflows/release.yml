@@ -53,7 +53,7 @@ jobs:
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}
           commit-message: 'chore(release): v${{ steps.changelog.outputs.version }}'
           branch: release/v${{ steps.changelog.outputs.version }}
           delete-branch: true
@@ -66,13 +66,18 @@ jobs:
             ### Changelog
             ${{ steps.changelog.outputs.clean_changelog }}
 
-            ### After Merge
-            **Automated**: After merging this PR, the tag will be created automatically by the `auto-tag-release.yml` workflow.
+            ### Automated Workflow
+            This release PR will trigger the following automatically:
 
-            The workflow will:
-            1. ✅ Automatically create tag `v${{ steps.changelog.outputs.version }}`
-            2. ✅ Push the tag to trigger `publish.yml`
-            3. ✅ Publish to npm and create GitHub release
+            **On PR Creation:**
+            - ✅ Tests run automatically (using PAT_TOKEN)
+            - ✅ Coverage reports uploaded to Codecov
+            - ✅ All CI checks must pass before merge
+
+            **After Merge:**
+            - ✅ Tag `v${{ steps.changelog.outputs.version }}` created automatically
+            - ✅ npm publish triggered via `publish.yml`
+            - ✅ GitHub release created with changelog
 
             No manual intervention required!
 
