@@ -94,7 +94,7 @@ jobs:
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
           echo "✅ Release PR created for v${{ steps.changelog.outputs.version }}"
-          echo "📋 Review and merge the PR, then manually create the tag"
+          echo "📋 Review and merge the PR, tag will be created automatically"
 
       - name: No Release Needed
         if: ${{ steps.changelog.outputs.skipped == 'true' }}
