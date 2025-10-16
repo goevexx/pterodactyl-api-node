@@ -16,7 +16,7 @@ export const sendCommandOperation: INodeProperties[] = [
 		placeholder: 'abc12def',
 		default: '',
 		description:
-			'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
+			'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL or use the List Servers operation. Note: This operation requires Client API credentials.',
 	},
 	{
 		displayName: 'Command',
@@ -36,6 +36,15 @@ export const sendCommandOperation: INodeProperties[] = [
 ];
 
 export async function sendCommand(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Send Command operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const command = this.getNodeParameter('command', index) as string;
 

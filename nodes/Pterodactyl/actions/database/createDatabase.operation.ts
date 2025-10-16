@@ -51,6 +51,15 @@ export const createDatabaseOperation: INodeProperties[] = [
 ];
 
 export async function createDatabase(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Create Database operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const database = this.getNodeParameter('database', index) as string;
 	const remote = this.getNodeParameter('remote', index) as string;

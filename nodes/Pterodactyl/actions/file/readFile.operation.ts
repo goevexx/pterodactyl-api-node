@@ -35,6 +35,15 @@ export const readFileOperation: INodeProperties[] = [
 ];
 
 export async function readFile(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Read File operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const filePath = this.getNodeParameter('filePath', index) as string;
 

@@ -35,6 +35,15 @@ export const rotatePasswordOperation: INodeProperties[] = [
 ];
 
 export async function rotatePassword(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Rotate Password operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const databaseId = this.getNodeParameter('databaseId', index) as string;
 

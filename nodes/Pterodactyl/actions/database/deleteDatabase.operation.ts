@@ -35,6 +35,15 @@ export const deleteDatabaseOperation: INodeProperties[] = [
 ];
 
 export async function deleteDatabase(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Delete Database operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const databaseId = this.getNodeParameter('databaseId', index) as string;
 

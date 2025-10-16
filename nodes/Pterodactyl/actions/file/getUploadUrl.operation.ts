@@ -34,6 +34,15 @@ export const getUploadUrlOperation: INodeProperties[] = [
 ];
 
 export async function getUploadUrl(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Get Upload URL operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const directory = this.getNodeParameter('directory', index) as string;
 

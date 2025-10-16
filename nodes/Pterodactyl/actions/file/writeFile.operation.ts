@@ -51,6 +51,15 @@ export const writeFileOperation: INodeProperties[] = [
 ];
 
 export async function writeFile(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Write File operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const filePath = this.getNodeParameter('filePath', index) as string;
 	const content = this.getNodeParameter('content', index) as string;
@@ -59,9 +68,15 @@ export async function writeFile(this: IExecuteFunctions, index: number): Promise
 		this,
 		'POST',
 		`/servers/${serverId}/files/write`,
-		{},
+		{}, // Empty body object since we're sending raw content
 		{ file: filePath },
-		{ body: content, json: false },
+		{
+			body: content, // Raw content in options
+			json: false, // Disable JSON stringification
+			headers: {
+				'Content-Type': 'text/plain', // Send as plain text
+			},
+		},
 	);
 	return { success: true, filePath };
 }

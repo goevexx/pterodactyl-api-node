@@ -50,6 +50,15 @@ export const createFolderOperation: INodeProperties[] = [
 ];
 
 export async function createFolder(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Create Folder operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const root = this.getNodeParameter('root', index) as string;
 	const name = this.getNodeParameter('name', index) as string;

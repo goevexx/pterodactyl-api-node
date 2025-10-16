@@ -48,12 +48,22 @@ export const restoreBackupOperation: INodeProperties[] = [
 ];
 
 export async function restoreBackup(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Restore Backup operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const backupId = this.getNodeParameter('backupId', index) as string;
 	const truncate = this.getNodeParameter('truncate', index) as boolean;
 
-	const body: any = {};
-	if (truncate) body.truncate = truncate;
+	const body: any = {
+		truncate,
+	};
 
 	await pterodactylApiRequest.call(
 		this,

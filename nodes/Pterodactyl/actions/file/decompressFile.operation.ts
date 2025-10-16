@@ -50,6 +50,15 @@ export const decompressFileOperation: INodeProperties[] = [
 ];
 
 export async function decompressFile(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Decompress File operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const root = this.getNodeParameter('root', index) as string;
 	const file = this.getNodeParameter('file', index) as string;

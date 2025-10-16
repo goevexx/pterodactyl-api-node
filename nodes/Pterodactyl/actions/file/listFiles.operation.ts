@@ -34,6 +34,15 @@ export const listFilesOperation: INodeProperties[] = [
 ];
 
 export async function listFiles(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'List Files operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const directory = this.getNodeParameter('directory', index) as string;
 

@@ -62,6 +62,15 @@ export const createBackupOperation: INodeProperties[] = [
 ];
 
 export async function createBackup(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Create Backup operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const name = this.getNodeParameter('name', index, '') as string;
 	const ignoredStr = this.getNodeParameter('ignored', index, '') as string;
