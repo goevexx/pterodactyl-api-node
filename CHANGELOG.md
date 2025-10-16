@@ -1,4 +1,11 @@
-## [1.1.0](https://github.com/goevexx/pterodactyl-api-node/compare/v1.0.3...v1.1.0) (2025-10-13)
+## [1.2.0](https://github.com/goevexx/pterodactyl-api-node/compare/v1.1.0...v1.2.0) (2025-10-16)
+
+
+### Features
+
+* implement comprehensive unit testing with 85.71% coverage ([#20](https://github.com/goevexx/pterodactyl-api-node/issues/20)) ([8b1bb46](https://github.com/goevexx/pterodactyl-api-node/commit/8b1bb463c9762e74d5150cfe10deb64cc42ca6b5))
+
+## [1.1.0](https://github.com/goevexx/pterodactyl-api-node/compare/v1.0.3...v1.1.0) (2025-10-15)
 
 
 ### Features
