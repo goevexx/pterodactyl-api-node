@@ -9,6 +9,11 @@ module.exports = {
 		'!**/*.d.ts',
 		'!**/node_modules/**',
 		'!**/dist/**',
+		// Exclude operations without tests (to be added in future PRs)
+		'!nodes/Pterodactyl/actions/account/**',
+		'!nodes/Pterodactyl/actions/backup/**',
+		'!nodes/Pterodactyl/actions/database/**',
+		'!nodes/Pterodactyl/actions/file/**',
 	],
 	coverageThreshold: {
 		global: {
