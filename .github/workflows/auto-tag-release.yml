@@ -1,0 +1,127 @@
+name: Auto Tag Release
+
+# This workflow automatically creates and pushes git tags when release PRs are merged
+# Workflow relationship:
+#   1. release.yml -> Creates PR with version bump & CHANGELOG
+#   2. auto-tag-release.yml (this) -> Detects merged release PR -> Creates tag
+#   3. publish.yml -> Triggered by tag push -> Publishes to npm + GitHub Release
+#
+# Trigger strategy: Automatic on PR merge to main
+# This eliminates manual tag creation while respecting branch protection rules
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  auto-tag:
+    # Only run if PR was actually merged (not just closed)
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Minimum required for tag creation
+
+    steps:
+      - name: Check if release PR and extract version
+        id: check
+        run: |
+          PR_TITLE="${{ github.event.pull_request.title }}"
+          echo "PR Title: $PR_TITLE"
+
+          # Match release PR title pattern: "chore(release): vX.Y.Z"
+          if [[ "$PR_TITLE" =~ ^chore\(release\):[[:space:]]+v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+            echo "is_release=true" >> $GITHUB_OUTPUT
+            echo "version=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
+            echo "✅ Detected release PR for version ${BASH_REMATCH[1]}"
+          else
+            echo "is_release=false" >> $GITHUB_OUTPUT
+            echo "ℹ️ Not a release PR - skipping tag creation"
+          fi
+
+      - name: Skip non-release PR
+        if: steps.check.outputs.is_release != 'true'
+        run: |
+          echo "ℹ️ Not a release PR - workflow complete"
+          exit 0
+
+      - name: Checkout repository
+        if: steps.check.outputs.is_release == 'true'
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0  # Full history needed for tag creation
+
+      - name: Check if tag already exists
+        if: steps.check.outputs.is_release == 'true'
+        id: tag-check
+        run: |
+          VERSION="${{ steps.check.outputs.version }}"
+          echo "Checking if tag v${VERSION} exists..."
+
+          if git ls-remote --tags origin | grep -q "refs/tags/v${VERSION}$"; then
+            echo "exists=true" >> $GITHUB_OUTPUT
+            echo "⚠️ Tag v${VERSION} already exists"
+          else
+            echo "exists=false" >> $GITHUB_OUTPUT
+            echo "✅ Tag v${VERSION} does not exist - safe to create"
+          fi
+
+      - name: Fail if tag already exists
+        if: steps.check.outputs.is_release == 'true' && steps.tag-check.outputs.exists == 'true'
+        run: |
+          VERSION="${{ steps.check.outputs.version }}"
+          echo "## ❌ Tag Already Exists" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag**: v${VERSION}" >> $GITHUB_STEP_SUMMARY
+          echo "**Status**: Already exists in repository" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Cannot create duplicate tag. This may indicate:" >> $GITHUB_STEP_SUMMARY
+          echo "- The tag was already created manually" >> $GITHUB_STEP_SUMMARY
+          echo "- This workflow was re-run after successful execution" >> $GITHUB_STEP_SUMMARY
+          echo "- Multiple release PRs with the same version were merged" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "If this tag should not exist, delete it first:" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`bash" >> $GITHUB_STEP_SUMMARY
+          echo "git tag -d v${VERSION}" >> $GITHUB_STEP_SUMMARY
+          echo "git push origin :refs/tags/v${VERSION}" >> $GITHUB_STEP_SUMMARY
+          echo "\`\`\`" >> $GITHUB_STEP_SUMMARY
+          exit 1
+
+      - name: Create and push tag
+        if: steps.check.outputs.is_release == 'true' && steps.tag-check.outputs.exists != 'true'
+        run: |
+          VERSION="${{ steps.check.outputs.version }}"
+
+          # Configure git for tagging
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          # Create annotated tag
+          git tag -a "v${VERSION}" -m "Release v${VERSION}"
+
+          # Push tag to origin
+          git push origin "v${VERSION}"
+
+          echo "✅ Successfully created and pushed tag v${VERSION}"
+
+      - name: Success summary
+        if: steps.check.outputs.is_release == 'true' && steps.tag-check.outputs.exists != 'true'
+        run: |
+          VERSION="${{ steps.check.outputs.version }}"
+          echo "## ✅ Auto-Tag Release Success" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Tag Created**: v${VERSION}" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit**: ${{ github.event.pull_request.merge_commit_sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**PR**: #${{ github.event.pull_request.number }} - ${{ github.event.pull_request.title }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next Steps" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "The \`publish.yml\` workflow will now trigger automatically to:" >> $GITHUB_STEP_SUMMARY
+          echo "- Build the package" >> $GITHUB_STEP_SUMMARY
+          echo "- Run tests" >> $GITHUB_STEP_SUMMARY
+          echo "- Publish to npm" >> $GITHUB_STEP_SUMMARY
+          echo "- Create GitHub Release" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "🔗 [View publish workflow runs](https://github.com/${{ github.repository }}/actions/workflows/publish.yml)" >> $GITHUB_STEP_SUMMARY

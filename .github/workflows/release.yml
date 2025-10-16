@@ -3,7 +3,8 @@ name: Release
 # This workflow generates release PRs from conventional commits
 # Workflow relationship:
 #   1. release.yml (this) -> Creates PR with version bump & CHANGELOG
-#   2. After PR merge -> Manually create tag -> publish.yml runs
+#   2. After PR merge -> auto-tag-release.yml creates tag automatically
+#   3. Tag push triggers publish.yml -> Publishes to npm + GitHub Release
 #
 # Trigger strategy: Manual only
 # Run this workflow manually from Actions tab when ready to release
@@ -52,7 +53,7 @@ jobs:
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT_TOKEN }}
           commit-message: 'chore(release): v${{ steps.changelog.outputs.version }}'
           branch: release/v${{ steps.changelog.outputs.version }}
           delete-branch: true
@@ -65,16 +66,20 @@ jobs:
             ### Changelog
             ${{ steps.changelog.outputs.clean_changelog }}
 
-            ### After Merge
-            **Important**: After merging this PR, manually create and push the tag:
-            ```bash
-            git checkout main
-            git pull origin main
-            git tag v${{ steps.changelog.outputs.version }}
-            git push origin v${{ steps.changelog.outputs.version }}
-            ```
+            ### Automated Workflow
+            This release PR will trigger the following automatically:
 
-            This will trigger the `publish.yml` workflow to publish to npm and create the GitHub release.
+            **On PR Creation:**
+            - ✅ Tests run automatically (using PAT_TOKEN)
+            - ✅ Coverage reports uploaded to Codecov
+            - ✅ All CI checks must pass before merge
+
+            **After Merge:**
+            - ✅ Tag `v${{ steps.changelog.outputs.version }}` created automatically
+            - ✅ npm publish triggered via `publish.yml`
+            - ✅ GitHub release created with changelog
+
+            No manual intervention required!
 
             ---
 
@@ -89,7 +94,7 @@ jobs:
         if: ${{ steps.changelog.outputs.skipped == 'false' }}
         run: |
           echo "✅ Release PR created for v${{ steps.changelog.outputs.version }}"
-          echo "📋 Review and merge the PR, then manually create the tag"
+          echo "📋 Review and merge the PR, tag will be created automatically"
 
       - name: No Release Needed
         if: ${{ steps.changelog.outputs.skipped == 'true' }}
