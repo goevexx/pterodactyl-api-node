@@ -28,6 +28,7 @@ describe('listServers operation', () => {
 		it('should call getNodeParameter with limit when returnAll is false', async () => {
 			mockExecuteFunctions.getNodeParameter
 				.mockReturnValueOnce(false) // returnAll
+				.mockReturnValueOnce('applicationApi') // authentication
 				.mockReturnValueOnce(25); // limit
 
 			mockPterodactylApiRequest.mockResolvedValue({ data: [] });
@@ -90,6 +91,7 @@ describe('listServers operation', () => {
 		it('should call pterodactylApiRequest with limit when returnAll is false', async () => {
 			mockExecuteFunctions.getNodeParameter
 				.mockReturnValueOnce(false) // returnAll
+				.mockReturnValueOnce('applicationApi') // authentication
 				.mockReturnValueOnce(10); // limit
 
 			const mockResponse = {
@@ -115,6 +117,7 @@ describe('listServers operation', () => {
 		it('should use custom limit value', async () => {
 			mockExecuteFunctions.getNodeParameter
 				.mockReturnValueOnce(false) // returnAll
+				.mockReturnValueOnce('applicationApi') // authentication
 				.mockReturnValueOnce(50); // limit
 
 			mockPterodactylApiRequest.mockResolvedValue({ data: [] });
@@ -134,6 +137,7 @@ describe('listServers operation', () => {
 		it('should handle minimum limit of 1', async () => {
 			mockExecuteFunctions.getNodeParameter
 				.mockReturnValueOnce(false) // returnAll
+				.mockReturnValueOnce('applicationApi') // authentication
 				.mockReturnValueOnce(1); // limit
 
 			mockPterodactylApiRequest.mockResolvedValue({ data: [] });
@@ -153,6 +157,7 @@ describe('listServers operation', () => {
 		it('should handle maximum limit of 100', async () => {
 			mockExecuteFunctions.getNodeParameter
 				.mockReturnValueOnce(false) // returnAll
+				.mockReturnValueOnce('applicationApi') // authentication
 				.mockReturnValueOnce(100); // limit
 
 			mockPterodactylApiRequest.mockResolvedValue({ data: [] });
@@ -172,6 +177,7 @@ describe('listServers operation', () => {
 		it('should pass correct itemIndex to pterodactylApiRequest', async () => {
 			mockExecuteFunctions.getNodeParameter
 				.mockReturnValueOnce(false) // returnAll
+				.mockReturnValueOnce('applicationApi') // authentication
 				.mockReturnValueOnce(25); // limit
 
 			mockPterodactylApiRequest.mockResolvedValue({ data: [] });
@@ -193,6 +199,7 @@ describe('listServers operation', () => {
 		it('should return data array when response has data property', async () => {
 			mockExecuteFunctions.getNodeParameter
 				.mockReturnValueOnce(false) // returnAll
+				.mockReturnValueOnce('applicationApi') // authentication
 				.mockReturnValueOnce(10); // limit
 
 			const mockData = [
@@ -209,6 +216,7 @@ describe('listServers operation', () => {
 		it('should return empty array when response.data is undefined', async () => {
 			mockExecuteFunctions.getNodeParameter
 				.mockReturnValueOnce(false) // returnAll
+				.mockReturnValueOnce('applicationApi') // authentication
 				.mockReturnValueOnce(10); // limit
 
 			mockPterodactylApiRequest.mockResolvedValue({});
@@ -221,6 +229,7 @@ describe('listServers operation', () => {
 		it('should return empty array when response.data is null', async () => {
 			mockExecuteFunctions.getNodeParameter
 				.mockReturnValueOnce(false) // returnAll
+				.mockReturnValueOnce('applicationApi') // authentication
 				.mockReturnValueOnce(10); // limit
 
 			mockPterodactylApiRequest.mockResolvedValue({ data: null });
@@ -233,6 +242,7 @@ describe('listServers operation', () => {
 		it('should preserve empty data array', async () => {
 			mockExecuteFunctions.getNodeParameter
 				.mockReturnValueOnce(false) // returnAll
+				.mockReturnValueOnce('applicationApi') // authentication
 				.mockReturnValueOnce(10); // limit
 
 			mockPterodactylApiRequest.mockResolvedValue({ data: [] });
@@ -256,6 +266,7 @@ describe('listServers operation', () => {
 		it('should propagate errors from pterodactylApiRequest', async () => {
 			mockExecuteFunctions.getNodeParameter
 				.mockReturnValueOnce(false) // returnAll
+				.mockReturnValueOnce('applicationApi') // authentication
 				.mockReturnValueOnce(10); // limit
 
 			const error = new Error('Network error');
@@ -277,6 +288,7 @@ describe('listServers operation', () => {
 		it('should handle permission errors', async () => {
 			mockExecuteFunctions.getNodeParameter
 				.mockReturnValueOnce(false)
+				.mockReturnValueOnce('applicationApi') // authentication
 				.mockReturnValueOnce(10);
 
 			const permissionError = new Error('Insufficient permissions');
