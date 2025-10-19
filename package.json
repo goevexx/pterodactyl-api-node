@@ -43,7 +43,9 @@
       "dist/credentials/PterodactylApplicationApi.credentials.js"
     ],
     "nodes": [
-      "dist/nodes/Pterodactyl/Pterodactyl.node.js"
+      "dist/nodes/Pterodactyl/Pterodactyl.node.js",
+      "dist/nodes/PterodactylClient/PterodactylClient.node.js",
+      "dist/nodes/PterodactylApplication/PterodactylApplication.node.js"
     ]
   },
   "devDependencies": {

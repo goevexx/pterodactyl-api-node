@@ -72,18 +72,68 @@ import {
 	deleteApiKey,
 	deleteApiKeyOperation,
 } from './actions/account';
+import {
+	listSchedules,
+	listSchedulesOperation,
+	getSchedule,
+	getScheduleOperation,
+	createSchedule,
+	createScheduleOperation,
+	updateSchedule,
+	updateScheduleOperation,
+	deleteSchedule,
+	deleteScheduleOperation,
+	executeSchedule,
+	executeScheduleOperation,
+	createTask,
+	createTaskOperation,
+	updateTask,
+	updateTaskOperation,
+	deleteTask,
+	deleteTaskOperation,
+} from './actions/schedule';
+import {
+	listAllocations,
+	listAllocationsOperation,
+	assignAllocation,
+	assignAllocationOperation,
+	setPrimary,
+	setPrimaryOperation,
+	deleteAllocation,
+	deleteAllocationOperation,
+	updateNotes,
+	updateNotesOperation,
+} from './actions/network';
+import {
+	listSubusers,
+	listSubusersOperation,
+	createSubuser,
+	createSubuserOperation,
+	getSubuser,
+	getSubuserOperation,
+	updateSubuser,
+	updateSubuserOperation,
+	deleteSubuser,
+	deleteSubuserOperation,
+} from './actions/subuser';
+import {
+	getStartupVariables,
+	getStartupVariablesOperation,
+	updateStartupVariable,
+	updateStartupVariableOperation,
+} from './actions/startup';
 
-export class Pterodactyl implements INodeType {
+export class PterodactylClient implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Pterodactyl (Deprecated)',
-		name: 'pterodactyl',
-		icon: 'file:pterodactyl.svg',
+		displayName: 'Pterodactyl Client',
+		name: 'pterodactylClient',
+		icon: 'file:pterodactylClient.svg',
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: '⚠️ DEPRECATED: Use "Pterodactyl Client" for user-level operations or "Pterodactyl Application" for admin operations instead. This node will be removed in a future version.',
+		description: 'User-level server management with Pterodactyl Panel Client API',
 		defaults: {
-			name: 'Pterodactyl (Deprecated)',
+			name: 'Pterodactyl Client',
 		},
 		inputs: ['main'],
 		outputs: ['main'],
@@ -91,42 +141,9 @@ export class Pterodactyl implements INodeType {
 			{
 				name: 'pterodactylClientApi',
 				required: true,
-				displayOptions: {
-					show: {
-						authentication: ['clientApi'],
-					},
-				},
-			},
-			{
-				name: 'pterodactylApplicationApi',
-				required: true,
-				displayOptions: {
-					show: {
-						authentication: ['applicationApi'],
-					},
-				},
 			},
 		],
 		properties: [
-			{
-				displayName: 'Authentication',
-				name: 'authentication',
-				type: 'options',
-				options: [
-					{
-						name: 'Client API',
-						value: 'clientApi',
-						description: 'User-level API access',
-					},
-					{
-						name: 'Application API',
-						value: 'applicationApi',
-						description: 'Admin-level API access',
-					},
-				],
-				default: 'clientApi',
-				description: 'The type of API authentication to use',
-			},
 			{
 				displayName: 'Resource',
 				name: 'resource',
@@ -134,19 +151,9 @@ export class Pterodactyl implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
-						name: 'Server',
-						value: 'server',
-						description: 'Manage game servers',
-					},
-					{
-						name: 'File',
-						value: 'file',
-						description: 'Manage server files',
-					},
-					{
-						name: 'Database',
-						value: 'database',
-						description: 'Manage server databases',
+						name: 'Account',
+						value: 'account',
+						description: 'Manage account settings',
 					},
 					{
 						name: 'Backup',
@@ -154,9 +161,39 @@ export class Pterodactyl implements INodeType {
 						description: 'Manage server backups',
 					},
 					{
-						name: 'Account',
-						value: 'account',
-						description: 'Manage account settings',
+						name: 'Database',
+						value: 'database',
+						description: 'Manage server databases',
+					},
+					{
+						name: 'File',
+						value: 'file',
+						description: 'Manage server files',
+					},
+					{
+						name: 'Network',
+						value: 'network',
+						description: 'Manage network allocations',
+					},
+					{
+						name: 'Schedule',
+						value: 'schedule',
+						description: 'Manage server schedules and tasks',
+					},
+					{
+						name: 'Server',
+						value: 'server',
+						description: 'Manage game servers',
+					},
+					{
+						name: 'Startup',
+						value: 'startup',
+						description: 'Manage startup variables',
+					},
+					{
+						name: 'Subuser',
+						value: 'subuser',
+						description: 'Manage server subusers',
 					},
 				],
 				default: 'server',
@@ -411,6 +448,192 @@ export class Pterodactyl implements INodeType {
 				default: 'getAccount',
 				description: 'The operation to perform',
 			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['schedule'],
+					},
+				},
+				options: [
+					{
+						name: 'List',
+						value: 'list',
+						description: 'List all schedules for a server',
+						action: 'List schedules',
+					},
+					{
+						name: 'Get',
+						value: 'get',
+						description: 'Get schedule details',
+						action: 'Get a schedule',
+					},
+					{
+						name: 'Create',
+						value: 'create',
+						description: 'Create a new schedule',
+						action: 'Create schedule',
+					},
+					{
+						name: 'Update',
+						value: 'update',
+						description: 'Update a schedule',
+						action: 'Update schedule',
+					},
+					{
+						name: 'Delete',
+						value: 'delete',
+						description: 'Delete a schedule',
+						action: 'Delete schedule',
+					},
+					{
+						name: 'Execute',
+						value: 'execute',
+						description: 'Execute a schedule now',
+						action: 'Execute schedule',
+					},
+					{
+						name: 'Create Task',
+						value: 'createTask',
+						description: 'Create a schedule task',
+						action: 'Create task',
+					},
+					{
+						name: 'Update Task',
+						value: 'updateTask',
+						description: 'Update a schedule task',
+						action: 'Update task',
+					},
+					{
+						name: 'Delete Task',
+						value: 'deleteTask',
+						description: 'Delete a schedule task',
+						action: 'Delete task',
+					},
+				],
+				default: 'list',
+				description: 'The operation to perform',
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['network'],
+					},
+				},
+				options: [
+					{
+						name: 'List',
+						value: 'listAllocations',
+						description: 'List network allocations',
+						action: 'List allocations',
+					},
+					{
+						name: 'Assign',
+						value: 'assignAllocation',
+						description: 'Assign a new allocation',
+						action: 'Assign allocation',
+					},
+					{
+						name: 'Set Primary',
+						value: 'setPrimary',
+						description: 'Set allocation as primary',
+						action: 'Set primary',
+					},
+					{
+						name: 'Update Notes',
+						value: 'updateNotes',
+						description: 'Update allocation notes',
+						action: 'Update notes',
+					},
+					{
+						name: 'Delete',
+						value: 'deleteAllocation',
+						description: 'Delete an allocation',
+						action: 'Delete allocation',
+					},
+				],
+				default: 'listAllocations',
+				description: 'The operation to perform',
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['subuser'],
+					},
+				},
+				options: [
+					{
+						name: 'List',
+						value: 'listSubusers',
+						description: 'List server subusers',
+						action: 'List subusers',
+					},
+					{
+						name: 'Get',
+						value: 'getSubuser',
+						description: 'Get subuser details',
+						action: 'Get subuser',
+					},
+					{
+						name: 'Create',
+						value: 'createSubuser',
+						description: 'Create a subuser',
+						action: 'Create subuser',
+					},
+					{
+						name: 'Update',
+						value: 'updateSubuser',
+						description: 'Update subuser permissions',
+						action: 'Update subuser',
+					},
+					{
+						name: 'Delete',
+						value: 'deleteSubuser',
+						description: 'Delete a subuser',
+						action: 'Delete subuser',
+					},
+				],
+				default: 'listSubusers',
+				description: 'The operation to perform',
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['startup'],
+					},
+				},
+				options: [
+					{
+						name: 'Get Variables',
+						value: 'getStartupVariables',
+						description: 'Get startup variables',
+						action: 'Get variables',
+					},
+					{
+						name: 'Update Variable',
+						value: 'updateStartupVariable',
+						description: 'Update a startup variable',
+						action: 'Update variable',
+					},
+				],
+				default: 'getStartupVariables',
+				description: 'The operation to perform',
+			},
 			...listServersOperation,
 			...getServerOperation,
 			...powerActionOperation,
@@ -440,6 +663,27 @@ export class Pterodactyl implements INodeType {
 			...listApiKeysOperation,
 			...createApiKeyOperation,
 			...deleteApiKeyOperation,
+			...listSchedulesOperation,
+			...getScheduleOperation,
+			...createScheduleOperation,
+			...updateScheduleOperation,
+			...deleteScheduleOperation,
+			...executeScheduleOperation,
+			...createTaskOperation,
+			...updateTaskOperation,
+			...deleteTaskOperation,
+			...listAllocationsOperation,
+			...assignAllocationOperation,
+			...setPrimaryOperation,
+			...deleteAllocationOperation,
+			...updateNotesOperation,
+			...listSubusersOperation,
+			...createSubuserOperation,
+			...getSubuserOperation,
+			...updateSubuserOperation,
+			...deleteSubuserOperation,
+			...getStartupVariablesOperation,
+			...updateStartupVariableOperation,
 		],
 	};
 
@@ -520,6 +764,56 @@ export class Pterodactyl implements INodeType {
 						responseData = await createApiKey.call(this, i);
 					} else if (operation === 'deleteApiKey') {
 						responseData = await deleteApiKey.call(this, i);
+					}
+				} else if (resource === 'schedule') {
+					if (operation === 'list') {
+						responseData = await listSchedules.call(this, i);
+					} else if (operation === 'get') {
+						responseData = await getSchedule.call(this, i);
+					} else if (operation === 'create') {
+						responseData = await createSchedule.call(this, i);
+					} else if (operation === 'update') {
+						responseData = await updateSchedule.call(this, i);
+					} else if (operation === 'delete') {
+						responseData = await deleteSchedule.call(this, i);
+					} else if (operation === 'execute') {
+						responseData = await executeSchedule.call(this, i);
+					} else if (operation === 'createTask') {
+						responseData = await createTask.call(this, i);
+					} else if (operation === 'updateTask') {
+						responseData = await updateTask.call(this, i);
+					} else if (operation === 'deleteTask') {
+						responseData = await deleteTask.call(this, i);
+					}
+				} else if (resource === 'network') {
+					if (operation === 'listAllocations') {
+						responseData = await listAllocations.call(this, i);
+					} else if (operation === 'assignAllocation') {
+						responseData = await assignAllocation.call(this, i);
+					} else if (operation === 'setPrimary') {
+						responseData = await setPrimary.call(this, i);
+					} else if (operation === 'deleteAllocation') {
+						responseData = await deleteAllocation.call(this, i);
+					} else if (operation === 'updateNotes') {
+						responseData = await updateNotes.call(this, i);
+					}
+				} else if (resource === 'subuser') {
+					if (operation === 'listSubusers') {
+						responseData = await listSubusers.call(this, i);
+					} else if (operation === 'createSubuser') {
+						responseData = await createSubuser.call(this, i);
+					} else if (operation === 'getSubuser') {
+						responseData = await getSubuser.call(this, i);
+					} else if (operation === 'updateSubuser') {
+						responseData = await updateSubuser.call(this, i);
+					} else if (operation === 'deleteSubuser') {
+						responseData = await deleteSubuser.call(this, i);
+					}
+				} else if (resource === 'startup') {
+					if (operation === 'getStartupVariables') {
+						responseData = await getStartupVariables.call(this, i);
+					} else if (operation === 'updateStartupVariable') {
+						responseData = await updateStartupVariable.call(this, i);
 					}
 				}
 

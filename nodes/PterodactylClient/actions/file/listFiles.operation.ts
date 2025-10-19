@@ -1,0 +1,58 @@
+import { IExecuteFunctions, INodeProperties } from 'n8n-workflow';
+import { pterodactylApiRequest } from '../../../../shared/transport';
+
+export const listFilesOperation: INodeProperties[] = [
+	{
+		displayName: 'Server Identifier',
+		name: 'serverId',
+		type: 'string',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['file'],
+				operation: ['list'],
+			},
+		},
+		placeholder: 'abc12def',
+		default: '',
+		description:
+			'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
+	},
+	{
+		displayName: 'Directory Path',
+		name: 'directory',
+		type: 'string',
+		displayOptions: {
+			show: {
+				resource: ['file'],
+				operation: ['list'],
+			},
+		},
+		default: '/',
+		description: 'The directory path to list files from',
+	},
+];
+
+export async function listFiles(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'List Files operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
+	const serverId = this.getNodeParameter('serverId', index) as string;
+	const directory = this.getNodeParameter('directory', index) as string;
+
+	const response = await pterodactylApiRequest.call(
+		this,
+		'GET',
+		'/api/client',
+		`/servers/${serverId}/files/list`,
+		{},
+		{ directory },
+	);
+	return response.data || [];
+}

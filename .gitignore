@@ -43,16 +43,13 @@ PRDs/
 .claude/
 CLAUDE.md
 
-# Local development/testing documentation
-QUICKSTART.md
-README-TESTING.md
+# Development scripts and documentation (keep local)
+.dev/
+
+# Local testing and development
 test/
-*.tgz
 .network-logs/
-analysis/
-CREDENTIALS.md
-wings-config.yml
-.serena/
-screenshots/
+.build-package/
 docker-compose.dev.yml
-*.sh
+.serena/
+*.tgz
