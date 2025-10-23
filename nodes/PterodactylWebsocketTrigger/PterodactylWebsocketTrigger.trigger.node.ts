@@ -82,21 +82,6 @@ export class PterodactylWebsocketTrigger implements INodeType {
 						value: 'install completed',
 						description: 'Installation finished',
 					},
-					{
-						name: 'JWT Error',
-						value: 'jwt error',
-						description: 'Authentication/token errors',
-					},
-					{
-						name: 'Token Expiring',
-						value: 'token expiring',
-						description: 'Token about to expire',
-					},
-					{
-						name: 'Token Expired',
-						value: 'token expired',
-						description: 'Token has expired',
-					},
 				],
 				default: ['*'],
 				description: 'Events to trigger the workflow on',

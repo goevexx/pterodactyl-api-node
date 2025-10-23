@@ -1,6 +1,8 @@
 import {
 	IExecuteFunctions,
+	ILoadOptionsFunctions,
 	INodeExecutionData,
+	INodePropertyOptions,
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
@@ -471,6 +473,81 @@ export class PterodactylApplication implements INodeType {
 			...listNestEggsOperation,
 			...getNestEggOperation,
 		],
+	};
+
+	methods = {
+		loadOptions: {
+			async getNodes(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				const { pterodactylApiRequest } = await import('../../shared/transport');
+				const response = await pterodactylApiRequest.call(
+					this as unknown as IExecuteFunctions,
+					'GET',
+					'/api/application',
+					'/nodes',
+					{},
+					{},
+					{},
+					0,
+				);
+
+				const nodes = response.data || [];
+				return nodes.map((node: any) => ({
+					name: `${node.attributes.name} (ID: ${node.attributes.id})`,
+					value: node.attributes.id,
+				}));
+			},
+
+			async getAvailableAllocations(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const nodeId = this.getCurrentNodeParameter('nodeId') as number;
+
+					if (!nodeId) {
+						return [];
+					}
+
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/application',
+						`/nodes/${nodeId}/allocations`,
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const allocations = response.data || [];
+
+					if (allocations.length === 0) {
+						return [{
+							name: 'No allocations found - create allocations first',
+							value: '',
+						}];
+					}
+
+					// Map all allocations and mark assigned ones
+					return allocations.map((alloc: any) => {
+						const isAssigned = alloc.attributes.assigned;
+						const alias = alloc.attributes.alias ? ` (${alloc.attributes.alias})` : '';
+						const assignedLabel = isAssigned ? ' [ASSIGNED]' : '';
+
+						return {
+							name: `${alloc.attributes.ip}:${alloc.attributes.port}${alias}${assignedLabel}`,
+							value: alloc.attributes.id,
+							// Disable assigned allocations in the dropdown
+							disabled: isAssigned,
+						};
+					});
+				} catch (error) {
+					console.error('Error fetching allocations:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+		},
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {
