@@ -187,27 +187,53 @@ describe('PterodactylWebsocketTrigger', () => {
 	});
 
 	describe('Manual Trigger Function', () => {
-		test('should emit sample data when manual trigger called', async () => {
+		test('should emit multiple sample events when manual trigger called', async () => {
 			const result = await triggerNode.trigger.call(mockTriggerFunctions);
 
 			await result.manualTriggerFunction!();
 
 			expect(mockEmit).toHaveBeenCalled();
-			const emittedData = mockEmit.mock.calls[0][0][0][0];
-			expect(emittedData).toHaveProperty('json');
-			expect(emittedData.json).toHaveProperty('event');
-			expect(emittedData.json).toHaveProperty('serverId');
-			expect(emittedData.json).toHaveProperty('timestamp');
+			// Should emit 4 events: console output, status, stats, daemon message
+			const emittedData = mockEmit.mock.calls[0][0][0];
+			expect(emittedData).toHaveLength(4);
+
+			// All events should have required properties
+			emittedData.forEach((item: any) => {
+				expect(item).toHaveProperty('json');
+				expect(item.json).toHaveProperty('event');
+				expect(item.json).toHaveProperty('serverId');
+				expect(item.json).toHaveProperty('timestamp');
+			});
 		});
 
-		test('should emit status event in manual trigger', async () => {
+		test('should emit all event types in manual trigger', async () => {
 			const result = await triggerNode.trigger.call(mockTriggerFunctions);
 
 			await result.manualTriggerFunction!();
 
-			const emittedData = mockEmit.mock.calls[0][0][0][0];
-			expect(emittedData.json.event).toBe('status');
-			expect(emittedData.json.data).toEqual(['running']);
+			const emittedData = mockEmit.mock.calls[0][0][0];
+
+			// Verify console output event
+			expect(emittedData[0].json.event).toBe('console output');
+			expect(emittedData[0].json.data).toHaveLength(1);
+			expect(typeof emittedData[0].json.data[0]).toBe('string');
+
+			// Verify status event
+			expect(emittedData[1].json.event).toBe('status');
+			expect(emittedData[1].json.data).toEqual(['running']);
+
+			// Verify stats event (automatically parsed to object)
+			expect(emittedData[2].json.event).toBe('stats');
+			expect(typeof emittedData[2].json.data[0]).toBe('object');
+			expect(emittedData[2].json.data[0]).toHaveProperty('memory_bytes');
+			expect(emittedData[2].json.data[0]).toHaveProperty('cpu_absolute');
+			expect(emittedData[2].json.data[0]).toHaveProperty('disk_bytes');
+			expect(emittedData[2].json.data[0]).toHaveProperty('network');
+
+			// Verify daemon message event
+			expect(emittedData[3].json.event).toBe('daemon message');
+			expect(emittedData[3].json.data).toHaveLength(1);
+			expect(typeof emittedData[3].json.data[0]).toBe('string');
 		});
 	});
 

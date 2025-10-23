@@ -65,22 +65,7 @@ export class PterodactylWebsocketTrigger implements INodeType {
 					{
 						name: 'Daemon Message',
 						value: 'daemon message',
-						description: 'Messages from Wings daemon',
-					},
-					{
-						name: 'Install Started',
-						value: 'install started',
-						description: 'Server installation started',
-					},
-					{
-						name: 'Install Output',
-						value: 'install output',
-						description: 'Installation progress output',
-					},
-					{
-						name: 'Install Completed',
-						value: 'install completed',
-						description: 'Installation finished',
+						description: 'System messages from Wings daemon',
 					},
 				],
 				default: ['*'],
@@ -236,12 +221,23 @@ export class PterodactylWebsocketTrigger implements INodeType {
 			return (data: any) => {
 				if (!shouldEmit(eventName)) return;
 
+				// Parse stats JSON string to object for better usability
+				let processedData = data;
+				if (eventName === 'stats' && Array.isArray(data) && data.length > 0 && typeof data[0] === 'string') {
+					try {
+						processedData = [JSON.parse(data[0])];
+					} catch (error) {
+						console.warn('[PterodactylWebsocketTrigger] Failed to parse stats JSON:', error);
+						// Keep original data if parsing fails
+					}
+				}
+
 				const item = {
 					json: {
 						event: eventName,
 						timestamp: new Date().toISOString(),
 						serverId,
-						data,
+						data: processedData,
 						...(includeRawData && { raw: { event: eventName, args: data } }),
 					},
 				};
@@ -259,14 +255,12 @@ export class PterodactylWebsocketTrigger implements INodeType {
 		};
 
 		// Register handlers for all possible events
+		// Based on official Pterodactyl WebSocket API documentation
 		const eventNames = [
 			'console output',
 			'status',
 			'stats',
 			'daemon message',
-			'install started',
-			'install output',
-			'install completed',
 			'jwt error',
 			'token expiring',
 			'token expired',
@@ -304,17 +298,58 @@ export class PterodactylWebsocketTrigger implements INodeType {
 
 		// Manual trigger function for testing
 		const manualTriggerFunction = async () => {
-			// Emit sample data for manual testing
-			const sampleItem = {
-				json: {
-					event: 'status',
-					timestamp: new Date().toISOString(),
-					serverId,
-					data: ['running'],
-					message: 'Manual trigger - sample event',
+			// Emit sample data for each event type to demonstrate different outputs
+			// Stats are automatically parsed to objects for better usability
+			const timestamp = new Date().toISOString();
+
+			const sampleEvents = [
+				{
+					json: {
+						event: 'console output',
+						timestamp,
+						serverId,
+						data: ['[10:30:45] [Server thread/INFO]: Sample console output - server is running'],
+					},
 				},
-			};
-			this.emit([this.helpers.returnJsonArray([sampleItem])]);
+				{
+					json: {
+						event: 'status',
+						timestamp,
+						serverId,
+						data: ['running'],
+					},
+				},
+				{
+					json: {
+						event: 'stats',
+						timestamp,
+						serverId,
+						data: [{
+							memory_bytes: 536870912,
+							memory_limit_bytes: 1073741824,
+							cpu_absolute: 45.5,
+							disk_bytes: 2147483648,
+							network: {
+								rx_bytes: 1048576,
+								tx_bytes: 524288,
+							},
+							state: 'running',
+							uptime: 3600,
+						}],
+					},
+				},
+				{
+					json: {
+						event: 'daemon message',
+						timestamp,
+						serverId,
+						data: ['Sample daemon message - server container started successfully'],
+					},
+				},
+			];
+
+			// Emit all sample events
+			this.emit([this.helpers.returnJsonArray(sampleEvents)]);
 		};
 
 		// Return close function for cleanup

@@ -98,15 +98,6 @@ describe('PterodactylWebsocketTrigger - Event Handling', () => {
 			expect(wsManagerInstance.on).toHaveBeenCalledWith('jwt error', expect.any(Function));
 		});
 
-		test('should register handlers for installation events', async () => {
-			await triggerNode.trigger.call(mockTriggerFunctions);
-
-			wsManagerInstance = (PterodactylWebSocketManager as jest.Mock).mock.results[0].value;
-
-			expect(wsManagerInstance.on).toHaveBeenCalledWith('install started', expect.any(Function));
-			expect(wsManagerInstance.on).toHaveBeenCalledWith('install output', expect.any(Function));
-			expect(wsManagerInstance.on).toHaveBeenCalledWith('install completed', expect.any(Function));
-		});
 
 		test('should register handlers for token events', async () => {
 			await triggerNode.trigger.call(mockTriggerFunctions);
@@ -390,6 +381,35 @@ describe('PterodactylWebsocketTrigger - Event Handling', () => {
 			expect(mockEmit).toHaveBeenCalled();
 			const emittedData = mockEmit.mock.calls[0][0][0][0];
 			expect(emittedData.json.data).toEqual([complexStats]);
+		});
+
+		test('should parse stats JSON string to object', async () => {
+			await triggerNode.trigger.call(mockTriggerFunctions);
+
+			wsManagerInstance = (PterodactylWebSocketManager as jest.Mock).mock.results[0].value;
+
+			// Simulate real Pterodactyl stats format (JSON string)
+			const statsJson = JSON.stringify({
+				memory_bytes: 536870912,
+				memory_limit_bytes: 1073741824,
+				cpu_absolute: 45.5,
+				disk_bytes: 2147483648,
+				network: {
+					rx_bytes: 1048576,
+					tx_bytes: 524288,
+				},
+				state: 'running',
+			});
+
+			wsManagerInstance._triggerEvent('stats', [statsJson]);
+
+			expect(mockEmit).toHaveBeenCalled();
+			const emittedData = mockEmit.mock.calls[0][0][0][0];
+
+			// Should be parsed to object
+			expect(typeof emittedData.json.data[0]).toBe('object');
+			expect(emittedData.json.data[0]).toHaveProperty('memory_bytes');
+			expect(emittedData.json.data[0].memory_bytes).toBe(536870912);
 		});
 	});
 });
