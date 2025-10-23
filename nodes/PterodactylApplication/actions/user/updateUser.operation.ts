@@ -3,7 +3,7 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const updateUserOperation: INodeProperties[] = [
 	{
-		displayName: 'User Id',
+		displayName: 'User ID',
 		name: 'userId',
 		type: 'number',
 		required: true,
@@ -13,7 +13,7 @@ export const updateUserOperation: INodeProperties[] = [
 				operation: ['updateUser'],
 			},
 		},
-		default: 0,
+		default: 1,
 		description: 'ID of the user',
 	},
 	{
@@ -105,5 +105,5 @@ export async function updateUser(this: IExecuteFunctions, index: number): Promis
 		{},
 		index,
 	);
-	return response;
+	return response.attributes || response;
 }

@@ -3,17 +3,17 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const reinstallServerOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Id',
+		displayName: 'Server ID',
 		name: 'serverId',
 		type: 'number',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['reinstallServer'],
+				operation: ['reinstall'],
 			},
 		},
-		default: 0,
+		default: 1,
 		description: 'ID of the server to reinstall',
 	}
 ];
@@ -30,5 +30,5 @@ export async function reinstallServer(this: IExecuteFunctions, index: number): P
 		{},
 		index,
 	);
-	return response;
+	return response.attributes || response;
 }

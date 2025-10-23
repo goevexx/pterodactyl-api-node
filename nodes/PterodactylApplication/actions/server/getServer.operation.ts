@@ -3,17 +3,17 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const getServerOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Id',
+		displayName: 'Server ID',
 		name: 'serverId',
 		type: 'number',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['getServer'],
+				operation: ['get'],
 			},
 		},
-		default: 0,
+		default: 1,
 		description: 'ID of the server',
 	}
 ];
@@ -30,5 +30,5 @@ export async function getServer(this: IExecuteFunctions, index: number): Promise
 		{},
 		index,
 	);
-	return response;
+	return response.attributes || response;
 }

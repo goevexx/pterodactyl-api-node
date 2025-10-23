@@ -3,32 +3,37 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const createLocationOperation: INodeProperties[] = [
 	{
-		displayName: 'Short',
+		displayName: 'Short Code',
 		name: 'short',
 		type: 'string',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['location'],
-				operation: ['createLocation'],
+				operation: ['create'],
 			},
 		},
 		default: '',
-		description: 'Short code (e.g., us-east)',
+		description: 'Short identifier for the location (e.g., us-east)',
+		placeholder: 'us-east',
 	},
 	{
-		displayName: 'Long',
+		displayName: 'Description',
 		name: 'long',
 		type: 'string',
+		typeOptions: {
+			rows: 4,
+		},
 		required: false,
 		displayOptions: {
 			show: {
 				resource: ['location'],
-				operation: ['createLocation'],
+				operation: ['create'],
 			},
 		},
 		default: '',
-		description: 'Long description (e.g., US East)',
+		description: 'Detailed description of the location',
+		placeholder: 'Data center located on the US East Coast',
 	}
 ];
 
@@ -45,5 +50,5 @@ export async function createLocation(this: IExecuteFunctions, index: number): Pr
 		{},
 		index,
 	);
-	return response;
+	return response.attributes || response;
 }

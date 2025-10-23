@@ -17,5 +17,9 @@ export async function listLocations(this: IExecuteFunctions, index: number): Pro
 		{},
 		index,
 	);
-	return response.data || [];
+	console.log('[ListLocations] Raw API response:', JSON.stringify(response, null, 2));
+	// Extract attributes from each location object
+	const locations = (response.data || []).map((location: any) => location.attributes || location);
+	console.log('[ListLocations] Processed locations:', JSON.stringify(locations, null, 2));
+	return locations;
 }

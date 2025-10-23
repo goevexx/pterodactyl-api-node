@@ -3,17 +3,17 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const updateServerStartupOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Id',
+		displayName: 'Server ID',
 		name: 'serverId',
 		type: 'number',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['updateServerStartup'],
+				operation: ['updateStartup'],
 			},
 		},
-		default: 0,
+		default: 1,
 		description: 'ID of the server',
 	},
 	{
@@ -24,7 +24,7 @@ export const updateServerStartupOperation: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['updateServerStartup'],
+				operation: ['updateStartup'],
 			},
 		},
 		default: '',
@@ -38,7 +38,7 @@ export const updateServerStartupOperation: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['updateServerStartup'],
+				operation: ['updateStartup'],
 			},
 		},
 		default: '',
@@ -52,10 +52,10 @@ export const updateServerStartupOperation: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['updateServerStartup'],
+				operation: ['updateStartup'],
 			},
 		},
-		default: 0,
+		default: 1,
 		description: 'Egg ID',
 	},
 	{
@@ -66,7 +66,7 @@ export const updateServerStartupOperation: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['updateServerStartup'],
+				operation: ['updateStartup'],
 			},
 		},
 		default: '',
@@ -90,5 +90,5 @@ export async function updateServerStartup(this: IExecuteFunctions, index: number
 		{},
 		index,
 	);
-	return response;
+	return response.attributes || response;
 }

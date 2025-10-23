@@ -17,5 +17,6 @@ export async function listUsers(this: IExecuteFunctions, index: number): Promise
 		{},
 		index,
 	);
-	return response.data || [];
+	// Extract attributes from each user object
+	return (response.data || []).map((user: any) => user.attributes || user);
 }

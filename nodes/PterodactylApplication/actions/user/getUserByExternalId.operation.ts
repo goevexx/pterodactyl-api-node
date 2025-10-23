@@ -3,14 +3,14 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const getUserByExternalIdOperation: INodeProperties[] = [
 	{
-		displayName: 'External Id',
+		displayName: 'External ID',
 		name: 'externalId',
 		type: 'string',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['user'],
-				operation: ['getUserByExternalId'],
+				operation: ['getByExternalId'],
 			},
 		},
 		default: '',
@@ -30,5 +30,5 @@ export async function getUserByExternalId(this: IExecuteFunctions, index: number
 		{},
 		index,
 	);
-	return response;
+	return response.attributes || response;
 }

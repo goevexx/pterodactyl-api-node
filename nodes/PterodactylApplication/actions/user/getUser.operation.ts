@@ -3,17 +3,17 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const getUserOperation: INodeProperties[] = [
 	{
-		displayName: 'User Id',
+		displayName: 'User ID',
 		name: 'userId',
 		type: 'number',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['user'],
-				operation: ['getUser'],
+				operation: ['get'],
 			},
 		},
-		default: 0,
+		default: 1,
 		description: 'ID of the user',
 	}
 ];
@@ -30,5 +30,5 @@ export async function getUser(this: IExecuteFunctions, index: number): Promise<a
 		{},
 		index,
 	);
-	return response;
+	return response.attributes || response;
 }

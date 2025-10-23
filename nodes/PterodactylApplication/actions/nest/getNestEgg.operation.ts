@@ -3,32 +3,32 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const getNestEggOperation: INodeProperties[] = [
 	{
-		displayName: 'Nest Id',
+		displayName: 'Nest ID',
 		name: 'nestId',
 		type: 'number',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['nest'],
-				operation: ['getNestEgg'],
+				operation: ['getEgg'],
 			},
 		},
-		default: 0,
+		default: 1,
 		description: 'ID of the nest',
 	},
 	{
-		displayName: 'Egg Id',
+		displayName: 'Egg ID',
 		name: 'eggId',
 		type: 'number',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['nest'],
-				operation: ['getNestEgg'],
+				operation: ['getEgg'],
 			},
 		},
-		default: 0,
-		description: 'ID of the egg',
+		default: 1,
+		description: 'ID of the egg to retrieve',
 	}
 ];
 
@@ -45,5 +45,5 @@ export async function getNestEgg(this: IExecuteFunctions, index: number): Promis
 		{},
 		index,
 	);
-	return response;
+	return response.attributes || response;
 }

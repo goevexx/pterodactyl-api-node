@@ -17,5 +17,6 @@ export async function listServers(this: IExecuteFunctions, index: number): Promi
 		{},
 		index,
 	);
-	return response.data || [];
+	// Extract attributes from each object
+	return (response.data || []).map((item: any) => item.attributes || item);
 }

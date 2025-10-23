@@ -3,7 +3,7 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const getNestOperation: INodeProperties[] = [
 	{
-		displayName: 'Nest Id',
+		displayName: 'Nest ID',
 		name: 'nestId',
 		type: 'number',
 		required: true,
@@ -13,8 +13,8 @@ export const getNestOperation: INodeProperties[] = [
 				operation: ['getNest'],
 			},
 		},
-		default: 0,
-		description: 'ID of the nest',
+		default: 1,
+		description: 'ID of the nest to retrieve',
 	}
 ];
 
@@ -30,5 +30,5 @@ export async function getNest(this: IExecuteFunctions, index: number): Promise<a
 		{},
 		index,
 	);
-	return response;
+	return response.attributes || response;
 }

@@ -3,17 +3,17 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const deleteServerOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Id',
+		displayName: 'Server ID',
 		name: 'serverId',
 		type: 'number',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['deleteServer'],
+				operation: ['delete'],
 			},
 		},
-		default: 0,
+		default: 1,
 		description: 'ID of the server to delete',
 	}
 ];

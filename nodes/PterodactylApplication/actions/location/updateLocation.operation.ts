@@ -3,46 +3,51 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const updateLocationOperation: INodeProperties[] = [
 	{
-		displayName: 'Location Id',
+		displayName: 'Location ID',
 		name: 'locationId',
 		type: 'number',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['location'],
-				operation: ['updateLocation'],
+				operation: ['update'],
 			},
 		},
-		default: 0,
-		description: 'ID of the location',
+		default: 1,
+		description: 'ID of the location to update',
 	},
 	{
-		displayName: 'Short',
+		displayName: 'Short Code',
 		name: 'short',
 		type: 'string',
 		required: false,
 		displayOptions: {
 			show: {
 				resource: ['location'],
-				operation: ['updateLocation'],
+				operation: ['update'],
 			},
 		},
 		default: '',
-		description: 'Short code',
+		description: 'New short identifier for the location',
+		placeholder: 'us-east',
 	},
 	{
-		displayName: 'Long',
+		displayName: 'Description',
 		name: 'long',
 		type: 'string',
+		typeOptions: {
+			rows: 4,
+		},
 		required: false,
 		displayOptions: {
 			show: {
 				resource: ['location'],
-				operation: ['updateLocation'],
+				operation: ['update'],
 			},
 		},
 		default: '',
-		description: 'Long description',
+		description: 'New detailed description of the location',
+		placeholder: 'Data center located on the US East Coast',
 	}
 ];
 
@@ -60,5 +65,5 @@ export async function updateLocation(this: IExecuteFunctions, index: number): Pr
 		{},
 		index,
 	);
-	return response;
+	return response.attributes || response;
 }

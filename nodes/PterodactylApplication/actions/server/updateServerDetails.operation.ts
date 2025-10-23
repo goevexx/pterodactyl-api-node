@@ -3,17 +3,17 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const updateServerDetailsOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Id',
+		displayName: 'Server ID',
 		name: 'serverId',
 		type: 'number',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['updateServerDetails'],
+				operation: ['updateDetails'],
 			},
 		},
-		default: 0,
+		default: 1,
 		description: 'ID of the server',
 	},
 	{
@@ -24,35 +24,35 @@ export const updateServerDetailsOperation: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['updateServerDetails'],
+				operation: ['updateDetails'],
 			},
 		},
 		default: '',
 		description: 'Server name',
 	},
 	{
-		displayName: 'User Id',
+		displayName: 'User ID',
 		name: 'userId',
 		type: 'number',
 		required: false,
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['updateServerDetails'],
+				operation: ['updateDetails'],
 			},
 		},
-		default: 0,
+		default: 1,
 		description: 'Owner user ID',
 	},
 	{
-		displayName: 'External Id',
+		displayName: 'External ID',
 		name: 'externalId',
 		type: 'string',
 		required: false,
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['updateServerDetails'],
+				operation: ['updateDetails'],
 			},
 		},
 		default: '',
@@ -66,7 +66,7 @@ export const updateServerDetailsOperation: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['updateServerDetails'],
+				operation: ['updateDetails'],
 			},
 		},
 		default: '',
@@ -90,5 +90,5 @@ export async function updateServerDetails(this: IExecuteFunctions, index: number
 		{},
 		index,
 	);
-	return response;
+	return response.attributes || response;
 }

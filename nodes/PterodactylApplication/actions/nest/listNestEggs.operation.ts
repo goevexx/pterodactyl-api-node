@@ -3,18 +3,18 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const listNestEggsOperation: INodeProperties[] = [
 	{
-		displayName: 'Nest Id',
+		displayName: 'Nest ID',
 		name: 'nestId',
 		type: 'number',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['nest'],
-				operation: ['listNestEggs'],
+				operation: ['listEggs'],
 			},
 		},
-		default: 0,
-		description: 'ID of the nest',
+		default: 1,
+		description: 'ID of the nest to list eggs from',
 	}
 ];
 
@@ -30,5 +30,6 @@ export async function listNestEggs(this: IExecuteFunctions, index: number): Prom
 		{},
 		index,
 	);
-	return response.data || [];
+	// Extract attributes from each object
+	return (response.data || []).map((item: any) => item.attributes || item);
 }

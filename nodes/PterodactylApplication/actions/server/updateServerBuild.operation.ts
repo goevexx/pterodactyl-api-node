@@ -3,17 +3,17 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const updateServerBuildOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Id',
+		displayName: 'Server ID',
 		name: 'serverId',
 		type: 'number',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['updateServerBuild'],
+				operation: ['updateBuild'],
 			},
 		},
-		default: 0,
+		default: 1,
 		description: 'ID of the server',
 	},
 	{
@@ -24,10 +24,10 @@ export const updateServerBuildOperation: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['updateServerBuild'],
+				operation: ['updateBuild'],
 			},
 		},
-		default: 0,
+		default: 1,
 		description: 'Default allocation ID',
 	},
 	{
@@ -38,7 +38,7 @@ export const updateServerBuildOperation: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['updateServerBuild'],
+				operation: ['updateBuild'],
 			},
 		},
 		default: '',
@@ -52,7 +52,7 @@ export const updateServerBuildOperation: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['updateServerBuild'],
+				operation: ['updateBuild'],
 			},
 		},
 		default: '',
@@ -75,5 +75,5 @@ export async function updateServerBuild(this: IExecuteFunctions, index: number):
 		{},
 		index,
 	);
-	return response;
+	return response.attributes || response;
 }

@@ -3,7 +3,7 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const deleteUserOperation: INodeProperties[] = [
 	{
-		displayName: 'User Id',
+		displayName: 'User ID',
 		name: 'userId',
 		type: 'number',
 		required: true,
@@ -13,7 +13,7 @@ export const deleteUserOperation: INodeProperties[] = [
 				operation: ['deleteUser'],
 			},
 		},
-		default: 0,
+		default: 1,
 		description: 'ID of the user to delete',
 	}
 ];

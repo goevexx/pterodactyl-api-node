@@ -3,18 +3,18 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const getLocationOperation: INodeProperties[] = [
 	{
-		displayName: 'Location Id',
+		displayName: 'Location ID',
 		name: 'locationId',
 		type: 'number',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['location'],
-				operation: ['getLocation'],
+				operation: ['get'],
 			},
 		},
-		default: 0,
-		description: 'ID of the location',
+		default: 1,
+		description: 'ID of the location to retrieve',
 	}
 ];
 
@@ -30,5 +30,5 @@ export async function getLocation(this: IExecuteFunctions, index: number): Promi
 		{},
 		index,
 	);
-	return response;
+	return response.attributes || response;
 }

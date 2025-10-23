@@ -59,7 +59,7 @@ export const createUserOperation: INodeProperties[] = [
 		description: 'Last name',
 	},
 	{
-		displayName: 'External Id',
+		displayName: 'External ID',
 		name: 'externalId',
 		type: 'string',
 		required: false,
@@ -105,5 +105,5 @@ export async function createUser(this: IExecuteFunctions, index: number): Promis
 		{},
 		index,
 	);
-	return response;
+	return response.attributes || response;
 }

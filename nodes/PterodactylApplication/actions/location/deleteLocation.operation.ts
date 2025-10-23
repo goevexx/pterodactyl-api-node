@@ -3,17 +3,17 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const deleteLocationOperation: INodeProperties[] = [
 	{
-		displayName: 'Location Id',
+		displayName: 'Location ID',
 		name: 'locationId',
 		type: 'number',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['location'],
-				operation: ['deleteLocation'],
+				operation: ['delete'],
 			},
 		},
-		default: 0,
+		default: 1,
 		description: 'ID of the location to delete',
 	}
 ];

@@ -3,17 +3,17 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const suspendServerOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Id',
+		displayName: 'Server ID',
 		name: 'serverId',
 		type: 'number',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['server'],
-				operation: ['suspendServer'],
+				operation: ['suspend'],
 			},
 		},
-		default: 0,
+		default: 1,
 		description: 'ID of the server to suspend',
 	}
 ];
@@ -30,5 +30,5 @@ export async function suspendServer(this: IExecuteFunctions, index: number): Pro
 		{},
 		index,
 	);
-	return response;
+	return response.attributes || response;
 }

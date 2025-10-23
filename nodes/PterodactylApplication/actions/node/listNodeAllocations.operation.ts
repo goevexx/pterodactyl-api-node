@@ -3,18 +3,18 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const listNodeAllocationsOperation: INodeProperties[] = [
 	{
-		displayName: 'Node Id',
+		displayName: 'Node ID',
 		name: 'nodeId',
 		type: 'number',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['node'],
-				operation: ['listNodeAllocations'],
+				operation: ['listAllocations'],
 			},
 		},
-		default: 0,
-		description: 'ID of the node',
+		default: 1,
+		description: 'ID of the node to list allocations from',
 	}
 ];
 
@@ -30,5 +30,6 @@ export async function listNodeAllocations(this: IExecuteFunctions, index: number
 		{},
 		index,
 	);
-	return response.data || [];
+	// Extract attributes from each object
+	return (response.data || []).map((item: any) => item.attributes || item);
 }
