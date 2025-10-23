@@ -73,6 +73,16 @@ export async function pterodactylApiRequest(
 			// Parse Pterodactyl error format
 			if (response.body?.errors) {
 				const pterodactylError = response.body.errors[0];
+
+				// ConfigurationNotPersistedException is a warning, not a fatal error
+				// The node was updated successfully, but Wings config sync failed
+				if (pterodactylError.code === 'ConfigurationNotPersistedException') {
+					// Log warning but don't throw - operation succeeded
+					console.warn(`Warning: ${pterodactylError.detail}`);
+					// Return the response body as the operation was successful
+					return response.body;
+				}
+
 				const baseMessage = `Pterodactyl API Error [${pterodactylError.code}]: ${pterodactylError.detail}`;
 				const errorMessage = enhanceErrorMessage(baseMessage, response.statusCode);
 				throw new Error(errorMessage);
@@ -93,6 +103,13 @@ export async function pterodactylApiRequest(
 		// Parse Pterodactyl error format from error.response
 		if (error.response?.body?.errors) {
 			const pterodactylError = error.response.body.errors[0];
+
+			// ConfigurationNotPersistedException is a warning, not a fatal error
+			if (pterodactylError.code === 'ConfigurationNotPersistedException') {
+				console.warn(`Warning: ${pterodactylError.detail}`);
+				return error.response.body;
+			}
+
 			const baseMessage = `Pterodactyl API Error [${pterodactylError.code}]: ${pterodactylError.detail}`;
 			const errorMessage = enhanceErrorMessage(baseMessage, error.statusCode);
 			throw new Error(errorMessage);

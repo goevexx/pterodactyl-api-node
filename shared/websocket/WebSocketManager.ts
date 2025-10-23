@@ -109,6 +109,10 @@ export class PterodactylWebSocketManager {
 			// Send authentication
 			this.sendCommand({ event: 'auth', args: [this.token] });
 
+			// Wait for authentication to be processed by Wings
+			// Wings needs a moment to validate the JWT before accepting commands
+			await new Promise(resolve => setTimeout(resolve, 200));
+
 			// Reset reconnection state on successful connection
 			this.reconnectionState = {
 				attempt: 0,
@@ -243,6 +247,9 @@ export class PterodactylWebSocketManager {
 
 			// Send new auth command
 			this.sendCommand({ event: 'auth', args: [this.token] });
+
+			// Wait for re-authentication to be processed
+			await new Promise(resolve => setTimeout(resolve, 200));
 
 			// Schedule next refresh
 			const tokenParts = this.token.split('.');

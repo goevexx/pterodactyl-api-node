@@ -119,12 +119,6 @@ export async function executeRequestLogs(
 		// Connect
 		await wsManager.connect();
 
-		// Request logs
-		wsManager.sendCommand({
-			event: 'send logs',
-			args: [],
-		});
-
 		// Collect log lines
 		const logs = await new Promise<string[]>((resolve) => {
 			const logLines: string[] = [];
@@ -132,6 +126,7 @@ export async function executeRequestLogs(
 				resolve(logLines);
 			}, timeout);
 
+			// Register handler BEFORE sending command
 			wsManager.on('console output', (data: any) => {
 				if (data && data[0]) {
 					logLines.push(data[0]);
@@ -140,6 +135,12 @@ export async function executeRequestLogs(
 						resolve(logLines);
 					}
 				}
+			});
+
+			// Request logs AFTER handler is registered
+			wsManager.sendCommand({
+				event: 'send logs',
+				args: [],
 			});
 		});
 
@@ -205,21 +206,24 @@ export async function executeRequestStats(
 		// Connect
 		await wsManager.connect();
 
-		// Request stats
-		wsManager.sendCommand({
-			event: 'send stats',
-			args: [],
-		});
-
 		// Wait for stats response
 		const stats = await new Promise<any>((resolve, reject) => {
 			const timeoutHandle = setTimeout(() => {
 				reject(new Error('Timeout waiting for stats'));
 			}, timeout);
 
+			// Register handler BEFORE sending command
 			wsManager.on('stats', (data: any) => {
 				clearTimeout(timeoutHandle);
-				resolve(data[0]);
+				// Wings sends stats as a JSON string, need to parse it
+				const statsData = typeof data[0] === 'string' ? JSON.parse(data[0]) : data[0];
+				resolve(statsData);
+			});
+
+			// Request stats AFTER handler is registered
+			wsManager.sendCommand({
+				event: 'send stats',
+				args: [],
 			});
 		});
 

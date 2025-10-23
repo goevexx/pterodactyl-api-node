@@ -167,21 +167,22 @@ export async function executeSetState(
 		// Connect
 		await wsManager.connect();
 
-		// Send power command
-		wsManager.sendCommand({
-			event: 'set state',
-			args: [powerAction],
-		});
-
 		// Wait for status confirmation
 		const newStatus = await new Promise<string>((resolve, reject) => {
 			const timeout = setTimeout(() => {
 				reject(new Error('Timeout waiting for status confirmation'));
 			}, 10000);
 
+			// Register handler BEFORE sending command
 			wsManager.on('status', (data: any) => {
 				clearTimeout(timeout);
 				resolve(data[0]);
+			});
+
+			// Send power command AFTER handler is registered
+			wsManager.sendCommand({
+				event: 'set state',
+				args: [powerAction],
 			});
 		});
 
@@ -249,12 +250,6 @@ export async function executeSendCommand(
 		// Connect
 		await wsManager.connect();
 
-		// Send command
-		wsManager.sendCommand({
-			event: 'send command',
-			args: [command],
-		});
-
 		let consoleOutput: string[] = [];
 
 		// Wait for response if requested
@@ -265,10 +260,17 @@ export async function executeSendCommand(
 					resolve(outputs); // Return what we have so far
 				}, responseTimeout);
 
+				// Register handler BEFORE sending command
 				wsManager.on('console output', (data: any) => {
 					if (data && data[0]) {
 						outputs.push(data[0]);
 					}
+				});
+
+				// Send command AFTER handler is registered
+				wsManager.sendCommand({
+					event: 'send command',
+					args: [command],
 				});
 
 				// Give it a moment to receive output
@@ -276,6 +278,12 @@ export async function executeSendCommand(
 					clearTimeout(timeout);
 					resolve(outputs);
 				}, Math.min(responseTimeout, 2000));
+			});
+		} else {
+			// No response needed - just send command
+			wsManager.sendCommand({
+				event: 'send command',
+				args: [command],
 			});
 		}
 
