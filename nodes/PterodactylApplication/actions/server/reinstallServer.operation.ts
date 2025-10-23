@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const reinstallServerOperation: INodeProperties[] = [
 	{
-		displayName: 'Server ID',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,8 +16,8 @@ export const reinstallServerOperation: INodeProperties[] = [
 				operation: ['reinstall'],
 			},
 		},
-		default: 1,
-		description: 'ID of the server to reinstall',
+		default: '',
+		description: 'The server to reinstall',
 	}
 ];
 

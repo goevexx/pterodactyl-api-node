@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const updateServerStartupOperation: INodeProperties[] = [
 	{
-		displayName: 'Server ID',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,8 +16,8 @@ export const updateServerStartupOperation: INodeProperties[] = [
 				operation: ['updateStartup'],
 			},
 		},
-		default: 1,
-		description: 'ID of the server',
+		default: '',
+		description: 'The server to update',
 	},
 	{
 		displayName: 'Startup',
@@ -47,7 +50,10 @@ export const updateServerStartupOperation: INodeProperties[] = [
 	{
 		displayName: 'Egg',
 		name: 'egg',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getAllEggs',
+		},
 		required: false,
 		displayOptions: {
 			show: {
@@ -55,8 +61,8 @@ export const updateServerStartupOperation: INodeProperties[] = [
 				operation: ['updateStartup'],
 			},
 		},
-		default: 1,
-		description: 'Egg ID',
+		default: '',
+		description: 'The egg (server type) to use',
 	},
 	{
 		displayName: 'Dockerimage',

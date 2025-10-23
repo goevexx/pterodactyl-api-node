@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const createNodeAllocationsOperation: INodeProperties[] = [
 	{
-		displayName: 'Node ID',
+		displayName: 'Node',
 		name: 'nodeId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getNodes',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,8 +16,8 @@ export const createNodeAllocationsOperation: INodeProperties[] = [
 				operation: ['createAllocations'],
 			},
 		},
-		default: 1,
-		description: 'ID of the node to create allocations on',
+		default: '',
+		description: 'The node to create allocations on',
 	},
 	{
 		displayName: 'IP Address',

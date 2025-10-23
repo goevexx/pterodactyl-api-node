@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const updateServerDetailsOperation: INodeProperties[] = [
 	{
-		displayName: 'Server ID',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,8 +16,8 @@ export const updateServerDetailsOperation: INodeProperties[] = [
 				operation: ['updateDetails'],
 			},
 		},
-		default: 1,
-		description: 'ID of the server',
+		default: '',
+		description: 'The server to update',
 	},
 	{
 		displayName: 'Name',
@@ -31,9 +34,12 @@ export const updateServerDetailsOperation: INodeProperties[] = [
 		description: 'Server name',
 	},
 	{
-		displayName: 'User ID',
+		displayName: 'Owner User',
 		name: 'userId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getUsers',
+		},
 		required: false,
 		displayOptions: {
 			show: {
@@ -41,8 +47,8 @@ export const updateServerDetailsOperation: INodeProperties[] = [
 				operation: ['updateDetails'],
 			},
 		},
-		default: 1,
-		description: 'Owner user ID',
+		default: '',
+		description: 'The user who will own this server',
 	},
 	{
 		displayName: 'External ID',

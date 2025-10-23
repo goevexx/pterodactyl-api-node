@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const createTaskOperation: INodeProperties[] = [
 	{
-		displayName: 'Server ID',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getClientServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -14,12 +17,16 @@ export const createTaskOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'ID of the server',
+		description: 'Select the server containing the schedule',
 	},
 	{
-		displayName: 'Schedule ID',
+		displayName: 'Schedule',
 		name: 'scheduleId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getSchedulesForServer',
+			loadOptionsDependsOn: ['serverId'],
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -28,7 +35,7 @@ export const createTaskOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'ID of the schedule',
+		description: 'Select the schedule to create task for',
 	},
 	{
 		displayName: 'Action',

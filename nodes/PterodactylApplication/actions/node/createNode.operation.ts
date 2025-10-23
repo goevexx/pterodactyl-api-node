@@ -17,9 +17,12 @@ export const createNodeOperation: INodeProperties[] = [
 		description: 'Node name',
 	},
 	{
-		displayName: 'Location ID',
+		displayName: 'Location',
 		name: 'locationId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getLocations',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -27,8 +30,8 @@ export const createNodeOperation: INodeProperties[] = [
 				operation: ['create'],
 			},
 		},
-		default: 1,
-		description: 'Location ID',
+		default: '',
+		description: 'The location for this node',
 	},
 	{
 		displayName: 'FQDN',

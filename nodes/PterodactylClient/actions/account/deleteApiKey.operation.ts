@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const deleteApiKeyOperation: INodeProperties[] = [
 	{
-		displayName: 'API Key Identifier',
+		displayName: 'API Key',
 		name: 'identifier',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getApiKeys',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -14,7 +17,7 @@ export const deleteApiKeyOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'The unique identifier of the API key to delete',
+		description: 'Select the API key to delete',
 	},
 ];
 

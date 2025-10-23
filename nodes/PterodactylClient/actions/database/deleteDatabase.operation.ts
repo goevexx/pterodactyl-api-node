@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const deleteDatabaseOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Identifier',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getClientServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,15 +16,17 @@ export const deleteDatabaseOperation: INodeProperties[] = [
 				operation: ['delete'],
 			},
 		},
-		placeholder: 'abc12def',
 		default: '',
-		description:
-			'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
+		description: 'Select the server containing the database',
 	},
 	{
-		displayName: 'Database ID',
+		displayName: 'Database',
 		name: 'databaseId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getDatabasesForServer',
+			loadOptionsDependsOn: ['serverId'],
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -30,7 +35,7 @@ export const deleteDatabaseOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Database identifier to delete',
+		description: 'Select the database to delete',
 	},
 ];
 

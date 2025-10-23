@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const deleteFileOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Identifier',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getClientServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,10 +16,8 @@ export const deleteFileOperation: INodeProperties[] = [
 				operation: ['delete'],
 			},
 		},
-		placeholder: 'abc12def',
 		default: '',
-		description:
-			'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
+		description: 'Select the server to delete files from',
 	},
 	{
 		displayName: 'Root Directory',

@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const setPrimaryOperation: INodeProperties[] = [
 	{
-		displayName: 'Server ID',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getClientServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -14,12 +17,16 @@ export const setPrimaryOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'ID of the server',
+		description: 'Select the server containing the allocation',
 	},
 	{
-		displayName: 'Allocation Id',
+		displayName: 'Allocation',
 		name: 'allocationId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getAllocationsForServer',
+			loadOptionsDependsOn: ['serverId'],
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -28,7 +35,7 @@ export const setPrimaryOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'ID of the allocation to set as primary',
+		description: 'Select the allocation to set as primary',
 	},
 ];
 

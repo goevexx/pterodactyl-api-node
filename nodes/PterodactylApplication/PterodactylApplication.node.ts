@@ -477,6 +477,249 @@ export class PterodactylApplication implements INodeType {
 
 	methods = {
 		loadOptions: {
+			async getServers(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/application',
+						'/servers',
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const servers = response.data || [];
+
+					if (servers.length === 0) {
+						return [{
+							name: 'No servers found - create one first',
+							value: '',
+						}];
+					}
+
+					return servers.map((server: any) => ({
+						name: `${server.attributes.name} (ID: ${server.attributes.id})`,
+						value: server.attributes.id,
+					}));
+				} catch (error) {
+					console.error('Error fetching servers:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getUsers(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/application',
+						'/users',
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const users = response.data || [];
+
+					if (users.length === 0) {
+						return [{
+							name: 'No users found - create one first',
+							value: '',
+						}];
+					}
+
+					return users.map((user: any) => ({
+						name: `${user.attributes.email} - ${user.attributes.username} (ID: ${user.attributes.id})`,
+						value: user.attributes.id,
+					}));
+				} catch (error) {
+					console.error('Error fetching users:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getLocations(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/application',
+						'/locations',
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const locations = response.data || [];
+
+					if (locations.length === 0) {
+						return [{
+							name: 'No locations found - create one first',
+							value: '',
+						}];
+					}
+
+					return locations.map((location: any) => ({
+						name: `${location.attributes.short} - ${location.attributes.long} (ID: ${location.attributes.id})`,
+						value: location.attributes.id,
+					}));
+				} catch (error) {
+					console.error('Error fetching locations:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getNests(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/application',
+						'/nests',
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const nests = response.data || [];
+
+					if (nests.length === 0) {
+						return [{
+							name: 'No nests found',
+							value: '',
+						}];
+					}
+
+					return nests.map((nest: any) => ({
+						name: `${nest.attributes.name} (ID: ${nest.attributes.id})`,
+						value: nest.attributes.id,
+					}));
+				} catch (error) {
+					console.error('Error fetching nests:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getEggsForNest(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const nestId = this.getCurrentNodeParameter('nestId') as number || this.getCurrentNodeParameter('nest') as number;
+
+					if (!nestId) {
+						return [];
+					}
+
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/application',
+						`/nests/${nestId}/eggs`,
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const eggs = response.data || [];
+
+					if (eggs.length === 0) {
+						return [{
+							name: 'No eggs found for this nest',
+							value: '',
+						}];
+					}
+
+					return eggs.map((egg: any) => ({
+						name: `${egg.attributes.name} (ID: ${egg.attributes.id})`,
+						value: egg.attributes.id,
+					}));
+				} catch (error) {
+					console.error('Error fetching eggs:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getAllEggs(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					// First get all nests
+					const nestsResponse = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/application',
+						'/nests',
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const nests = nestsResponse.data || [];
+					const allEggs: any[] = [];
+
+					// Get eggs from each nest
+					for (const nest of nests) {
+						const eggsResponse = await pterodactylApiRequest.call(
+							this as unknown as IExecuteFunctions,
+							'GET',
+							'/api/application',
+							`/nests/${nest.attributes.id}/eggs`,
+							{},
+							{},
+							{},
+							0,
+						);
+
+						const eggs = eggsResponse.data || [];
+						eggs.forEach((egg: any) => {
+							allEggs.push({
+								name: `${nest.attributes.name}: ${egg.attributes.name} (ID: ${egg.attributes.id})`,
+								value: egg.attributes.id,
+							});
+						});
+					}
+
+					if (allEggs.length === 0) {
+						return [{
+							name: 'No eggs found',
+							value: '',
+						}];
+					}
+
+					return allEggs;
+				} catch (error) {
+					console.error('Error fetching all eggs:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
 			async getNodes(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
 				const { pterodactylApiRequest } = await import('../../shared/transport');
 				const response = await pterodactylApiRequest.call(

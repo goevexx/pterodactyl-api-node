@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const getSubuserOperation: INodeProperties[] = [
 	{
-		displayName: 'Server ID',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getClientServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -14,12 +17,16 @@ export const getSubuserOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'ID of the server',
+		description: 'Select the server containing the subuser',
 	},
 	{
-		displayName: 'Uuid',
+		displayName: 'Subuser',
 		name: 'uuid',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getSubusersForServer',
+			loadOptionsDependsOn: ['serverId'],
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -28,7 +35,7 @@ export const getSubuserOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'UUID of the subuser',
+		description: 'Select the subuser to retrieve',
 	},
 ];
 

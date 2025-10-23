@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const unsuspendServerOperation: INodeProperties[] = [
 	{
-		displayName: 'Server ID',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,8 +16,8 @@ export const unsuspendServerOperation: INodeProperties[] = [
 				operation: ['unsuspend'],
 			},
 		},
-		default: 1,
-		description: 'ID of the server to unsuspend',
+		default: '',
+		description: 'The server to unsuspend',
 	}
 ];
 

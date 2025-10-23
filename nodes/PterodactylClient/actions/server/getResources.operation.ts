@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const getResourcesOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Identifier',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getClientServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,10 +16,8 @@ export const getResourcesOperation: INodeProperties[] = [
 				operation: ['getResources'],
 			},
 		},
-		placeholder: 'abc12def',
 		default: '',
-		description:
-			'The server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL or use the List Servers operation. Note: This operation requires Client API credentials.',
+		description: 'Select the server to retrieve resources for',
 	},
 ];
 

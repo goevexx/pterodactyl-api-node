@@ -48,9 +48,12 @@ export const updateNodeOperation: INodeProperties[] = [
 		description: 'Description of the node',
 	},
 	{
-		displayName: 'Location ID',
+		displayName: 'Location',
 		name: 'locationId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getLocations',
+		},
 		required: false,
 		displayOptions: {
 			show: {
@@ -58,8 +61,8 @@ export const updateNodeOperation: INodeProperties[] = [
 				operation: ['update'],
 			},
 		},
-		default: 1,
-		description: 'Location ID',
+		default: '',
+		description: 'The location for this node',
 	},
 	{
 		displayName: 'FQDN',

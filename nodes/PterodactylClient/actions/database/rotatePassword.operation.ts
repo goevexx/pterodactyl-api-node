@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const rotatePasswordOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Identifier',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getClientServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,15 +16,17 @@ export const rotatePasswordOperation: INodeProperties[] = [
 				operation: ['rotatePassword'],
 			},
 		},
-		placeholder: 'abc12def',
 		default: '',
-		description:
-			'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
+		description: 'Select the server containing the database',
 	},
 	{
-		displayName: 'Database ID',
+		displayName: 'Database',
 		name: 'databaseId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getDatabasesForServer',
+			loadOptionsDependsOn: ['serverId'],
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -30,7 +35,7 @@ export const rotatePasswordOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Database identifier to rotate password for',
+		description: 'Select the database to rotate password for',
 	},
 ];
 

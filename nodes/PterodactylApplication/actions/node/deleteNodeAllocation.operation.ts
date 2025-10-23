@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const deleteNodeAllocationOperation: INodeProperties[] = [
 	{
-		displayName: 'Node ID',
+		displayName: 'Node',
 		name: 'nodeId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getNodes',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,13 +16,17 @@ export const deleteNodeAllocationOperation: INodeProperties[] = [
 				operation: ['deleteAllocation'],
 			},
 		},
-		default: 1,
-		description: 'ID of the node',
+		default: '',
+		description: 'The node containing the allocation',
 	},
 	{
-		displayName: 'Allocation ID',
+		displayName: 'Allocation',
 		name: 'allocationId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getAvailableAllocations',
+			loadOptionsDependsOn: ['nodeId'],
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -27,8 +34,8 @@ export const deleteNodeAllocationOperation: INodeProperties[] = [
 				operation: ['deleteAllocation'],
 			},
 		},
-		default: 1,
-		description: 'ID of the allocation to delete',
+		default: '',
+		description: 'The allocation to delete',
 	}
 ];
 

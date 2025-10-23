@@ -36,9 +36,12 @@ export const createServerOperation: INodeProperties[] = [
 		description: 'Optional description for this server',
 	},
 	{
-		displayName: 'Owner User ID',
+		displayName: 'Owner User',
 		name: 'userId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getUsers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -46,8 +49,8 @@ export const createServerOperation: INodeProperties[] = [
 				operation: ['create'],
 			},
 		},
-		default: 1,
-		description: 'The user ID who will own this server',
+		default: '',
+		description: 'The user who will own this server',
 	},
 	{
 		displayName: 'External ID',
@@ -67,9 +70,12 @@ export const createServerOperation: INodeProperties[] = [
 
 	// ========== Server Configuration ==========
 	{
-		displayName: 'Nest ID',
+		displayName: 'Nest',
 		name: 'nest',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getNests',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -77,13 +83,17 @@ export const createServerOperation: INodeProperties[] = [
 				operation: ['create'],
 			},
 		},
-		default: 1,
+		default: '',
 		description: 'The nest containing the egg for this server type',
 	},
 	{
-		displayName: 'Egg ID',
+		displayName: 'Egg',
 		name: 'egg',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getEggsForNest',
+			loadOptionsDependsOn: ['nest'],
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -91,7 +101,7 @@ export const createServerOperation: INodeProperties[] = [
 				operation: ['create'],
 			},
 		},
-		default: 1,
+		default: '',
 		description: 'The egg that defines server type and default configuration',
 	},
 	{

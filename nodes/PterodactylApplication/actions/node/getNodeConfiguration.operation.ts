@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const getNodeConfigurationOperation: INodeProperties[] = [
 	{
-		displayName: 'Node ID',
+		displayName: 'Node',
 		name: 'nodeId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getNodes',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,8 +16,8 @@ export const getNodeConfigurationOperation: INodeProperties[] = [
 				operation: ['getConfiguration'],
 			},
 		},
-		default: 1,
-		description: 'ID of the node',
+		default: '',
+		description: 'The node to get configuration for',
 	}
 ];
 

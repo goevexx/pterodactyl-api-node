@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const compressFilesOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Identifier',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getClientServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,10 +16,8 @@ export const compressFilesOperation: INodeProperties[] = [
 				operation: ['compress'],
 			},
 		},
-		placeholder: 'abc12def',
 		default: '',
-		description:
-			'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
+		description: 'Select the server to compress files on',
 	},
 	{
 		displayName: 'Root Directory',

@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const updateLocationOperation: INodeProperties[] = [
 	{
-		displayName: 'Location ID',
+		displayName: 'Location',
 		name: 'locationId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getLocations',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,8 +16,8 @@ export const updateLocationOperation: INodeProperties[] = [
 				operation: ['update'],
 			},
 		},
-		default: 1,
-		description: 'ID of the location to update',
+		default: '',
+		description: 'The location to update',
 	},
 	{
 		displayName: 'Short Code',

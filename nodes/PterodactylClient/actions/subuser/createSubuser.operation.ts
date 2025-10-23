@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const createSubuserOperation: INodeProperties[] = [
 	{
-		displayName: 'Server ID',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getClientServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -14,7 +17,7 @@ export const createSubuserOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'ID of the server',
+		description: 'Select the server to create subuser for',
 	},
 	{
 		displayName: 'Email',

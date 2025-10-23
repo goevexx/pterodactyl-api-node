@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const getLocationOperation: INodeProperties[] = [
 	{
-		displayName: 'Location ID',
+		displayName: 'Location',
 		name: 'locationId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getLocations',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,8 +16,8 @@ export const getLocationOperation: INodeProperties[] = [
 				operation: ['get'],
 			},
 		},
-		default: 1,
-		description: 'ID of the location to retrieve',
+		default: '',
+		description: 'The location to retrieve',
 	}
 ];
 

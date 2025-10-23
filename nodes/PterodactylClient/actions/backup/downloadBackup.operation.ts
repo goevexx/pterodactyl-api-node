@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const downloadBackupOperation: INodeProperties[] = [
 	{
-		displayName: 'Server Identifier',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getClientServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,15 +16,17 @@ export const downloadBackupOperation: INodeProperties[] = [
 				operation: ['download'],
 			},
 		},
-		placeholder: 'abc12def',
 		default: '',
-		description:
-			'The alphanumeric server identifier from your Pterodactyl Panel (e.g., abc12def). Find this in the server URL.',
+		description: 'Select the server containing the backup',
 	},
 	{
-		displayName: 'Backup ID',
+		displayName: 'Backup',
 		name: 'backupId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getBackupsForServer',
+			loadOptionsDependsOn: ['serverId'],
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -30,7 +35,7 @@ export const downloadBackupOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Backup UUID to generate download URL for',
+		description: 'Select the backup to download',
 	},
 ];
 

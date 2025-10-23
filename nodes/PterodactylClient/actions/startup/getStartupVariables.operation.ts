@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const getStartupVariablesOperation: INodeProperties[] = [
 	{
-		displayName: 'Server ID',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getClientServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -14,7 +17,7 @@ export const getStartupVariablesOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'ID of the server',
+		description: 'Select the server to get startup variables from',
 	},
 ];
 

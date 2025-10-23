@@ -1,6 +1,8 @@
 import {
 	IExecuteFunctions,
+	ILoadOptionsFunctions,
 	INodeExecutionData,
+	INodePropertyOptions,
 	INodeType,
 	INodeTypeDescription,
 } from 'n8n-workflow';
@@ -685,6 +687,335 @@ export class PterodactylClient implements INodeType {
 			...getStartupVariablesOperation,
 			...updateStartupVariableOperation,
 		],
+	};
+
+	methods = {
+		loadOptions: {
+			async getClientServers(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/client',
+						'',
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const servers = response.data || [];
+
+					if (servers.length === 0) {
+						return [{
+							name: 'No servers found',
+							value: '',
+						}];
+					}
+
+					return servers.map((server: any) => ({
+						name: `${server.attributes.name} - ${server.attributes.identifier}`,
+						value: server.attributes.identifier,
+					}));
+				} catch (error) {
+					console.error('Error fetching client servers:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getBackupsForServer(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const serverId = this.getCurrentNodeParameter('serverId') as string;
+
+					if (!serverId) {
+						return [];
+					}
+
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/client',
+						`/servers/${serverId}/backups`,
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const backups = response.data || [];
+
+					if (backups.length === 0) {
+						return [{
+							name: 'No backups found for this server',
+							value: '',
+						}];
+					}
+
+					return backups.map((backup: any) => ({
+						name: `${backup.attributes.name} - ${backup.attributes.created_at} (UUID: ${backup.attributes.uuid})`,
+						value: backup.attributes.uuid,
+					}));
+				} catch (error) {
+					console.error('Error fetching backups:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getDatabasesForServer(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const serverId = this.getCurrentNodeParameter('serverId') as string;
+
+					if (!serverId) {
+						return [];
+					}
+
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/client',
+						`/servers/${serverId}/databases`,
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const databases = response.data || [];
+
+					if (databases.length === 0) {
+						return [{
+							name: 'No databases found for this server',
+							value: '',
+						}];
+					}
+
+					return databases.map((database: any) => ({
+						name: `${database.attributes.name} (ID: ${database.attributes.id})`,
+						value: database.attributes.id,
+					}));
+				} catch (error) {
+					console.error('Error fetching databases:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getSchedulesForServer(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const serverId = this.getCurrentNodeParameter('serverId') as string;
+
+					if (!serverId) {
+						return [];
+					}
+
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/client',
+						`/servers/${serverId}/schedules`,
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const schedules = response.data || [];
+
+					if (schedules.length === 0) {
+						return [{
+							name: 'No schedules found for this server',
+							value: '',
+						}];
+					}
+
+					return schedules.map((schedule: any) => ({
+						name: `${schedule.attributes.name} (ID: ${schedule.attributes.id})`,
+						value: schedule.attributes.id,
+					}));
+				} catch (error) {
+					console.error('Error fetching schedules:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getTasksForSchedule(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const serverId = this.getCurrentNodeParameter('serverId') as string;
+					const scheduleId = this.getCurrentNodeParameter('scheduleId') as string;
+
+					if (!serverId || !scheduleId) {
+						return [];
+					}
+
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/client',
+						`/servers/${serverId}/schedules/${scheduleId}`,
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const tasks = response.attributes?.relationships?.tasks?.data || [];
+
+					if (tasks.length === 0) {
+						return [{
+							name: 'No tasks found for this schedule',
+							value: '',
+						}];
+					}
+
+					return tasks.map((task: any) => ({
+						name: `${task.attributes.action} - ${task.attributes.payload} (ID: ${task.attributes.id})`,
+						value: task.attributes.id,
+					}));
+				} catch (error) {
+					console.error('Error fetching tasks:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getAllocationsForServer(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const serverId = this.getCurrentNodeParameter('serverId') as string;
+
+					if (!serverId) {
+						return [];
+					}
+
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/client',
+						`/servers/${serverId}/network/allocations`,
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const allocations = response.data || [];
+
+					if (allocations.length === 0) {
+						return [{
+							name: 'No allocations found for this server',
+							value: '',
+						}];
+					}
+
+					return allocations.map((allocation: any) => ({
+						name: `${allocation.attributes.ip}:${allocation.attributes.port} [${allocation.attributes.is_default ? 'PRIMARY' : 'SECONDARY'}] (ID: ${allocation.attributes.id})`,
+						value: allocation.attributes.id,
+					}));
+				} catch (error) {
+					console.error('Error fetching allocations:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getSubusersForServer(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const serverId = this.getCurrentNodeParameter('serverId') as string;
+
+					if (!serverId) {
+						return [];
+					}
+
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/client',
+						`/servers/${serverId}/users`,
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const subusers = response.data || [];
+
+					if (subusers.length === 0) {
+						return [{
+							name: 'No subusers found for this server',
+							value: '',
+						}];
+					}
+
+					return subusers.map((subuser: any) => ({
+						name: `${subuser.attributes.email} (UUID: ${subuser.attributes.uuid})`,
+						value: subuser.attributes.uuid,
+					}));
+				} catch (error) {
+					console.error('Error fetching subusers:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getApiKeys(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/client',
+						'/account/api-keys',
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const apiKeys = response.data || [];
+
+					if (apiKeys.length === 0) {
+						return [{
+							name: 'No API keys found',
+							value: '',
+						}];
+					}
+
+					return apiKeys.map((apiKey: any) => ({
+						name: `${apiKey.attributes.description} - Last used: ${apiKey.attributes.last_used_at || 'Never'} (Identifier: ${apiKey.attributes.identifier})`,
+						value: apiKey.attributes.identifier,
+					}));
+				} catch (error) {
+					console.error('Error fetching API keys:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+		},
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {

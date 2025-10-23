@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const getNestEggOperation: INodeProperties[] = [
 	{
-		displayName: 'Nest ID',
+		displayName: 'Nest',
 		name: 'nestId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getNests',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,13 +16,17 @@ export const getNestEggOperation: INodeProperties[] = [
 				operation: ['getEgg'],
 			},
 		},
-		default: 1,
-		description: 'ID of the nest',
+		default: '',
+		description: 'The nest containing the egg',
 	},
 	{
-		displayName: 'Egg ID',
+		displayName: 'Egg',
 		name: 'eggId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getEggsForNest',
+			loadOptionsDependsOn: ['nestId'],
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -27,8 +34,8 @@ export const getNestEggOperation: INodeProperties[] = [
 				operation: ['getEgg'],
 			},
 		},
-		default: 1,
-		description: 'ID of the egg to retrieve',
+		default: '',
+		description: 'The egg to retrieve',
 	}
 ];
 

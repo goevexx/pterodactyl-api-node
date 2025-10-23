@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const updateUserOperation: INodeProperties[] = [
 	{
-		displayName: 'User ID',
+		displayName: 'User',
 		name: 'userId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getUsers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,8 +16,8 @@ export const updateUserOperation: INodeProperties[] = [
 				operation: ['updateUser'],
 			},
 		},
-		default: 1,
-		description: 'ID of the user',
+		default: '',
+		description: 'The user to update',
 	},
 	{
 		displayName: 'Email',

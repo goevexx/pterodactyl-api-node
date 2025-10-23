@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const forceDeleteServerOperation: INodeProperties[] = [
 	{
-		displayName: 'Server ID',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,8 +16,8 @@ export const forceDeleteServerOperation: INodeProperties[] = [
 				operation: ['forceDelete'],
 			},
 		},
-		default: 1,
-		description: 'ID of the server to force delete',
+		default: '',
+		description: 'The server to force delete',
 	}
 ];
 
