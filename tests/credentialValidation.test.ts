@@ -25,10 +25,7 @@ describe('Operation Credential Validation', () => {
 				'Power Action operation requires Client API credentials. Please configure and select Client API credentials.',
 			);
 
-			expect(mockExecuteFunctions.getCredentials).toHaveBeenCalledWith(
-				'pterodactylClientApi',
-				0,
-			);
+			expect(mockExecuteFunctions.getCredentials).toHaveBeenCalledWith('pterodactylClientApi', 0);
 		});
 
 		it('should proceed when Client API credentials are available', async () => {
@@ -41,10 +38,7 @@ describe('Operation Credential Validation', () => {
 			// This test verifies the credential check passes
 			await expect(powerAction.call(mockExecuteFunctions, 0)).rejects.toThrow();
 
-			expect(mockExecuteFunctions.getCredentials).toHaveBeenCalledWith(
-				'pterodactylClientApi',
-				0,
-			);
+			expect(mockExecuteFunctions.getCredentials).toHaveBeenCalledWith('pterodactylClientApi', 0);
 		});
 	});
 
@@ -58,10 +52,7 @@ describe('Operation Credential Validation', () => {
 				'Create API Key operation requires Client API credentials. Please configure and select Client API credentials.',
 			);
 
-			expect(mockExecuteFunctions.getCredentials).toHaveBeenCalledWith(
-				'pterodactylClientApi',
-				0,
-			);
+			expect(mockExecuteFunctions.getCredentials).toHaveBeenCalledWith('pterodactylClientApi', 0);
 		});
 	});
 
@@ -75,10 +66,7 @@ describe('Operation Credential Validation', () => {
 				'Create Backup operation requires Client API credentials. Please configure and select Client API credentials.',
 			);
 
-			expect(mockExecuteFunctions.getCredentials).toHaveBeenCalledWith(
-				'pterodactylClientApi',
-				0,
-			);
+			expect(mockExecuteFunctions.getCredentials).toHaveBeenCalledWith('pterodactylClientApi', 0);
 		});
 	});
 
@@ -92,10 +80,7 @@ describe('Operation Credential Validation', () => {
 				'List Files operation requires Client API credentials. Please configure and select Client API credentials.',
 			);
 
-			expect(mockExecuteFunctions.getCredentials).toHaveBeenCalledWith(
-				'pterodactylClientApi',
-				0,
-			);
+			expect(mockExecuteFunctions.getCredentials).toHaveBeenCalledWith('pterodactylClientApi', 0);
 		});
 	});
 
@@ -109,10 +94,7 @@ describe('Operation Credential Validation', () => {
 				'Create Database operation requires Client API credentials. Please configure and select Client API credentials.',
 			);
 
-			expect(mockExecuteFunctions.getCredentials).toHaveBeenCalledWith(
-				'pterodactylClientApi',
-				0,
-			);
+			expect(mockExecuteFunctions.getCredentials).toHaveBeenCalledWith('pterodactylClientApi', 0);
 		});
 	});
 

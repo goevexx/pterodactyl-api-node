@@ -3,136 +3,429 @@
 [![npm version](https://img.shields.io/npm/v/n8n-nodes-pterodactyl.svg)](https://www.npmjs.com/package/n8n-nodes-pterodactyl)
 [![npm downloads](https://img.shields.io/npm/dm/n8n-nodes-pterodactyl.svg)](https://www.npmjs.com/package/n8n-nodes-pterodactyl)
 [![codecov](https://codecov.io/gh/goevexx/pterodactyl-api-node/branch/main/graph/badge.svg)](https://codecov.io/gh/goevexx/pterodactyl-api-node)
-[![GitHub issues](https://img.shields.io/github/issues/goevexx/pterodactyl-api-node.svg)](https://github.com/goevexx/pterodactyl-api-node/issues)
-[![GitHub stars](https://img.shields.io/github/stars/goevexx/pterodactyl-api-node.svg)](https://github.com/goevexx/pterodactyl-api-node/stargazers)
+[![Tests](https://github.com/goevexx/pterodactyl-api-node/actions/workflows/test.yml/badge.svg)](https://github.com/goevexx/pterodactyl-api-node/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-This is an n8n community node that lets you interact with the Pterodactyl Panel API in your n8n workflows.
+> Automate your Pterodactyl Panel with n8n workflows - manage game servers, monitor resources in real-time, and control infrastructure via API.
 
-[Pterodactyl](https://pterodactyl.io/) is an open-source game server management panel built with PHP, React, and Go.
+[Pterodactyl Panel](https://pterodactyl.io/) is an open-source game server management platform built with PHP, React, and Go.
 
 [n8n](https://n8n.io/) is a [fair-code licensed](https://docs.n8n.io/sustainable-use-license/) workflow automation platform.
 
+---
+
 ## Table of Contents
 
+- [Features](#features)
 - [Installation](#installation)
-- [Operations](#operations)
-  - [Server Management](#server-management)
-  - [File Operations](#file-operations)
-  - [Database Management](#database-management)
-  - [Backup Operations](#backup-operations)
-  - [Account Operations](#account-operations)
-- [Credentials](#credentials)
+  - [Via n8n Community Nodes](#via-n8n-community-nodes)
+  - [Manual Installation (Self-Hosted)](#manual-installation-self-hosted)
+- [Quick Start](#quick-start)
+- [What You Can Do](#what-you-can-do)
+  - [Client API Operations](#client-api-operations)
+  - [Application API Operations (Admin)](#application-api-operations-admin)
+  - [WebSocket Features](#websocket-features)
+- [Usage Examples](#usage-examples)
+  - [Automated Backups](#automated-backups)
+  - [Real-Time Monitoring](#real-time-monitoring)
+  - [Config Deployment](#config-deployment)
+  - [Server Provisioning](#server-provisioning)
+- [Credentials Setup](#credentials-setup)
+  - [Client API Key](#client-api-key)
+  - [Application API Key](#application-api-key)
+- [Troubleshooting](#troubleshooting)
 - [Compatibility](#compatibility)
-- [Usage](#usage)
+- [Advanced Features](#advanced-features)
+- [Contributing](#contributing)
+- [Project Status](#project-status)
+- [License](#license)
+- [Important Notice](#important-notice)
 - [Resources](#resources)
+
+---
+
+## Features
+
+- 🎮 **47+ Operations** - Server management, files, databases, backups, users, schedules, networks
+- ⚡ **Real-Time WebSocket** - Stream console output and resource statistics
+- 👥 **Client & Application APIs** - Both user and admin operations
+- 🔐 **Credential Validation** - Tests API connectivity on credential save
+- 🎨 **Dynamic Dropdowns** - Load servers, users, and locations from your panel
+- 📦 **TypeScript** - Full type definitions included
+
+---
 
 ## Installation
 
-Follow the [installation guide](https://docs.n8n.io/integrations/community-nodes/installation/) in the n8n community nodes documentation.
+### Via n8n Community Nodes
 
-## Operations
+1. In n8n, go to **Settings** > **Community Nodes**
+2. Click **Install a community node**
+3. Enter: `n8n-nodes-pterodactyl`
+4. Click **Install**
 
-This node supports both Client API and Application API operations for comprehensive Pterodactyl Panel automation.
+### Manual Installation (Self-Hosted)
 
-### Server Management
+```bash
+cd ~/.n8n/nodes
+npm install n8n-nodes-pterodactyl
+```
 
-- **List Servers** - Get all accessible servers
-- **Get Server** - Get server details
-- **Power Action** - Start, stop, restart, or kill server
-- **Send Command** - Execute console command
-- **Get Resources** - Get server resource usage
+Restart n8n to load the new nodes.
 
-### File Operations
+---
 
-- **List Files** - List files in directory
-- **Read File** - Read file contents
-- **Write File** - Write content to file
-- **Delete File** - Delete file or folder
-- **Compress Files** - Create archive
-- **Decompress File** - Extract archive
-- **Create Folder** - Create directory
-- **Get Upload URL** - Get file upload URL
+## Quick Start
 
-### Database Management
+### 1. Set Up Credentials
 
-- **List Databases** - Get all databases
-- **Create Database** - Create new database
-- **Rotate Password** - Generate new password
-- **Delete Database** - Remove database
+You'll need an API key from your Pterodactyl Panel:
 
-### Backup Operations
+**For Client API (user operations):**
+- Go to Account Settings → API Credentials
+- Create a new API key
+- Copy the key immediately
 
-- **List Backups** - Get all backups
-- **Create Backup** - Create new backup
-- **Get Backup** - Get backup details
-- **Download Backup** - Get download URL
-- **Restore Backup** - Restore from backup
-- **Delete Backup** - Remove backup
+**For Application API (admin operations):**
+- Go to Admin Panel → Application API
+- Create a new API key with appropriate permissions
+- Copy the key immediately
 
-### Account Operations
+### 2. Configure in n8n
 
-- **Get Account** - Get account details
-- **Update Email** - Change email address
-- **Update Password** - Change password
-- **List API Keys** - Get all API keys
-- **Create API Key** - Generate new key
-- **Delete API Key** - Revoke API key
+1. Add a Pterodactyl node to your workflow
+2. Click **Create New Credential**
+3. Select the credential type you need
+4. Enter your Panel URL and API key
+5. Save and test the connection
 
-## Credentials
+### 3. Start Automating
 
-This node requires either:
+Create a workflow to list your servers and check their status.
 
-- **Pterodactyl Client API** credentials (user-level access)
-- **Pterodactyl Application API** credentials (admin-level access)
+---
 
-See the [Pterodactyl API documentation](https://pterodactyl-api-docs.netvpx.com/) for information on generating API keys.
+## What You Can Do
+
+### Client API Operations
+
+**Server Management**
+- List all your servers
+- Get server details and resource usage
+- Control server power (start, stop, restart)
+- Send console commands
+- Monitor real-time resource usage
+
+**File Operations**
+- Browse and manage server files
+- Read and write file contents
+- Create archives and extract files
+- Get secure upload URLs
+
+**Database Management**
+- List and create databases
+- Rotate passwords
+- Delete databases when needed
+
+**Backup Operations**
+- Create and restore backups
+- Download backup archives
+- Manage backup retention
+
+**Account & Access**
+- Manage your account settings
+- Control API keys
+- Manage subuser permissions
+- Configure server schedules
+
+**Network**
+- View and manage IP allocations
+- Set primary allocation
+
+### Application API Operations (Admin)
+
+**User Management**
+- Create and manage user accounts
+- View user details and their servers
+
+**Server Provisioning**
+- Create new game servers
+- Update server configurations
+- Remove servers
+
+**Infrastructure**
+- Manage datacenter locations
+
+### WebSocket Features
+
+**Real-Time Monitoring**
+- Stream console output
+- Get live resource statistics
+- React to server status changes
+- Track installation progress
+
+**Connection Management**
+- Automatic reconnection on disconnect
+- Token refresh handling
+- Graceful error recovery
+
+---
+
+## Usage Examples
+
+### Automated Backups
+
+Schedule daily backups for all servers:
+
+```
+Schedule Trigger (Daily at 3 AM)
+  ↓
+List Servers
+  ↓
+For each server
+  ↓
+  Create Backup
+  ↓
+  Send notification to Slack/Discord
+```
+
+### Real-Time Monitoring
+
+Alert on server errors from console output:
+
+```
+WebSocket Trigger
+  ↓
+Listen for console output
+  ↓
+If error detected
+  ↓
+  Send alert to team
+```
+
+### Config Deployment
+
+Deploy configuration updates automatically:
+
+```
+GitHub Webhook (on push)
+  ↓
+Download config file
+  ↓
+Write to server
+  ↓
+Restart server
+  ↓
+Confirm success
+```
+
+### Server Provisioning
+
+Automate customer onboarding:
+
+```
+Webhook (new order)
+  ↓
+Create user account
+  ↓
+Create server
+  ↓
+Send welcome email
+```
+
+---
+
+## Credentials Setup
+
+### Client API Key
+
+Use for: Server management, file operations, backups
+
+1. Log into your Pterodactyl Panel
+2. Click your username → **Account Settings**
+3. Go to **API Credentials**
+4. Click **Create New**
+5. Add a description (e.g., "n8n Automation")
+6. Copy the key (shown only once!)
+
+### Application API Key
+
+Use for: User management, server creation, admin tasks
+
+1. Log into Pterodactyl as admin
+2. Go to **Admin Panel**
+3. Navigate to **Application API**
+4. Click **Create New**
+5. Add description and select permissions
+6. Copy the key (shown only once!)
+
+**Tips:**
+- Use Client API for most automation tasks
+- Only use Application API when you need admin privileges
+- Create separate keys for different workflows
+- Never share API keys or commit them to code
+
+---
+
+## Troubleshooting
+
+### Common Issues
+
+**Can't connect to Panel**
+- Check that your Panel URL is correct (e.g., `https://panel.example.com`)
+- Remove any trailing slashes from the URL
+- Verify the panel is accessible from your n8n instance
+
+**API Key not working**
+- Make sure you copied the entire key
+- Check if the key was revoked in the panel
+- Verify you're using the right credential type (Client vs Application)
+
+**WebSocket won't connect**
+- Ensure Wings is running on the server
+- Check firewall rules allow WebSocket connections
+- Verify the server ID is correct
+
+**"ConfigurationNotPersistedException" warning**
+- This is usually harmless - it means Wings couldn't sync immediately
+- The operation succeeded on the Panel
+- Wings will sync when it comes back online
+
+### Getting Help
+
+- 📖 [GitHub Repository](https://github.com/goevexx/pterodactyl-api-node)
+- 🐛 [Report an Issue](https://github.com/goevexx/pterodactyl-api-node/issues)
+- 💬 [n8n Community Forum](https://community.n8n.io/)
+- 📧 [Email](mailto:contact@morawietz.dev)
+
+---
 
 ## Compatibility
 
-- Requires n8n version 0.198.0 or above
-- Compatible with Pterodactyl Panel v1.0 and above
+**Requirements:**
+- n8n v0.198.0 or higher
+- Pterodactyl Panel v1.0 or higher
+- Wings v1.0 or higher (for WebSocket features)
+- Node.js v18.10.0 or higher
 
-## Usage
+**Tested with:**
+- n8n 1.x
+- Pterodactyl Panel 1.11.x
+- Self-hosted and n8n Cloud
+- PostgreSQL and MySQL
 
-This node provides programmatic access to all major Pterodactyl Panel operations. Select your authentication type (Client or Application API), choose a resource, and pick the operation you want to perform.
+---
 
-### Usage Examples
+## Advanced Features
 
-#### Example 1: Automated Server Backup
+### Dynamic Dropdowns
 
-Create a scheduled workflow to backup all servers daily:
+Many operations include dropdowns that load data from your panel:
+- Server selection shows your accessible servers
+- User selection (Application API)
+- Location selection
+- Allocation management
 
-1. Schedule Trigger (daily at 3 AM)
-2. Pterodactyl: List Servers
-3. Loop over servers
-4. Pterodactyl: Create Backup
+### Pagination
 
-#### Example 2: File Deployment Pipeline
+List operations handle pagination automatically:
+- Enable "Return All" to fetch everything
+- Or set a limit for faster queries
 
-Deploy config files when Git repository updates:
+### Error Handling
 
-1. Webhook Trigger (GitHub)
-2. HTTP Request: Download file
-3. Pterodactyl: Write File
-4. Pterodactyl: Send Command (reload config)
+Error handling features:
+- Retries on HTTP 429 (rate limit) and 5xx responses
+- ConfigurationNotPersistedException logged as warning instead of error
+- WebSocket reconnection with exponential backoff
 
-More examples coming in the `examples/` directory.
+---
 
-## Resources
+## Contributing
 
-- [n8n community nodes documentation](https://docs.n8n.io/integrations/community-nodes/)
-- [Pterodactyl Panel](https://pterodactyl.io/)
-- [Pterodactyl API Documentation](https://pterodactyl-api-docs.netvpx.com/)
+This is a community project and we welcome contributions!
 
-## Development
+### How to Help
 
-This project is under active development. Contributions are welcome!
+- 🐛 Report bugs or issues you encounter
+- 💡 Suggest features or improvements
+- 📝 Improve documentation
+- 🧪 Add test coverage
+- 💻 Submit pull requests
+
+### Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/goevexx/pterodactyl-api-node.git
+cd pterodactyl-api-node
+
+# Install dependencies
+npm install
+
+# Run tests
+npm test
+
+# Build
+npm run build
+```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
+
+---
+
+## Project Status
+
+This project is actively maintained. Current focus:
+
+- ✅ Core operations implemented and tested
+- ✅ WebSocket support with auto-reconnect
+- ✅ 81% test coverage
+- 🔄 Adding more example workflows
+- 🔄 Improving documentation
+- 📋 Planning additional Pterodactyl features
+
+See [ROADMAP.md](ROADMAP.md) for detailed plans.
+
+---
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE) - Free to use, modify, and distribute.
 
-## Trademark Notice
+---
 
-Pterodactyl® is a registered trademark of Dane Everitt and contributors. This project is not officially affiliated with or endorsed by Pterodactyl Panel. The Pterodactyl logo is used under nominative fair use to indicate compatibility with the Pterodactyl Panel API.
+## Acknowledgments
+
+- Built for the [n8n](https://n8n.io/) community
+- Integrates with [Pterodactyl Panel](https://pterodactyl.io/)
+- Thanks to all contributors and users
+
+---
+
+## Important Notice
+
+> **⚠️ Independent Project**
+>
+> This project is independently maintained and not officially affiliated with Pterodactyl Panel or n8n.
+>
+> Pterodactyl® is a registered trademark of Dane Everitt and contributors. The Pterodactyl logo is used under nominative fair use to indicate compatibility with the Pterodactyl Panel API.
+
+---
+
+## Resources
+
+- [n8n Documentation](https://docs.n8n.io/)
+- [n8n Community Nodes](https://docs.n8n.io/integrations/community-nodes/)
+- [Pterodactyl Panel](https://pterodactyl.io/)
+- [Pterodactyl API Docs](https://pterodactyl-api-docs.netvpx.com/)
+
+---
+
+<div align="center">
+
+**Built with ❤️ for the community**
+
+[Documentation](https://github.com/goevexx/pterodactyl-api-node) · [Issues](https://github.com/goevexx/pterodactyl-api-node/issues) · [Discussions](https://github.com/goevexx/pterodactyl-api-node/discussions)
+
+</div>

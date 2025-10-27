@@ -75,15 +75,16 @@ import {
 
 export class Pterodactyl implements INodeType {
 	description: INodeTypeDescription = {
-		displayName: 'Pterodactyl',
+		displayName: 'Pterodactyl (Deprecated)',
 		name: 'pterodactyl',
 		icon: 'file:pterodactyl.svg',
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: 'Interact with Pterodactyl Panel API',
+		description:
+			'⚠️ DEPRECATED: Use "Pterodactyl Client" for user-level operations or "Pterodactyl Application" for admin operations instead. This node will be removed in a future version.',
 		defaults: {
-			name: 'Pterodactyl',
+			name: 'Pterodactyl (Deprecated)',
 		},
 		inputs: ['main'],
 		outputs: ['main'],

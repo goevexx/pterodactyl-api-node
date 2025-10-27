@@ -6,7 +6,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('createBackup operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -225,7 +228,9 @@ describe('createBackup operation', () => {
 			const error = new Error('API request failed');
 			mockPterodactylApiRequest.mockRejectedValue(error);
 
-			await expect(createBackup.call(mockExecuteFunctions, 0)).rejects.toThrow('API request failed');
+			await expect(createBackup.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'API request failed',
+			);
 		});
 
 		it('should handle server not found errors', async () => {
@@ -241,7 +246,9 @@ describe('createBackup operation', () => {
 			(limitError as any).statusCode = 422;
 			mockPterodactylApiRequest.mockRejectedValue(limitError);
 
-			await expect(createBackup.call(mockExecuteFunctions, 0)).rejects.toThrow('Backup limit exceeded');
+			await expect(createBackup.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Backup limit exceeded',
+			);
 		});
 	});
 });

@@ -26,7 +26,7 @@ describe('pterodactylApiRequestAllItems', () => {
 				'/servers',
 				{},
 				{},
-				0
+				0,
 			);
 
 			expect(result).toEqual([{ id: 1, name: 'Server 1' }]);
@@ -87,7 +87,7 @@ describe('pterodactylApiRequestAllItems', () => {
 				'/servers',
 				{},
 				{},
-				0
+				0,
 			);
 
 			expect(result).toEqual([
@@ -131,7 +131,7 @@ describe('pterodactylApiRequestAllItems', () => {
 				'/servers',
 				{},
 				{},
-				0
+				0,
 			);
 
 			expect(result).toHaveLength(4);
@@ -152,7 +152,7 @@ describe('pterodactylApiRequestAllItems', () => {
 				'/servers',
 				{},
 				{},
-				0
+				0,
 			);
 
 			expect(result).toEqual([]);
@@ -179,7 +179,7 @@ describe('pterodactylApiRequestAllItems', () => {
 				});
 
 			await expect(
-				pterodactylApiRequestAllItems.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, 0)
+				pterodactylApiRequestAllItems.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, 0),
 			).rejects.toThrow();
 		});
 	});
@@ -193,14 +193,7 @@ describe('pterodactylApiRequestAllItems', () => {
 				},
 			});
 
-			await pterodactylApiRequestAllItems.call(
-				mockExecuteFunctions,
-				'GET',
-				'/servers',
-				{},
-				{},
-				0
-			);
+			await pterodactylApiRequestAllItems.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, 0);
 
 			const callArgs = mockExecuteFunctions.helpers.httpRequest.mock.calls[0][0];
 			expect(callArgs.qs).toHaveProperty('page', 1);
@@ -220,7 +213,7 @@ describe('pterodactylApiRequestAllItems', () => {
 				'/servers',
 				{},
 				{ filter: 'test' },
-				0
+				0,
 			);
 
 			const callArgs = mockExecuteFunctions.helpers.httpRequest.mock.calls[0][0];
@@ -266,18 +259,58 @@ describe('pterodactylApiRequestAllItems', () => {
 					},
 				});
 
-			await pterodactylApiRequestAllItems.call(
+			await pterodactylApiRequestAllItems.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, 0);
+
+			expect(mockExecuteFunctions.helpers.httpRequest.mock.calls[0][0].qs.page).toBe(1);
+			expect(mockExecuteFunctions.helpers.httpRequest.mock.calls[1][0].qs.page).toBe(2);
+			expect(mockExecuteFunctions.helpers.httpRequest.mock.calls[2][0].qs.page).toBe(3);
+		});
+
+		it('should handle response without pagination metadata', async () => {
+			mockExecuteFunctions.helpers.httpRequest.mockResolvedValue({
+				statusCode: 200,
+				body: {
+					data: [{ id: 1 }, { id: 2 }],
+					// No meta field at all
+				},
+			});
+
+			const result = await pterodactylApiRequestAllItems.call(
 				mockExecuteFunctions,
 				'GET',
 				'/servers',
 				{},
 				{},
-				0
+				0,
 			);
 
-			expect(mockExecuteFunctions.helpers.httpRequest.mock.calls[0][0].qs.page).toBe(1);
-			expect(mockExecuteFunctions.helpers.httpRequest.mock.calls[1][0].qs.page).toBe(2);
-			expect(mockExecuteFunctions.helpers.httpRequest.mock.calls[2][0].qs.page).toBe(3);
+			expect(result).toEqual([{ id: 1 }, { id: 2 }]);
+			expect(mockExecuteFunctions.helpers.httpRequest).toHaveBeenCalledTimes(1);
+		});
+
+		it('should handle response with meta but no pagination field', async () => {
+			mockExecuteFunctions.helpers.httpRequest.mockResolvedValue({
+				statusCode: 200,
+				body: {
+					data: [{ id: 1 }],
+					meta: {
+						// meta exists but no pagination field
+						other_field: 'value',
+					},
+				},
+			});
+
+			const result = await pterodactylApiRequestAllItems.call(
+				mockExecuteFunctions,
+				'GET',
+				'/servers',
+				{},
+				{},
+				0,
+			);
+
+			expect(result).toEqual([{ id: 1 }]);
+			expect(mockExecuteFunctions.helpers.httpRequest).toHaveBeenCalledTimes(1);
 		});
 	});
 });

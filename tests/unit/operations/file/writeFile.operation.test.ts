@@ -6,7 +6,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('writeFile operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -226,7 +229,9 @@ describe('writeFile operation', () => {
 			(diskFullError as any).statusCode = 507;
 			mockPterodactylApiRequest.mockRejectedValue(diskFullError);
 
-			await expect(writeFile.call(mockExecuteFunctions, 0)).rejects.toThrow('Insufficient disk space');
+			await expect(writeFile.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Insufficient disk space',
+			);
 		});
 
 		it('should handle invalid path errors', async () => {

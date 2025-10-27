@@ -6,7 +6,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('restoreBackup operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -187,7 +190,9 @@ describe('restoreBackup operation', () => {
 			const error = new Error('API request failed');
 			mockPterodactylApiRequest.mockRejectedValue(error);
 
-			await expect(restoreBackup.call(mockExecuteFunctions, 0)).rejects.toThrow('API request failed');
+			await expect(restoreBackup.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'API request failed',
+			);
 		});
 
 		it('should handle backup not found errors', async () => {
@@ -203,7 +208,9 @@ describe('restoreBackup operation', () => {
 			(notReadyError as any).statusCode = 400;
 			mockPterodactylApiRequest.mockRejectedValue(notReadyError);
 
-			await expect(restoreBackup.call(mockExecuteFunctions, 0)).rejects.toThrow('Backup not yet completed');
+			await expect(restoreBackup.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Backup not yet completed',
+			);
 		});
 
 		it('should handle server running errors', async () => {
@@ -211,7 +218,9 @@ describe('restoreBackup operation', () => {
 			(runningError as any).statusCode = 409;
 			mockPterodactylApiRequest.mockRejectedValue(runningError);
 
-			await expect(restoreBackup.call(mockExecuteFunctions, 0)).rejects.toThrow('Server must be stopped');
+			await expect(restoreBackup.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Server must be stopped',
+			);
 		});
 	});
 });

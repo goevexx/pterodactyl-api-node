@@ -7,7 +7,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('createApiKey operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -88,9 +91,7 @@ describe('createApiKey operation', () => {
 		});
 
 		it('should not include allowed_ips in body when empty string', async () => {
-			mockExecuteFunctions.getNodeParameter
-				.mockReturnValueOnce('My Key')
-				.mockReturnValueOnce('');
+			mockExecuteFunctions.getNodeParameter.mockReturnValueOnce('My Key').mockReturnValueOnce('');
 
 			mockPterodactylApiRequest.mockResolvedValue({});
 
@@ -231,9 +232,7 @@ describe('createApiKey operation', () => {
 		});
 
 		it('should pass correct itemIndex to API request', async () => {
-			mockExecuteFunctions.getNodeParameter
-				.mockReturnValueOnce('Test Key')
-				.mockReturnValueOnce('');
+			mockExecuteFunctions.getNodeParameter.mockReturnValueOnce('Test Key').mockReturnValueOnce('');
 
 			mockPterodactylApiRequest.mockResolvedValue({});
 
@@ -256,20 +255,18 @@ describe('createApiKey operation', () => {
 		});
 
 		it('should propagate API request errors', async () => {
-			mockExecuteFunctions.getNodeParameter
-				.mockReturnValueOnce('Test Key')
-				.mockReturnValueOnce('');
+			mockExecuteFunctions.getNodeParameter.mockReturnValueOnce('Test Key').mockReturnValueOnce('');
 
 			const error = new Error('API request failed');
 			mockPterodactylApiRequest.mockRejectedValue(error);
 
-			await expect(createApiKey.call(mockExecuteFunctions, 0)).rejects.toThrow('API request failed');
+			await expect(createApiKey.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'API request failed',
+			);
 		});
 
 		it('should handle authentication errors', async () => {
-			mockExecuteFunctions.getNodeParameter
-				.mockReturnValueOnce('Test Key')
-				.mockReturnValueOnce('');
+			mockExecuteFunctions.getNodeParameter.mockReturnValueOnce('Test Key').mockReturnValueOnce('');
 
 			const authError = new Error('Invalid API key');
 			(authError as any).statusCode = 401;
@@ -287,7 +284,9 @@ describe('createApiKey operation', () => {
 			(validationError as any).statusCode = 422;
 			mockPterodactylApiRequest.mockRejectedValue(validationError);
 
-			await expect(createApiKey.call(mockExecuteFunctions, 0)).rejects.toThrow('Invalid IP address format');
+			await expect(createApiKey.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Invalid IP address format',
+			);
 		});
 	});
 });

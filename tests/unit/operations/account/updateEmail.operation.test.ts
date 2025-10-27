@@ -7,7 +7,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('updateEmail operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -197,11 +200,7 @@ describe('updateEmail operation', () => {
 		});
 
 		it('should include updated email in response', async () => {
-			const testEmails = [
-				'user1@example.com',
-				'user2@example.com',
-				'admin@company.org',
-			];
+			const testEmails = ['user1@example.com', 'user2@example.com', 'admin@company.org'];
 
 			for (const email of testEmails) {
 				jest.clearAllMocks();
@@ -300,7 +299,9 @@ describe('updateEmail operation', () => {
 			(validationError as any).statusCode = 422;
 			mockPterodactylApiRequest.mockRejectedValue(validationError);
 
-			await expect(updateEmail.call(mockExecuteFunctions, 0)).rejects.toThrow('Invalid email format');
+			await expect(updateEmail.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Invalid email format',
+			);
 		});
 
 		it('should handle email already in use error', async () => {
@@ -312,7 +313,9 @@ describe('updateEmail operation', () => {
 			(conflictError as any).statusCode = 409;
 			mockPterodactylApiRequest.mockRejectedValue(conflictError);
 
-			await expect(updateEmail.call(mockExecuteFunctions, 0)).rejects.toThrow('Email already in use');
+			await expect(updateEmail.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Email already in use',
+			);
 		});
 
 		it('should handle server errors', async () => {
@@ -324,7 +327,9 @@ describe('updateEmail operation', () => {
 			(serverError as any).statusCode = 500;
 			mockPterodactylApiRequest.mockRejectedValue(serverError);
 
-			await expect(updateEmail.call(mockExecuteFunctions, 0)).rejects.toThrow('Internal server error');
+			await expect(updateEmail.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Internal server error',
+			);
 		});
 	});
 });

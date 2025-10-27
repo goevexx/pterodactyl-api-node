@@ -21,7 +21,7 @@ jobs:
     if: github.event.pull_request.merged == true
     runs-on: ubuntu-latest
     permissions:
-      contents: write  # Minimum required for tag creation
+      contents: write # Minimum required for tag creation
 
     steps:
       - name: Check if release PR and extract version
@@ -51,7 +51,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: main
-          fetch-depth: 0  # Full history needed for tag creation
+          fetch-depth: 0 # Full history needed for tag creation
 
       - name: Check if tag already exists
         if: steps.check.outputs.is_release == 'true'

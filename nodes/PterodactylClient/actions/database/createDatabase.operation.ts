@@ -1,0 +1,79 @@
+import { IExecuteFunctions, INodeProperties } from 'n8n-workflow';
+import { pterodactylApiRequest } from '../../../../shared/transport';
+
+export const createDatabaseOperation: INodeProperties[] = [
+	{
+		displayName: 'Server',
+		name: 'serverId',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getClientServers',
+		},
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['database'],
+				operation: ['create'],
+			},
+		},
+		default: '',
+		description: 'Select the server to create database on',
+	},
+	{
+		displayName: 'Database Name',
+		name: 'database',
+		type: 'string',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['database'],
+				operation: ['create'],
+			},
+		},
+		default: '',
+		placeholder: 'my_database',
+		description: 'Database name (max 48 characters)',
+	},
+	{
+		displayName: 'Remote Access Pattern',
+		name: 'remote',
+		type: 'string',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['database'],
+				operation: ['create'],
+			},
+		},
+		default: '%',
+		placeholder: '%',
+		description: 'Remote access pattern (e.g., % for all, 127.0.0.1 for localhost only)',
+	},
+];
+
+export async function createDatabase(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Create Database operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
+	const serverId = this.getNodeParameter('serverId', index) as string;
+	const database = this.getNodeParameter('database', index) as string;
+	const remote = this.getNodeParameter('remote', index) as string;
+
+	const response = await pterodactylApiRequest.call(
+		this,
+		'POST',
+		'/api/client',
+		`/servers/${serverId}/databases`,
+		{
+			database,
+			remote,
+		},
+	);
+	return response;
+}

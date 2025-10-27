@@ -7,7 +7,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('getAccount operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -45,14 +48,7 @@ describe('getAccount operation', () => {
 
 			await getAccount.call(mockExecuteFunctions, 0);
 
-			expect(mockPterodactylApiRequest).toHaveBeenCalledWith(
-				'GET',
-				'/account',
-				{},
-				{},
-				{},
-				0,
-			);
+			expect(mockPterodactylApiRequest).toHaveBeenCalledWith('GET', '/account', {}, {}, {}, 0);
 		});
 
 		it('should use GET method', async () => {
@@ -185,27 +181,13 @@ describe('getAccount operation', () => {
 		it('should pass correct itemIndex to pterodactylApiRequest', async () => {
 			await getAccount.call(mockExecuteFunctions, 7);
 
-			expect(mockPterodactylApiRequest).toHaveBeenCalledWith(
-				'GET',
-				'/account',
-				{},
-				{},
-				{},
-				7,
-			);
+			expect(mockPterodactylApiRequest).toHaveBeenCalledWith('GET', '/account', {}, {}, {}, 7);
 		});
 
 		it('should handle itemIndex 0', async () => {
 			await getAccount.call(mockExecuteFunctions, 0);
 
-			expect(mockPterodactylApiRequest).toHaveBeenCalledWith(
-				'GET',
-				'/account',
-				{},
-				{},
-				{},
-				0,
-			);
+			expect(mockPterodactylApiRequest).toHaveBeenCalledWith('GET', '/account', {}, {}, {}, 0);
 		});
 	});
 
@@ -250,7 +232,9 @@ describe('getAccount operation', () => {
 			(serverError as any).statusCode = 500;
 			mockPterodactylApiRequest.mockRejectedValue(serverError);
 
-			await expect(getAccount.call(mockExecuteFunctions, 0)).rejects.toThrow('Internal server error');
+			await expect(getAccount.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Internal server error',
+			);
 		});
 	});
 

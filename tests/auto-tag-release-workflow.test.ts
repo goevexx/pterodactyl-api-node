@@ -123,7 +123,7 @@ describe('Auto Tag Release - Workflow Structure Validation', () => {
 			let checkStep: any;
 
 			beforeAll(() => {
-				checkStep = steps.find(s => s.name === 'Check if release PR and extract version');
+				checkStep = steps.find((s) => s.name === 'Check if release PR and extract version');
 			});
 
 			it('should exist', () => {
@@ -136,7 +136,9 @@ describe('Auto Tag Release - Workflow Structure Validation', () => {
 
 			it('should use bash regex pattern', () => {
 				expect(checkStep.run).toContain('if [[ "$PR_TITLE" =~');
-				expect(checkStep.run).toContain('^chore\\(release\\):[[:space:]]+v([0-9]+\\.[0-9]+\\.[0-9]+)$');
+				expect(checkStep.run).toContain(
+					'^chore\\(release\\):[[:space:]]+v([0-9]+\\.[0-9]+\\.[0-9]+)$',
+				);
 			});
 
 			it('should extract version using BASH_REMATCH', () => {
@@ -161,7 +163,7 @@ describe('Auto Tag Release - Workflow Structure Validation', () => {
 			let skipStep: any;
 
 			beforeAll(() => {
-				skipStep = steps.find(s => s.name === 'Skip non-release PR');
+				skipStep = steps.find((s) => s.name === 'Skip non-release PR');
 			});
 
 			it('should exist', () => {
@@ -181,7 +183,7 @@ describe('Auto Tag Release - Workflow Structure Validation', () => {
 			let checkoutStep: any;
 
 			beforeAll(() => {
-				checkoutStep = steps.find(s => s.name === 'Checkout repository');
+				checkoutStep = steps.find((s) => s.name === 'Checkout repository');
 			});
 
 			it('should exist', () => {
@@ -209,7 +211,7 @@ describe('Auto Tag Release - Workflow Structure Validation', () => {
 			let tagCheckStep: any;
 
 			beforeAll(() => {
-				tagCheckStep = steps.find(s => s.name === 'Check if tag already exists');
+				tagCheckStep = steps.find((s) => s.name === 'Check if tag already exists');
 			});
 
 			it('should exist', () => {
@@ -238,7 +240,7 @@ describe('Auto Tag Release - Workflow Structure Validation', () => {
 			let failStep: any;
 
 			beforeAll(() => {
-				failStep = steps.find(s => s.name === 'Fail if tag already exists');
+				failStep = steps.find((s) => s.name === 'Fail if tag already exists');
 			});
 
 			it('should exist', () => {
@@ -270,7 +272,7 @@ describe('Auto Tag Release - Workflow Structure Validation', () => {
 			let createTagStep: any;
 
 			beforeAll(() => {
-				createTagStep = steps.find(s => s.name === 'Create and push tag');
+				createTagStep = steps.find((s) => s.name === 'Create and push tag');
 			});
 
 			it('should exist', () => {
@@ -307,7 +309,7 @@ describe('Auto Tag Release - Workflow Structure Validation', () => {
 			let successStep: any;
 
 			beforeAll(() => {
-				successStep = steps.find(s => s.name === 'Success summary');
+				successStep = steps.find((s) => s.name === 'Success summary');
 			});
 
 			it('should exist', () => {
@@ -348,8 +350,8 @@ describe('Auto Tag Release - Workflow Structure Validation', () => {
 			expect(skipStep.if).toContain("!= 'true'");
 
 			// All other steps require is_release == true
-			const releaseSteps = steps.filter((s: any) =>
-				s.if && s.if.includes("steps.check.outputs.is_release == 'true'")
+			const releaseSteps = steps.filter(
+				(s: any) => s.if && s.if.includes("steps.check.outputs.is_release == 'true'"),
 			);
 			expect(releaseSteps.length).toBeGreaterThanOrEqual(5);
 		});
@@ -386,7 +388,7 @@ describe('Auto Tag Release - Workflow Structure Validation', () => {
 	describe('Error Handling', () => {
 		it('should handle non-release PRs gracefully', () => {
 			const skipStep = workflowYaml.jobs['auto-tag'].steps.find(
-				(s: any) => s.name === 'Skip non-release PR'
+				(s: any) => s.name === 'Skip non-release PR',
 			);
 			expect(skipStep).toBeDefined();
 			expect(skipStep.run).toContain('exit 0');
@@ -394,7 +396,7 @@ describe('Auto Tag Release - Workflow Structure Validation', () => {
 
 		it('should fail explicitly on duplicate tags', () => {
 			const failStep = workflowYaml.jobs['auto-tag'].steps.find(
-				(s: any) => s.name === 'Fail if tag already exists'
+				(s: any) => s.name === 'Fail if tag already exists',
 			);
 			expect(failStep).toBeDefined();
 			expect(failStep.run).toContain('exit 1');
@@ -404,15 +406,9 @@ describe('Auto Tag Release - Workflow Structure Validation', () => {
 			const steps = workflowYaml.jobs['auto-tag'].steps;
 
 			// Check for emoji indicators in output
-			const hasSuccessEmoji = steps.some((s: any) =>
-				s.run && s.run.includes('✅')
-			);
-			const hasInfoEmoji = steps.some((s: any) =>
-				s.run && s.run.includes('ℹ️')
-			);
-			const hasWarningEmoji = steps.some((s: any) =>
-				s.run && s.run.includes('⚠️')
-			);
+			const hasSuccessEmoji = steps.some((s: any) => s.run && s.run.includes('✅'));
+			const hasInfoEmoji = steps.some((s: any) => s.run && s.run.includes('ℹ️'));
+			const hasWarningEmoji = steps.some((s: any) => s.run && s.run.includes('⚠️'));
 
 			expect(hasSuccessEmoji).toBe(true);
 			expect(hasInfoEmoji).toBe(true);
@@ -459,7 +455,7 @@ describe('Auto Tag Release - Workflow Structure Validation', () => {
 			// Check for potentially dangerous commands
 			const dangerousCommands = ['eval', 'rm -rf /', 'sudo', 'chmod 777'];
 
-			dangerousCommands.forEach(cmd => {
+			dangerousCommands.forEach((cmd) => {
 				expect(allContent).not.toContain(cmd);
 			});
 		});
@@ -478,9 +474,7 @@ describe('Auto Tag Release - Workflow Structure Validation', () => {
 		it('should use GITHUB_STEP_SUMMARY for user feedback', () => {
 			const steps = workflowYaml.jobs['auto-tag'].steps;
 
-			const summarySteps = steps.filter((s: any) =>
-				s.run && s.run.includes('GITHUB_STEP_SUMMARY')
-			);
+			const summarySteps = steps.filter((s: any) => s.run && s.run.includes('GITHUB_STEP_SUMMARY'));
 
 			expect(summarySteps.length).toBeGreaterThanOrEqual(2);
 		});
@@ -530,7 +524,7 @@ describe('Auto Tag Release - Workflow Structure Validation', () => {
 				'chore(release): v10.20.30',
 			];
 
-			testTitles.forEach(title => {
+			testTitles.forEach((title) => {
 				const jsMatch = jsPattern.test(title);
 				expect(jsMatch).toBe(true);
 			});

@@ -7,7 +7,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('powerAction operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -58,7 +61,7 @@ describe('powerAction operation', () => {
 					{ signal: 'start' },
 					{},
 					{},
-					0
+					0,
 				);
 			}
 		});
@@ -80,7 +83,7 @@ describe('powerAction operation', () => {
 				{ signal: 'start' },
 				{},
 				{},
-				0
+				0,
 			);
 			expect(result).toEqual({
 				success: true,
@@ -119,7 +122,7 @@ describe('powerAction operation', () => {
 				{ signal: 'stop' },
 				{},
 				{},
-				0
+				0,
 			);
 			expect(result).toEqual({
 				success: true,
@@ -157,7 +160,7 @@ describe('powerAction operation', () => {
 				{ signal: 'restart' },
 				{},
 				{},
-				0
+				0,
 			);
 			expect(result).toEqual({
 				success: true,
@@ -183,7 +186,7 @@ describe('powerAction operation', () => {
 				{ signal: 'kill' },
 				{},
 				{},
-				0
+				0,
 			);
 			expect(result).toEqual({
 				success: true,
@@ -334,7 +337,9 @@ describe('powerAction operation', () => {
 				.mockReturnValueOnce('nonexistent-server')
 				.mockReturnValueOnce('start');
 
-			const notFoundError = new Error('Resource not found. Check server ID/identifier or endpoint URL.');
+			const notFoundError = new Error(
+				'Resource not found. Check server ID/identifier or endpoint URL.',
+			);
 			(notFoundError as any).statusCode = 404;
 			mockPterodactylApiRequest.mockRejectedValue(notFoundError);
 
@@ -346,11 +351,15 @@ describe('powerAction operation', () => {
 				.mockReturnValueOnce('server-123')
 				.mockReturnValueOnce('restart');
 
-			const permissionError = new Error('Insufficient permissions, server suspended, or API key lacks access');
+			const permissionError = new Error(
+				'Insufficient permissions, server suspended, or API key lacks access',
+			);
 			(permissionError as any).statusCode = 403;
 			mockPterodactylApiRequest.mockRejectedValue(permissionError);
 
-			await expect(powerAction.call(mockExecuteFunctions, 0)).rejects.toThrow('Insufficient permissions');
+			await expect(powerAction.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Insufficient permissions',
+			);
 		});
 
 		it('should handle 409 conflict error (server suspended or power action in progress)', async () => {
@@ -358,7 +367,9 @@ describe('powerAction operation', () => {
 				.mockReturnValueOnce('server-123')
 				.mockReturnValueOnce('start');
 
-			const conflictError = new Error('Server suspended, power action in progress, or would exceed disk limits');
+			const conflictError = new Error(
+				'Server suspended, power action in progress, or would exceed disk limits',
+			);
 			(conflictError as any).statusCode = 409;
 			mockPterodactylApiRequest.mockRejectedValue(conflictError);
 
@@ -374,7 +385,9 @@ describe('powerAction operation', () => {
 			(authError as any).statusCode = 401;
 			mockPterodactylApiRequest.mockRejectedValue(authError);
 
-			await expect(powerAction.call(mockExecuteFunctions, 0)).rejects.toThrow('API key invalid/expired');
+			await expect(powerAction.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'API key invalid/expired',
+			);
 		});
 
 		it('should handle 502 Wings daemon error', async () => {
@@ -386,7 +399,9 @@ describe('powerAction operation', () => {
 			(wingsError as any).statusCode = 502;
 			mockPterodactylApiRequest.mockRejectedValue(wingsError);
 
-			await expect(powerAction.call(mockExecuteFunctions, 0)).rejects.toThrow('Wings daemon down/unreachable');
+			await expect(powerAction.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Wings daemon down/unreachable',
+			);
 		});
 
 		it('should handle network errors', async () => {
@@ -397,15 +412,15 @@ describe('powerAction operation', () => {
 			const networkError = new Error('Network connection failed');
 			mockPterodactylApiRequest.mockRejectedValue(networkError);
 
-			await expect(powerAction.call(mockExecuteFunctions, 0)).rejects.toThrow('Network connection failed');
+			await expect(powerAction.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Network connection failed',
+			);
 		});
 	});
 
 	describe('edge cases', () => {
 		it('should handle empty server identifier', async () => {
-			mockExecuteFunctions.getNodeParameter
-				.mockReturnValueOnce('')
-				.mockReturnValueOnce('start');
+			mockExecuteFunctions.getNodeParameter.mockReturnValueOnce('').mockReturnValueOnce('start');
 
 			mockPterodactylApiRequest.mockResolvedValue({});
 
@@ -417,16 +432,14 @@ describe('powerAction operation', () => {
 				{ signal: 'start' },
 				{},
 				{},
-				0
+				0,
 			);
 			expect(result.serverId).toBe('');
 		});
 
 		it('should handle long server identifiers', async () => {
 			const longId = 'a'.repeat(100);
-			mockExecuteFunctions.getNodeParameter
-				.mockReturnValueOnce(longId)
-				.mockReturnValueOnce('stop');
+			mockExecuteFunctions.getNodeParameter.mockReturnValueOnce(longId).mockReturnValueOnce('stop');
 
 			mockPterodactylApiRequest.mockResolvedValue({});
 
@@ -450,7 +463,7 @@ describe('powerAction operation', () => {
 				{ signal: 'kill' },
 				{},
 				{},
-				0
+				0,
 			);
 		});
 
@@ -491,7 +504,7 @@ describe('powerAction operation', () => {
 					{ signal: action },
 					{},
 					{},
-					0
+					0,
 				);
 
 				expect(result).toEqual({

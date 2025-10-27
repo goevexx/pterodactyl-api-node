@@ -1,0 +1,84 @@
+import { IExecuteFunctions, INodeProperties } from 'n8n-workflow';
+import { pterodactylApiRequest } from '../../../../shared/transport';
+
+export const restoreBackupOperation: INodeProperties[] = [
+	{
+		displayName: 'Server',
+		name: 'serverId',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getClientServers',
+		},
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['backup'],
+				operation: ['restore'],
+			},
+		},
+		default: '',
+		description: 'Select the server containing the backup',
+	},
+	{
+		displayName: 'Backup',
+		name: 'backupId',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getBackupsForServer',
+			loadOptionsDependsOn: ['serverId'],
+		},
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['backup'],
+				operation: ['restore'],
+			},
+		},
+		default: '',
+		description: 'Select the backup to restore',
+	},
+	{
+		displayName: 'Truncate Files',
+		name: 'truncate',
+		type: 'boolean',
+		displayOptions: {
+			show: {
+				resource: ['backup'],
+				operation: ['restore'],
+			},
+		},
+		default: false,
+		description: 'Whether to delete existing files before restoring backup',
+	},
+];
+
+export async function restoreBackup(this: IExecuteFunctions, index: number): Promise<any> {
+	// Verify Client API credentials are configured
+	try {
+		await this.getCredentials('pterodactylClientApi', index);
+	} catch {
+		throw new Error(
+			'Restore Backup operation requires Client API credentials. Please configure and select Client API credentials.',
+		);
+	}
+
+	const serverId = this.getNodeParameter('serverId', index) as string;
+	const backupId = this.getNodeParameter('backupId', index) as string;
+	const truncate = this.getNodeParameter('truncate', index) as boolean;
+
+	const body: any = {
+		truncate,
+	};
+
+	await pterodactylApiRequest.call(
+		this,
+		'POST',
+		'/api/client',
+		`/servers/${serverId}/backups/${backupId}/restore`,
+		body,
+		{},
+		{},
+		index,
+	);
+	return { success: true, backupId, truncate };
+}

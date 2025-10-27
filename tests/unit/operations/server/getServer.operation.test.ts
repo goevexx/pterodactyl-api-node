@@ -7,7 +7,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('getServer operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -33,10 +36,7 @@ describe('getServer operation', () => {
 
 			await getServer.call(mockExecuteFunctions, 0);
 
-			expect(mockPterodactylApiRequest).toHaveBeenCalledWith(
-				'GET',
-				'/servers/42'
-			);
+			expect(mockPterodactylApiRequest).toHaveBeenCalledWith('GET', '/servers/42');
 		});
 
 		it('should handle alphanumeric identifiers (Client API)', async () => {
@@ -48,10 +48,7 @@ describe('getServer operation', () => {
 
 			await getServer.call(mockExecuteFunctions, 0);
 
-			expect(mockPterodactylApiRequest).toHaveBeenCalledWith(
-				'GET',
-				'/servers/abc12def'
-			);
+			expect(mockPterodactylApiRequest).toHaveBeenCalledWith('GET', '/servers/abc12def');
 		});
 
 		it('should handle server IDs with special characters', async () => {
@@ -63,10 +60,7 @@ describe('getServer operation', () => {
 
 			await getServer.call(mockExecuteFunctions, 0);
 
-			expect(mockPterodactylApiRequest).toHaveBeenCalledWith(
-				'GET',
-				'/servers/server-123-abc'
-			);
+			expect(mockPterodactylApiRequest).toHaveBeenCalledWith('GET', '/servers/server-123-abc');
 		});
 	});
 
@@ -80,10 +74,7 @@ describe('getServer operation', () => {
 
 			await getServer.call(mockExecuteFunctions, 0);
 
-			expect(mockPterodactylApiRequest).toHaveBeenCalledWith(
-				'GET',
-				'/servers/test-server-id'
-			);
+			expect(mockPterodactylApiRequest).toHaveBeenCalledWith('GET', '/servers/test-server-id');
 		});
 
 		it('should use GET method', async () => {
@@ -270,7 +261,9 @@ describe('getServer operation', () => {
 		it('should handle 404 not found error', async () => {
 			mockExecuteFunctions.getNodeParameter.mockReturnValue('nonexistent-server');
 
-			const notFoundError = new Error('Resource not found. Check server ID/identifier or endpoint URL.');
+			const notFoundError = new Error(
+				'Resource not found. Check server ID/identifier or endpoint URL.',
+			);
 			(notFoundError as any).statusCode = 404;
 			mockPterodactylApiRequest.mockRejectedValue(notFoundError);
 
@@ -284,17 +277,23 @@ describe('getServer operation', () => {
 			(authError as any).statusCode = 401;
 			mockPterodactylApiRequest.mockRejectedValue(authError);
 
-			await expect(getServer.call(mockExecuteFunctions, 0)).rejects.toThrow('API key invalid/expired');
+			await expect(getServer.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'API key invalid/expired',
+			);
 		});
 
 		it('should handle permission errors', async () => {
 			mockExecuteFunctions.getNodeParameter.mockReturnValue('server-123');
 
-			const permissionError = new Error('Insufficient permissions, server suspended, or API key lacks access');
+			const permissionError = new Error(
+				'Insufficient permissions, server suspended, or API key lacks access',
+			);
 			(permissionError as any).statusCode = 403;
 			mockPterodactylApiRequest.mockRejectedValue(permissionError);
 
-			await expect(getServer.call(mockExecuteFunctions, 0)).rejects.toThrow('Insufficient permissions');
+			await expect(getServer.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Insufficient permissions',
+			);
 		});
 
 		it('should handle server errors', async () => {
@@ -304,7 +303,9 @@ describe('getServer operation', () => {
 			(serverError as any).statusCode = 500;
 			mockPterodactylApiRequest.mockRejectedValue(serverError);
 
-			await expect(getServer.call(mockExecuteFunctions, 0)).rejects.toThrow('Pterodactyl panel error');
+			await expect(getServer.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Pterodactyl panel error',
+			);
 		});
 
 		it('should handle network errors', async () => {
@@ -313,7 +314,9 @@ describe('getServer operation', () => {
 			const networkError = new Error('Network connection failed');
 			mockPterodactylApiRequest.mockRejectedValue(networkError);
 
-			await expect(getServer.call(mockExecuteFunctions, 0)).rejects.toThrow('Network connection failed');
+			await expect(getServer.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Network connection failed',
+			);
 		});
 
 		it('should handle empty server ID', async () => {
@@ -323,10 +326,7 @@ describe('getServer operation', () => {
 
 			await getServer.call(mockExecuteFunctions, 0);
 
-			expect(mockPterodactylApiRequest).toHaveBeenCalledWith(
-				'GET',
-				'/servers/'
-			);
+			expect(mockPterodactylApiRequest).toHaveBeenCalledWith('GET', '/servers/');
 		});
 	});
 
@@ -340,10 +340,7 @@ describe('getServer operation', () => {
 
 			await getServer.call(mockExecuteFunctions, 0);
 
-			expect(mockPterodactylApiRequest).toHaveBeenCalledWith(
-				'GET',
-				`/servers/${longId}`
-			);
+			expect(mockPterodactylApiRequest).toHaveBeenCalledWith('GET', `/servers/${longId}`);
 		});
 
 		it('should handle server identifiers with URL-unsafe characters', async () => {
@@ -352,10 +349,7 @@ describe('getServer operation', () => {
 
 			await getServer.call(mockExecuteFunctions, 0);
 
-			expect(mockPterodactylApiRequest).toHaveBeenCalledWith(
-				'GET',
-				'/servers/server/with/slashes'
-			);
+			expect(mockPterodactylApiRequest).toHaveBeenCalledWith('GET', '/servers/server/with/slashes');
 		});
 
 		it('should handle response with empty attributes object', async () => {

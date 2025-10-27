@@ -19,7 +19,7 @@ describe('pterodactylApiRequest', () => {
 			mockExecuteFunctions.getNodeParameter.mockReturnValue('clientApi');
 			mockExecuteFunctions.getCredentials.mockResolvedValue(testClientCredentials);
 			mockExecuteFunctions.helpers.httpRequest.mockResolvedValue(
-				createMockHttpResponse({ data: 'test' })
+				createMockHttpResponse({ data: 'test' }),
 			);
 
 			await pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0);
@@ -31,14 +31,14 @@ describe('pterodactylApiRequest', () => {
 			mockExecuteFunctions.getNodeParameter.mockReturnValue('applicationApi');
 			mockExecuteFunctions.getCredentials.mockResolvedValue(testApplicationCredentials);
 			mockExecuteFunctions.helpers.httpRequest.mockResolvedValue(
-				createMockHttpResponse({ data: 'test' })
+				createMockHttpResponse({ data: 'test' }),
 			);
 
 			await pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0);
 
 			expect(mockExecuteFunctions.getCredentials).toHaveBeenCalledWith(
 				'pterodactylApplicationApi',
-				0
+				0,
 			);
 		});
 
@@ -47,7 +47,7 @@ describe('pterodactylApiRequest', () => {
 			mockExecuteFunctions.getCredentials.mockResolvedValue({ panelUrl: '', apiKey: 'test' });
 
 			await expect(
-				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0)
+				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0),
 			).rejects.toThrow('Panel URL is not configured');
 		});
 
@@ -59,7 +59,7 @@ describe('pterodactylApiRequest', () => {
 			});
 
 			await expect(
-				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0)
+				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0),
 			).rejects.toThrow('API Key is not configured');
 		});
 	});
@@ -69,14 +69,12 @@ describe('pterodactylApiRequest', () => {
 			mockExecuteFunctions.getNodeParameter.mockReturnValue('clientApi');
 			mockExecuteFunctions.getCredentials.mockResolvedValue(testClientCredentials);
 			mockExecuteFunctions.helpers.httpRequest.mockResolvedValue(
-				createMockHttpResponse({ data: 'test' })
+				createMockHttpResponse({ data: 'test' }),
 			);
 		});
 
 		it('should remove trailing slash from panelUrl', async () => {
-			mockExecuteFunctions.getCredentials.mockResolvedValue(
-				testClientCredentialsWithTrailingSlash
-			);
+			mockExecuteFunctions.getCredentials.mockResolvedValue(testClientCredentialsWithTrailingSlash);
 
 			await pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0);
 
@@ -129,7 +127,7 @@ describe('pterodactylApiRequest', () => {
 				{},
 				queryParams,
 				{},
-				0
+				0,
 			);
 
 			const callArgs = mockExecuteFunctions.helpers.httpRequest.mock.calls[0][0];
@@ -146,7 +144,7 @@ describe('pterodactylApiRequest', () => {
 				requestBody,
 				{},
 				{},
-				0
+				0,
 			);
 
 			const callArgs = mockExecuteFunctions.helpers.httpRequest.mock.calls[0][0];
@@ -189,7 +187,7 @@ describe('pterodactylApiRequest', () => {
 			});
 
 			await expect(
-				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers/xyz', {}, {}, {}, 0)
+				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers/xyz', {}, {}, {}, 0),
 			).rejects.toThrow('Pterodactyl API Error [ResourceNotFoundException]: Server not found');
 		});
 
@@ -208,7 +206,7 @@ describe('pterodactylApiRequest', () => {
 			});
 
 			await expect(
-				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers/xyz', {}, {}, {}, 0)
+				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers/xyz', {}, {}, {}, 0),
 			).rejects.toThrow('Resource not found. Check server ID/identifier or endpoint URL.');
 		});
 
@@ -220,7 +218,7 @@ describe('pterodactylApiRequest', () => {
 			});
 
 			await expect(
-				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0)
+				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0),
 			).rejects.toThrow('Insufficient permissions, server suspended, or API key lacks access');
 		});
 
@@ -232,7 +230,7 @@ describe('pterodactylApiRequest', () => {
 			});
 
 			await expect(
-				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0)
+				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0),
 			).rejects.toThrow('Rate limit exceeded');
 		});
 
@@ -244,7 +242,7 @@ describe('pterodactylApiRequest', () => {
 			});
 
 			await expect(
-				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0)
+				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0),
 			).rejects.toThrow('API key invalid/expired');
 		});
 
@@ -256,7 +254,7 @@ describe('pterodactylApiRequest', () => {
 			});
 
 			await expect(
-				pterodactylApiRequest.call(mockExecuteFunctions, 'POST', '/servers', {}, {}, {}, 0)
+				pterodactylApiRequest.call(mockExecuteFunctions, 'POST', '/servers', {}, {}, {}, 0),
 			).rejects.toThrow('Validation error. Check input parameters');
 		});
 
@@ -268,7 +266,7 @@ describe('pterodactylApiRequest', () => {
 			});
 
 			await expect(
-				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0)
+				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0),
 			).rejects.toThrow('Pterodactyl panel error. Check panel logs');
 		});
 
@@ -280,7 +278,7 @@ describe('pterodactylApiRequest', () => {
 			});
 
 			await expect(
-				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0)
+				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0),
 			).rejects.toThrow('Wings daemon down/unreachable');
 		});
 
@@ -292,7 +290,7 @@ describe('pterodactylApiRequest', () => {
 			});
 
 			await expect(
-				pterodactylApiRequest.call(mockExecuteFunctions, 'POST', '/power', {}, {}, {}, 0)
+				pterodactylApiRequest.call(mockExecuteFunctions, 'POST', '/power', {}, {}, {}, 0),
 			).rejects.toThrow('Server suspended, power action in progress, or would exceed disk limits');
 		});
 
@@ -303,7 +301,7 @@ describe('pterodactylApiRequest', () => {
 			});
 
 			await expect(
-				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0)
+				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0),
 			).rejects.toThrow('HTTP 503 error');
 		});
 	});
@@ -331,7 +329,7 @@ describe('pterodactylApiRequest', () => {
 			mockExecuteFunctions.helpers.httpRequest.mockRejectedValue(error);
 
 			await expect(
-				pterodactylApiRequest.call(mockExecuteFunctions, 'POST', '/servers', {}, {}, {}, 0)
+				pterodactylApiRequest.call(mockExecuteFunctions, 'POST', '/servers', {}, {}, {}, 0),
 			).rejects.toThrow('Pterodactyl API Error [ValidationException]: Invalid input');
 		});
 
@@ -341,7 +339,7 @@ describe('pterodactylApiRequest', () => {
 			mockExecuteFunctions.helpers.httpRequest.mockRejectedValue(error);
 
 			await expect(
-				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0)
+				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0),
 			).rejects.toThrow('Network error');
 		});
 
@@ -378,7 +376,7 @@ describe('pterodactylApiRequest', () => {
 			mockExecuteFunctions.helpers.httpRequest.mockRejectedValue(error);
 
 			await expect(
-				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0)
+				pterodactylApiRequest.call(mockExecuteFunctions, 'GET', '/servers', {}, {}, {}, 0),
 			).rejects.toThrow('Unknown error occurred');
 		});
 	});
@@ -403,7 +401,7 @@ describe('pterodactylApiRequest', () => {
 				{},
 				{},
 				{},
-				0
+				0,
 			);
 
 			expect(result).toEqual(responseBody);
@@ -423,7 +421,7 @@ describe('pterodactylApiRequest', () => {
 				{},
 				{},
 				{},
-				0
+				0,
 			);
 
 			expect(result).toEqual(responseBody);
@@ -442,7 +440,7 @@ describe('pterodactylApiRequest', () => {
 				{},
 				{},
 				{},
-				0
+				0,
 			);
 
 			expect(result).toBe('');

@@ -7,8 +7,14 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('listServers operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
-	const mockPterodactylApiRequestAllItems = PterodactylApiRequest.pterodactylApiRequestAllItems as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequestAllItems>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
+	const mockPterodactylApiRequestAllItems =
+		PterodactylApiRequest.pterodactylApiRequestAllItems as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequestAllItems
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -54,13 +60,7 @@ describe('listServers operation', () => {
 
 			const result = await listServers.call(mockExecuteFunctions, 0);
 
-			expect(mockPterodactylApiRequestAllItems).toHaveBeenCalledWith(
-				'GET',
-				'/servers',
-				{},
-				{},
-				0
-			);
+			expect(mockPterodactylApiRequestAllItems).toHaveBeenCalledWith('GET', '/servers', {}, {}, 0);
 			expect(result).toEqual(mockServers);
 		});
 
@@ -77,13 +77,7 @@ describe('listServers operation', () => {
 
 			await listServers.call(mockExecuteFunctions, 5);
 
-			expect(mockPterodactylApiRequestAllItems).toHaveBeenCalledWith(
-				'GET',
-				'/servers',
-				{},
-				{},
-				5
-			);
+			expect(mockPterodactylApiRequestAllItems).toHaveBeenCalledWith('GET', '/servers', {}, {}, 5);
 		});
 	});
 
@@ -95,9 +89,7 @@ describe('listServers operation', () => {
 				.mockReturnValueOnce(10); // limit
 
 			const mockResponse = {
-				data: [
-					{ object: 'server', attributes: { identifier: 'abc123', name: 'Server 1' } },
-				],
+				data: [{ object: 'server', attributes: { identifier: 'abc123', name: 'Server 1' } }],
 			};
 			mockPterodactylApiRequest.mockResolvedValue(mockResponse);
 
@@ -109,7 +101,7 @@ describe('listServers operation', () => {
 				{},
 				{ per_page: 10 },
 				{},
-				0
+				0,
 			);
 			expect(result).toEqual(mockResponse.data);
 		});
@@ -130,7 +122,7 @@ describe('listServers operation', () => {
 				{},
 				{ per_page: 50 },
 				{},
-				0
+				0,
 			);
 		});
 
@@ -150,7 +142,7 @@ describe('listServers operation', () => {
 				{},
 				{ per_page: 1 },
 				{},
-				0
+				0,
 			);
 		});
 
@@ -170,7 +162,7 @@ describe('listServers operation', () => {
 				{},
 				{ per_page: 100 },
 				{},
-				0
+				0,
 			);
 		});
 
@@ -190,7 +182,7 @@ describe('listServers operation', () => {
 				{},
 				{ per_page: 25 },
 				{},
-				3
+				3,
 			);
 		});
 	});
@@ -282,7 +274,9 @@ describe('listServers operation', () => {
 			(authError as any).statusCode = 401;
 			mockPterodactylApiRequestAllItems.mockRejectedValue(authError);
 
-			await expect(listServers.call(mockExecuteFunctions, 0)).rejects.toThrow('API key invalid/expired');
+			await expect(listServers.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'API key invalid/expired',
+			);
 		});
 
 		it('should handle permission errors', async () => {
@@ -295,7 +289,9 @@ describe('listServers operation', () => {
 			(permissionError as any).statusCode = 403;
 			mockPterodactylApiRequest.mockRejectedValue(permissionError);
 
-			await expect(listServers.call(mockExecuteFunctions, 0)).rejects.toThrow('Insufficient permissions');
+			await expect(listServers.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Insufficient permissions',
+			);
 		});
 	});
 });
