@@ -1,10 +1,120 @@
 import {
+	IExecuteFunctions,
+	ILoadOptionsFunctions,
+	INodeExecutionData,
+	INodePropertyOptions,
+	INodeType,
+	INodeTypeDescription,
+} from 'n8n-workflow';
+import {
+	listServers,
+	listServersOperation,
+	getServer,
+	getServerOperation,
+	powerAction,
+	powerActionOperation,
+	sendCommand,
+	sendCommandOperation,
+	getResources,
+	getResourcesOperation,
+} from './actions/server';
+import {
+	listFiles,
+	listFilesOperation,
+	readFile,
+	readFileOperation,
+	writeFile,
+	writeFileOperation,
+	deleteFile,
+	deleteFileOperation,
+	compressFiles,
+	compressFilesOperation,
+	decompressFile,
+	decompressFileOperation,
+	createFolder,
+	createFolderOperation,
+	getUploadUrl,
+	getUploadUrlOperation,
+} from './actions/file';
+import {
+	listDatabases,
+	listDatabasesOperation,
+	createDatabase,
+	createDatabaseOperation,
+	rotatePassword,
+	rotatePasswordOperation,
+	deleteDatabase,
+	deleteDatabaseOperation,
+} from './actions/database';
+import {
+	listBackups,
+	listBackupsOperation,
+	createBackup,
+	createBackupOperation,
+	getBackup,
+	getBackupOperation,
+	downloadBackup,
+	downloadBackupOperation,
+	deleteBackup,
+	deleteBackupOperation,
+	restoreBackup,
+	restoreBackupOperation,
+} from './actions/backup';
+import {
+	getAccount,
+	getAccountOperation,
+	updateEmail,
+	updateEmailOperation,
+	updatePassword,
+	updatePasswordOperation,
+	listApiKeys,
+	listApiKeysOperation,
+	createApiKey,
+	createApiKeyOperation,
+	deleteApiKey,
+	deleteApiKeyOperation,
+} from './actions/account';
+import {
+	listSchedules,
+	listSchedulesOperation,
+	listScheduleTasks,
+	listScheduleTasksOperation,
+	getSchedule,
+	getScheduleOperation,
+	createSchedule,
+	createScheduleOperation,
+	updateSchedule,
+	updateScheduleOperation,
+	deleteSchedule,
+	deleteScheduleOperation,
+	executeSchedule,
+	executeScheduleOperation,
+	createTask,
+	createTaskOperation,
+	updateTask,
+	updateTaskOperation,
+	deleteTask,
+	deleteTaskOperation,
+} from './actions/schedule';
+import {
+	listAllocations,
+	listAllocationsOperation,
+	assignAllocation,
+	assignAllocationOperation,
+	setPrimary,
+	setPrimaryOperation,
+	deleteAllocation,
+	deleteAllocationOperation,
+	updateNotes,
+	updateNotesOperation,
+} from './actions/network';
+import {
 	listSubusers,
 	listSubusersOperation,
-	createSubuser,
-	createSubuserOperation,
 	getSubuser,
 	getSubuserOperation,
+	createSubuser,
+	createSubuserOperation,
 	updateSubuser,
 	updateSubuserOperation,
 	deleteSubuser,
@@ -47,20 +157,53 @@ export class PterodactylClient implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
-						name: 'Delete',
-						value: 'deleteSubuser',
-						description: 'Delete a subuser',
-						action: 'Delete subuser',
+						name: 'Account',
+						value: 'account',
+						description: 'Manage account settings',
 					},
 					{
-						name: 'Get Permissions',
-						value: 'getPermissions',
-						description: 'Get available permissions',
-						action: 'Get available permissions',
+						name: 'Backup',
+						value: 'backup',
+						description: 'Manage server backups',
+					},
+					{
+						name: 'Database',
+						value: 'database',
+						description: 'Manage server databases',
+					},
+					{
+						name: 'File',
+						value: 'file',
+						description: 'Manage server files',
+					},
+					{
+						name: 'Network',
+						value: 'network',
+						description: 'Manage network allocations',
+					},
+					{
+						name: 'Schedule',
+						value: 'schedule',
+						description: 'Manage server schedules and tasks',
+					},
+					{
+						name: 'Server',
+						value: 'server',
+						description: 'Manage game servers',
+					},
+					{
+						name: 'Startup',
+						value: 'startup',
+						description: 'Manage startup variables',
+					},
+					{
+						name: 'Subuser',
+						value: 'subuser',
+						description: 'Manage server subusers',
 					},
 				],
-				default: 'listSubusers',
-				description: 'The operation to perform',
+				default: 'server',
+				description: 'The resource to operate on',
 			},
 			{
 				displayName: 'Operation',
@@ -519,18 +662,20 @@ export class PterodactylClient implements INodeType {
 						0,
 					);
 
-					const permissions = response.permissions || {};
+					const permissions = response.attributes?.permissions || response.permissions || {};
 					const options: INodePropertyOptions[] = [];
 
 					// Flatten permissions object into array of options
-					for (const [category, perms] of Object.entries(permissions)) {
-						if (Array.isArray(perms)) {
-							perms.forEach((perm: string) => {
+					// API returns: { category: { description: '...', keys: { permission: 'desc', ... } } }
+					for (const [category, categoryData] of Object.entries(permissions)) {
+						if (typeof categoryData === 'object' && categoryData !== null && 'keys' in categoryData) {
+							const keys = (categoryData as any).keys || {};
+							for (const permission of Object.keys(keys)) {
 								options.push({
-									name: `${category}.${perm}`,
-									value: `${category}.${perm}`,
+									name: `${category}.${permission}`,
+									value: `${category}.${permission}`,
 								});
-							});
+							}
 						}
 					}
 
