@@ -1,3 +1,11 @@
+## [1.3.1](https://github.com/goevexx/pterodactyl-api-node/compare/v1.3.0...v1.3.1) (2025-10-27)
+
+
+### Bug Fixes
+
+* add missing Operation dropdown fields for all resources ([#34](https://github.com/goevexx/pterodactyl-api-node/issues/34)) ([a732957](https://github.com/goevexx/pterodactyl-api-node/commit/a732957b7637350d7d333641c37dde151e647e73))
+* update workflow configuration for proper publish triggering ([#33](https://github.com/goevexx/pterodactyl-api-node/issues/33)) ([4143f53](https://github.com/goevexx/pterodactyl-api-node/commit/4143f5329a5c939a5f323e9289af22b79db3f61f))
+
 ## [1.3.0](https://github.com/goevexx/pterodactyl-api-node/compare/v1.2.0...v1.3.0) (2025-10-27)
 
 
