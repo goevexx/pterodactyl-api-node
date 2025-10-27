@@ -14,6 +14,36 @@
 
 ---
 
+## Table of Contents
+
+- [Features](#features)
+- [Installation](#installation)
+  - [Via n8n Community Nodes](#via-n8n-community-nodes)
+  - [Manual Installation (Self-Hosted)](#manual-installation-self-hosted)
+- [Quick Start](#quick-start)
+- [What You Can Do](#what-you-can-do)
+  - [Client API Operations](#client-api-operations)
+  - [Application API Operations (Admin)](#application-api-operations-admin)
+  - [WebSocket Features](#websocket-features)
+- [Usage Examples](#usage-examples)
+  - [Automated Backups](#automated-backups)
+  - [Real-Time Monitoring](#real-time-monitoring)
+  - [Config Deployment](#config-deployment)
+  - [Server Provisioning](#server-provisioning)
+- [Credentials Setup](#credentials-setup)
+  - [Client API Key](#client-api-key)
+  - [Application API Key](#application-api-key)
+- [Troubleshooting](#troubleshooting)
+- [Compatibility](#compatibility)
+- [Advanced Features](#advanced-features)
+- [Contributing](#contributing)
+- [Project Status](#project-status)
+- [License](#license)
+- [Important Notice](#important-notice)
+- [Resources](#resources)
+
+---
+
 ## Features
 
 - 🎮 **47+ Operations** - Comprehensive coverage of Pterodactyl APIs
