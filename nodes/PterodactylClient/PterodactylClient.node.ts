@@ -1187,7 +1187,7 @@ export class PterodactylClient implements INodeType {
 						responseData = await deleteBackup.call(this, i);
 					}
 				} else if (resource === 'account') {
-					if (operation === 'getAccount') {
+					if (operation === 'get') {
 						responseData = await getAccount.call(this, i);
 					} else if (operation === 'updateEmail') {
 						responseData = await updateEmail.call(this, i);
@@ -1223,31 +1223,31 @@ export class PterodactylClient implements INodeType {
 						responseData = await deleteTask.call(this, i);
 					}
 				} else if (resource === 'network') {
-					if (operation === 'listAllocations') {
+					if (operation === 'list') {
 						responseData = await listAllocations.call(this, i);
-					} else if (operation === 'assignAllocation') {
+					} else if (operation === 'assign') {
 						responseData = await assignAllocation.call(this, i);
 					} else if (operation === 'setPrimary') {
 						responseData = await setPrimary.call(this, i);
-					} else if (operation === 'deleteAllocation') {
+					} else if (operation === 'delete') {
 						responseData = await deleteAllocation.call(this, i);
 					} else if (operation === 'updateNotes') {
 						responseData = await updateNotes.call(this, i);
 					}
 				} else if (resource === 'subuser') {
-					if (operation === 'listSubusers') {
+					if (operation === 'list') {
 						responseData = await listSubusers.call(this, i);
 					} else if (operation === 'createSubuser') {
 						responseData = await createSubuser.call(this, i);
-					} else if (operation === 'getSubuser') {
+					} else if (operation === 'get') {
 						responseData = await getSubuser.call(this, i);
 					} else if (operation === 'updateSubuser') {
 						responseData = await updateSubuser.call(this, i);
-					} else if (operation === 'deleteSubuser') {
-					responseData = await deleteSubuser.call(this, i);
-				} else if (operation === 'getPermissions') {
-					responseData = await getPermissions.call(this, i);
-				}
+					} else if (operation === 'delete') {
+						responseData = await deleteSubuser.call(this, i);
+					} else if (operation === 'getPermissions') {
+						responseData = await getPermissions.call(this, i);
+					}
 				} else if (resource === 'startup') {
 					if (operation === 'getStartupVariables') {
 						responseData = await getStartupVariables.call(this, i);
