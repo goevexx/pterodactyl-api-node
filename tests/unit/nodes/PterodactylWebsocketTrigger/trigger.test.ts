@@ -91,7 +91,8 @@ describe('PterodactylWebsocketTrigger', () => {
 			const serverIdParam = properties.find((p) => p.name === 'serverId');
 			expect(serverIdParam).toBeDefined();
 			expect(serverIdParam!.required).toBe(true);
-			expect(serverIdParam!.type).toBe('string');
+			// serverId is now a dropdown (options type) instead of string
+			expect(serverIdParam!.type).toBe('options');
 		});
 
 		test('should have events parameter with multiOptions', () => {

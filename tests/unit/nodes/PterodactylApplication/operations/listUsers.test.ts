@@ -41,7 +41,21 @@ describe('PterodactylApplication - listUsers operation', () => {
 
 		const result = await listUsers.call(mockExecuteFunctions, 0);
 
-		expect(result).toEqual(mockUsers);
+		// Expect flattened response (attributes only)
+		expect(result).toEqual([
+			{
+				id: 1,
+				username: 'admin',
+				email: 'admin@example.com',
+				root_admin: true,
+			},
+			{
+				id: 2,
+				username: 'user1',
+				email: 'user1@example.com',
+				root_admin: false,
+			},
+		]);
 	});
 
 	it('should use /api/application API base', async () => {

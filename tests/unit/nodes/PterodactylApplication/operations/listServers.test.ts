@@ -43,7 +43,23 @@ describe('PterodactylApplication - listServers operation', () => {
 
 		const result = await listServers.call(mockExecuteFunctions, 0);
 
-		expect(result).toEqual(mockServers);
+		// Expect flattened response (attributes only)
+		expect(result).toEqual([
+			{
+				id: 1,
+				identifier: 'server1',
+				uuid: 'uuid-1',
+				name: 'Production Server',
+				suspended: false,
+			},
+			{
+				id: 2,
+				identifier: 'server2',
+				uuid: 'uuid-2',
+				name: 'Dev Server',
+				suspended: false,
+			},
+		]);
 	});
 
 	it('should use /api/application API base', async () => {
@@ -125,7 +141,8 @@ describe('PterodactylApplication - listServers operation', () => {
 
 		const result = await listServers.call(mockExecuteFunctions, 0);
 
-		expect(result[0].attributes).toHaveProperty('limits');
-		expect(result[0].attributes.limits.memory).toBe(2048);
+		// Expect flattened response (attributes only, no nested attributes)
+		expect(result[0]).toHaveProperty('limits');
+		expect(result[0].limits.memory).toBe(2048);
 	});
 });

@@ -33,7 +33,12 @@ describe('PterodactylApplication - createLocation operation', () => {
 
 		const result = await createLocation.call(mockExecuteFunctions, 0);
 
-		expect(result).toEqual(mockLocationResponse);
+		// Expect flattened response (attributes content)
+		expect(result).toEqual({
+			id: 1,
+			short: 'us-east',
+			long: '',
+		});
 		expect(mockExecuteFunctions.getNodeParameter).toHaveBeenCalledWith('short', 0);
 	});
 
@@ -58,7 +63,12 @@ describe('PterodactylApplication - createLocation operation', () => {
 
 		const result = await createLocation.call(mockExecuteFunctions, 0);
 
-		expect(result).toEqual(mockLocationResponse);
+		// Expect flattened response (attributes content)
+		expect(result).toEqual({
+			id: 2,
+			short: 'eu-west',
+			long: 'EU West',
+		});
 		expect(mockExecuteFunctions.getNodeParameter).toHaveBeenCalledWith('long', 0);
 	});
 
