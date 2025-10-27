@@ -9,6 +9,7 @@ This document outlines the planned development for the n8n Pterodactyl Node. Thi
 All essential Pterodactyl Panel operations are implemented and tested:
 
 **Client API (End-User Operations)**
+
 - Server Management (5 operations)
 - File Operations (8 operations)
 - Database Management (4 operations)
@@ -19,11 +20,13 @@ All essential Pterodactyl Panel operations are implemented and tested:
 - Network Management (2 operations)
 
 **Application API (Admin Operations)**
+
 - User Management (5 operations)
 - Server Management (4 operations)
 - Location Management (2 operations)
 
 **WebSocket Real-Time Operations**
+
 - WebSocket Trigger Node (real-time event streaming)
 - WebSocket Command Node (server control, logs & stats, connection management)
 

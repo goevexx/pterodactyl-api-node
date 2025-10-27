@@ -108,18 +108,12 @@ describe('PterodactylWebsocketTrigger', () => {
 			const eventsParam = properties.find((p) => p.name === 'events');
 			const options = (eventsParam as any).options;
 
-			expect(options).toContainEqual(
-				expect.objectContaining({ name: 'All Events', value: '*' }),
-			);
+			expect(options).toContainEqual(expect.objectContaining({ name: 'All Events', value: '*' }));
 			expect(options).toContainEqual(
 				expect.objectContaining({ name: 'Console Output', value: 'console output' }),
 			);
-			expect(options).toContainEqual(
-				expect.objectContaining({ name: 'Status', value: 'status' }),
-			);
-			expect(options).toContainEqual(
-				expect.objectContaining({ name: 'Stats', value: 'stats' }),
-			);
+			expect(options).toContainEqual(expect.objectContaining({ name: 'Status', value: 'status' }));
+			expect(options).toContainEqual(expect.objectContaining({ name: 'Stats', value: 'stats' }));
 		});
 	});
 
@@ -350,9 +344,9 @@ describe('PterodactylWebsocketTrigger', () => {
 		});
 
 		test('should handle missing credentials', async () => {
-			mockTriggerFunctions.getCredentials = jest.fn().mockRejectedValue(
-				new Error('Credentials not found'),
-			);
+			mockTriggerFunctions.getCredentials = jest
+				.fn()
+				.mockRejectedValue(new Error('Credentials not found'));
 
 			await expect(triggerNode.trigger.call(mockTriggerFunctions)).rejects.toThrow(
 				'Credentials not found',
@@ -372,9 +366,7 @@ describe('PterodactylWebsocketTrigger', () => {
 		test('should handle network errors during token fetch', async () => {
 			(pterodactylApiRequest as jest.Mock).mockRejectedValue(new Error('Network error'));
 
-			await expect(triggerNode.trigger.call(mockTriggerFunctions)).rejects.toThrow(
-				'Network error',
-			);
+			await expect(triggerNode.trigger.call(mockTriggerFunctions)).rejects.toThrow('Network error');
 		});
 
 		test('should handle WebSocket connection timeout', async () => {

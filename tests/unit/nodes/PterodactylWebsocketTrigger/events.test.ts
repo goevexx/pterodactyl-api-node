@@ -98,7 +98,6 @@ describe('PterodactylWebsocketTrigger - Event Handling', () => {
 			expect(wsManagerInstance.on).toHaveBeenCalledWith('jwt error', expect.any(Function));
 		});
 
-
 		test('should register handlers for token events', async () => {
 			await triggerNode.trigger.call(mockTriggerFunctions);
 

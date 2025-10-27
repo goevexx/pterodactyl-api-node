@@ -8,7 +8,11 @@ import {
 	INodePropertyOptions,
 	IExecuteFunctions,
 } from 'n8n-workflow';
-import { PterodactylWebSocketManager, EventThrottler, WebSocketTokenResponse } from '../../shared/websocket';
+import {
+	PterodactylWebSocketManager,
+	EventThrottler,
+	WebSocketTokenResponse,
+} from '../../shared/websocket';
 import { pterodactylApiRequest } from '../../shared/transport';
 
 export class PterodactylWebsocketTrigger implements INodeType {
@@ -95,7 +99,8 @@ export class PterodactylWebsocketTrigger implements INodeType {
 						name: 'throttleEnabled',
 						type: 'boolean',
 						default: true,
-						description: 'Whether to throttle high-frequency events to prevent overwhelming the workflow',
+						description:
+							'Whether to throttle high-frequency events to prevent overwhelming the workflow',
 					},
 					{
 						displayName: 'Throttle Interval (ms)',
@@ -176,10 +181,12 @@ export class PterodactylWebsocketTrigger implements INodeType {
 					const servers = response.data || [];
 
 					if (servers.length === 0) {
-						return [{
-							name: 'No servers found',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No servers found',
+								value: '',
+							},
+						];
 					}
 
 					return servers.map((server: any) => ({
@@ -188,10 +195,12 @@ export class PterodactylWebsocketTrigger implements INodeType {
 					}));
 				} catch (error) {
 					console.error('Error fetching servers:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 		},
@@ -202,13 +211,13 @@ export class PterodactylWebsocketTrigger implements INodeType {
 		const events = this.getNodeParameter('events') as string[];
 		const options = this.getNodeParameter('options', {}) as IDataObject;
 
-		const includeRawData = options.includeRawData as boolean || false;
+		const includeRawData = (options.includeRawData as boolean) || false;
 		const throttleEnabled = options.throttleEnabled !== false;
-		const throttleInterval = options.throttleInterval as number || 100;
-		const throttleMaxBurst = options.throttleMaxBurst as number || 10;
-		const discardExcess = options.discardExcess as boolean || false;
+		const throttleInterval = (options.throttleInterval as number) || 100;
+		const throttleMaxBurst = (options.throttleMaxBurst as number) || 10;
+		const discardExcess = (options.discardExcess as boolean) || false;
 		const autoReconnect = options.autoReconnect !== false;
-		const maxReconnectAttempts = options.maxReconnectAttempts as number || 5;
+		const maxReconnectAttempts = (options.maxReconnectAttempts as number) || 5;
 
 		// Get credentials
 		const credentials = await this.getCredentials('pterodactylClientApi');
@@ -268,7 +277,12 @@ export class PterodactylWebsocketTrigger implements INodeType {
 
 				// Parse stats JSON string to object for better usability
 				let processedData = data;
-				if (eventName === 'stats' && Array.isArray(data) && data.length > 0 && typeof data[0] === 'string') {
+				if (
+					eventName === 'stats' &&
+					Array.isArray(data) &&
+					data.length > 0 &&
+					typeof data[0] === 'string'
+				) {
 					try {
 						processedData = [JSON.parse(data[0])];
 					} catch (error) {
@@ -289,9 +303,8 @@ export class PterodactylWebsocketTrigger implements INodeType {
 
 				// Emit with or without throttling
 				if (throttler) {
-					throttler.add(
-						{ event: eventName, args: data },
-						() => this.emit([this.helpers.returnJsonArray([item])]),
+					throttler.add({ event: eventName, args: data }, () =>
+						this.emit([this.helpers.returnJsonArray([item])]),
 					);
 				} else {
 					this.emit([this.helpers.returnJsonArray([item])]);
@@ -369,18 +382,20 @@ export class PterodactylWebsocketTrigger implements INodeType {
 						event: 'stats',
 						timestamp,
 						serverId,
-						data: [{
-							memory_bytes: 536870912,
-							memory_limit_bytes: 1073741824,
-							cpu_absolute: 45.5,
-							disk_bytes: 2147483648,
-							network: {
-								rx_bytes: 1048576,
-								tx_bytes: 524288,
+						data: [
+							{
+								memory_bytes: 536870912,
+								memory_limit_bytes: 1073741824,
+								cpu_absolute: 45.5,
+								disk_bytes: 2147483648,
+								network: {
+									rx_bytes: 1048576,
+									tx_bytes: 524288,
+								},
+								state: 'running',
+								uptime: 3600,
 							},
-							state: 'running',
-							uptime: 3600,
-						}],
+						],
 					},
 				},
 				{

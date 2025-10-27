@@ -95,9 +95,7 @@ describe('PterodactylClient - listServers operation', () => {
 		});
 
 		it('should include per_page query parameter', async () => {
-			mockExecuteFunctions.getNodeParameter
-				.mockReturnValueOnce(false)
-				.mockReturnValueOnce(25);
+			mockExecuteFunctions.getNodeParameter.mockReturnValueOnce(false).mockReturnValueOnce(25);
 
 			mockExecuteFunctions.helpers.httpRequest.mockResolvedValue({
 				statusCode: 200,

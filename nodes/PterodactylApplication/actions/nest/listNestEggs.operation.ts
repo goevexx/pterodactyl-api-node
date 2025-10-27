@@ -18,7 +18,7 @@ export const listNestEggsOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The nest to list eggs from',
-	}
+	},
 ];
 
 export async function listNestEggs(this: IExecuteFunctions, index: number): Promise<any> {

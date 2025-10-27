@@ -15,7 +15,7 @@ export const getUserByExternalIdOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'External ID of the user',
-	}
+	},
 ];
 
 export async function getUserByExternalId(this: IExecuteFunctions, index: number): Promise<any> {

@@ -52,8 +52,15 @@ export async function deleteDatabase(this: IExecuteFunctions, index: number): Pr
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const databaseId = this.getNodeParameter('databaseId', index) as string;
 
-	await pterodactylApiRequest.call(this, 'DELETE',
+	await pterodactylApiRequest.call(
+		this,
+		'DELETE',
 		'/api/client',
-		`/servers/${serverId}/databases/${databaseId}`, {}, {}, {}, index);
+		`/servers/${serverId}/databases/${databaseId}`,
+		{},
+		{},
+		{},
+		index,
+	);
 	return { success: true, databaseId };
 }

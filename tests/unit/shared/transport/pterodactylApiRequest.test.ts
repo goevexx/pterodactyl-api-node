@@ -551,9 +551,7 @@ describe('Shared Transport - pterodactylApiRequest', () => {
 					{},
 					0,
 				),
-			).rejects.toThrow(
-				'Insufficient permissions, server suspended, or API key lacks access.',
-			);
+			).rejects.toThrow('Insufficient permissions, server suspended, or API key lacks access.');
 		});
 
 		it('should enhance 404 Not Found errors', async () => {

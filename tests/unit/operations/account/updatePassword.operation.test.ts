@@ -7,7 +7,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('updatePassword operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -295,7 +298,9 @@ describe('updatePassword operation', () => {
 			const error = new Error('API request failed');
 			mockPterodactylApiRequest.mockRejectedValue(error);
 
-			await expect(updatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow('API request failed');
+			await expect(updatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'API request failed',
+			);
 		});
 
 		it('should handle authentication errors (wrong current password)', async () => {
@@ -308,7 +313,9 @@ describe('updatePassword operation', () => {
 			(authError as any).statusCode = 401;
 			mockPterodactylApiRequest.mockRejectedValue(authError);
 
-			await expect(updatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow('Current password is incorrect');
+			await expect(updatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Current password is incorrect',
+			);
 		});
 
 		it('should handle validation errors for password mismatch', async () => {
@@ -321,7 +328,9 @@ describe('updatePassword operation', () => {
 			(validationError as any).statusCode = 422;
 			mockPterodactylApiRequest.mockRejectedValue(validationError);
 
-			await expect(updatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow('Password confirmation does not match');
+			await expect(updatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Password confirmation does not match',
+			);
 		});
 
 		it('should handle validation errors for weak password', async () => {
@@ -334,7 +343,9 @@ describe('updatePassword operation', () => {
 			(validationError as any).statusCode = 422;
 			mockPterodactylApiRequest.mockRejectedValue(validationError);
 
-			await expect(updatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow('Password must be at least 8 characters');
+			await expect(updatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Password must be at least 8 characters',
+			);
 		});
 
 		it('should handle rate limiting errors', async () => {
@@ -347,7 +358,9 @@ describe('updatePassword operation', () => {
 			(rateLimitError as any).statusCode = 429;
 			mockPterodactylApiRequest.mockRejectedValue(rateLimitError);
 
-			await expect(updatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow('Too many password change attempts');
+			await expect(updatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Too many password change attempts',
+			);
 		});
 
 		it('should handle server errors', async () => {
@@ -360,7 +373,9 @@ describe('updatePassword operation', () => {
 			(serverError as any).statusCode = 500;
 			mockPterodactylApiRequest.mockRejectedValue(serverError);
 
-			await expect(updatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow('Internal server error');
+			await expect(updatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Internal server error',
+			);
 		});
 	});
 });

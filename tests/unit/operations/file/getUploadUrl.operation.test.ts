@@ -6,7 +6,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('getUploadUrl operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -149,7 +152,9 @@ describe('getUploadUrl operation', () => {
 			const error = new Error('API request failed');
 			mockPterodactylApiRequest.mockRejectedValue(error);
 
-			await expect(getUploadUrl.call(mockExecuteFunctions, 0)).rejects.toThrow('API request failed');
+			await expect(getUploadUrl.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'API request failed',
+			);
 		});
 
 		it('should handle server not found errors', async () => {
@@ -165,7 +170,9 @@ describe('getUploadUrl operation', () => {
 			(validationError as any).statusCode = 400;
 			mockPterodactylApiRequest.mockRejectedValue(validationError);
 
-			await expect(getUploadUrl.call(mockExecuteFunctions, 0)).rejects.toThrow('Invalid directory path');
+			await expect(getUploadUrl.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Invalid directory path',
+			);
 		});
 	});
 });

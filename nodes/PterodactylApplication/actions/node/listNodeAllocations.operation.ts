@@ -18,7 +18,7 @@ export const listNodeAllocationsOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The node to list allocations from',
-	}
+	},
 ];
 
 export async function listNodeAllocations(this: IExecuteFunctions, index: number): Promise<any> {

@@ -1,8 +1,5 @@
 import { IExecuteFunctions, INodeProperties } from 'n8n-workflow';
-import {
-	pterodactylApiRequest,
-	pterodactylApiRequestAllItems,
-} from '../../../../shared/transport';
+import { pterodactylApiRequest, pterodactylApiRequestAllItems } from '../../../../shared/transport';
 
 export const listServersOperation: INodeProperties[] = [
 	{
@@ -45,14 +42,21 @@ export async function listServers(this: IExecuteFunctions, index: number): Promi
 	const endpoint = '';
 
 	if (returnAll) {
-		return await pterodactylApiRequestAllItems.call(this, 'GET',
-		'/api/client', endpoint, {}, {}, index);
+		return await pterodactylApiRequestAllItems.call(
+			this,
+			'GET',
+			'/api/client',
+			endpoint,
+			{},
+			{},
+			index,
+		);
 	} else {
 		const limit = this.getNodeParameter('limit', index) as number;
 		const response = await pterodactylApiRequest.call(
 			this,
 			'GET',
-		'/api/client',
+			'/api/client',
 			endpoint,
 			{},
 			{ per_page: limit },

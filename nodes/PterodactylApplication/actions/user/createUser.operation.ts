@@ -108,7 +108,8 @@ export const createUserOperation: INodeProperties[] = [
 			},
 		],
 		default: 'en',
-		description: 'User\'s preferred language. Only languages installed in your Pterodactyl panel are shown. Default: English.',
+		description:
+			"User's preferred language. Only languages installed in your Pterodactyl panel are shown. Default: English.",
 	},
 	{
 		displayName: 'Root Admin',
@@ -123,7 +124,7 @@ export const createUserOperation: INodeProperties[] = [
 		},
 		default: false,
 		description: 'Whether the user should have administrator privileges',
-	}
+	},
 ];
 
 export async function createUser(this: IExecuteFunctions, index: number): Promise<any> {

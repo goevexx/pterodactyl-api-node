@@ -77,13 +77,13 @@ describe('PterodactylWebsocket - Server Control', () => {
 		mockExecuteFunctions = {
 			getInputData: jest.fn(() => [{ json: {} }]),
 			getNodeParameter: jest.fn((param: string, _index: number, defaultValue?: any) => {
-			// Default parameters for server control
-			if (param === 'resource') return 'serverControl';
-			if (param === 'operation') return 'setState';
-			if (param === 'serverId') return 'test-server-id';
-			if (param === 'powerAction') return 'start';
-			return defaultValue;
-		}),
+				// Default parameters for server control
+				if (param === 'resource') return 'serverControl';
+				if (param === 'operation') return 'setState';
+				if (param === 'serverId') return 'test-server-id';
+				if (param === 'powerAction') return 'start';
+				return defaultValue;
+			}),
 			getCredentials: jest.fn().mockResolvedValue(mockCredentials.valid),
 			continueOnFail: jest.fn().mockReturnValue(false),
 		};
@@ -131,8 +131,7 @@ describe('PterodactylWebsocket - Server Control', () => {
 
 			// Trigger status event after a delay
 			setTimeout(() => {
-				const wsInstance = (PterodactylWebSocketManager as jest.Mock).mock.results[0]
-					.value;
+				const wsInstance = (PterodactylWebSocketManager as jest.Mock).mock.results[0].value;
 				wsInstance._triggerEvent('status', ['running']);
 			}, 10);
 
@@ -152,8 +151,7 @@ describe('PterodactylWebsocket - Server Control', () => {
 		test('should send set state command to WebSocket', async () => {
 			// Trigger status event
 			setTimeout(() => {
-				const wsInstance = (PterodactylWebSocketManager as jest.Mock).mock.results[0]
-					.value;
+				const wsInstance = (PterodactylWebSocketManager as jest.Mock).mock.results[0].value;
 				wsInstance._triggerEvent('status', ['starting']);
 			}, 10);
 
@@ -181,14 +179,13 @@ describe('PterodactylWebsocket - Server Control', () => {
 				});
 
 				setTimeout(() => {
-					const wsInstance = (PterodactylWebSocketManager as jest.Mock).mock.results[0]
-						.value;
+					const wsInstance = (PterodactylWebSocketManager as jest.Mock).mock.results[0].value;
 					wsInstance._triggerEvent('status', ['offline']);
 				}, 10);
 
 				await node.execute.call(mockExecuteFunctions);
 
-			expect(mockSendCommand).toHaveBeenCalledWith({
+				expect(mockSendCommand).toHaveBeenCalledWith({
 					event: 'set state',
 					args: [action],
 				});
@@ -197,8 +194,7 @@ describe('PterodactylWebsocket - Server Control', () => {
 
 		test('should close WebSocket connection after operation', async () => {
 			setTimeout(() => {
-				const wsInstance = (PterodactylWebSocketManager as jest.Mock).mock.results[0]
-					.value;
+				const wsInstance = (PterodactylWebSocketManager as jest.Mock).mock.results[0].value;
 				wsInstance._triggerEvent('status', ['running']);
 			}, 10);
 
@@ -208,21 +204,19 @@ describe('PterodactylWebsocket - Server Control', () => {
 		});
 
 		test('should handle status confirmation timeout', async () => {
-		// Don't trigger any status event - let it timeout
+			// Don't trigger any status event - let it timeout
 
-		await expect(node.execute.call(mockExecuteFunctions)).rejects.toThrow(
-			'Timeout waiting for status confirmation',
-		);
+			await expect(node.execute.call(mockExecuteFunctions)).rejects.toThrow(
+				'Timeout waiting for status confirmation',
+			);
 
-		expect(mockClose).toHaveBeenCalled();
-	}, 15000);
+			expect(mockClose).toHaveBeenCalled();
+		}, 15000);
 
 		test('should handle connection errors', async () => {
 			mockConnect.mockRejectedValue(new Error('Connection failed'));
 
-			await expect(node.execute.call(mockExecuteFunctions)).rejects.toThrow(
-				'Connection failed',
-			);
+			await expect(node.execute.call(mockExecuteFunctions)).rejects.toThrow('Connection failed');
 		});
 	});
 
@@ -275,8 +269,7 @@ describe('PterodactylWebsocket - Server Control', () => {
 
 			// Simulate console output
 			setTimeout(() => {
-				const wsInstance = (PterodactylWebSocketManager as jest.Mock).mock.results[0]
-					.value;
+				const wsInstance = (PterodactylWebSocketManager as jest.Mock).mock.results[0].value;
 				wsInstance._triggerEvent('console output', ['[Server] Hello World']);
 				wsInstance._triggerEvent('console output', ['[Server] Message received']);
 			}, 50);
@@ -301,8 +294,7 @@ describe('PterodactylWebsocket - Server Control', () => {
 
 			// Send output after timeout
 			setTimeout(() => {
-				const wsInstance = (PterodactylWebSocketManager as jest.Mock).mock.results[0]
-					.value;
+				const wsInstance = (PterodactylWebSocketManager as jest.Mock).mock.results[0].value;
 				wsInstance._triggerEvent('console output', ['Late message']);
 			}, 200);
 
@@ -321,9 +313,9 @@ describe('PterodactylWebsocket - Server Control', () => {
 
 	describe('Error Handling', () => {
 		test('should handle missing credentials', async () => {
-			mockExecuteFunctions.getCredentials = jest.fn().mockRejectedValue(
-				new Error('Credentials not found'),
-			);
+			mockExecuteFunctions.getCredentials = jest
+				.fn()
+				.mockRejectedValue(new Error('Credentials not found'));
 			mockExecuteFunctions.getNodeParameter = jest.fn((param: string) => {
 				if (param === 'resource') return 'serverControl';
 				if (param === 'operation') return 'setState';
@@ -358,16 +350,16 @@ describe('PterodactylWebsocket - Server Control', () => {
 		});
 
 		test('should handle token fetch errors', async () => {
-		(pterodactylApiRequest as jest.Mock).mockRejectedValue(new Error('API error'));
+			(pterodactylApiRequest as jest.Mock).mockRejectedValue(new Error('API error'));
 
-		mockExecuteFunctions.getNodeParameter = jest.fn((param: string) => {
-			if (param === 'resource') return 'serverControl';
-			if (param === 'operation') return 'setState';
-			return undefined;
-		});
+			mockExecuteFunctions.getNodeParameter = jest.fn((param: string) => {
+				if (param === 'resource') return 'serverControl';
+				if (param === 'operation') return 'setState';
+				return undefined;
+			});
 
-		await expect(node.execute.call(mockExecuteFunctions)).rejects.toThrow('API error');
-	}, 15000);
+			await expect(node.execute.call(mockExecuteFunctions)).rejects.toThrow('API error');
+		}, 15000);
 	});
 
 	describe('Multiple Items Processing', () => {

@@ -6,7 +6,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('createFolder operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -154,7 +157,9 @@ describe('createFolder operation', () => {
 			const error = new Error('API request failed');
 			mockPterodactylApiRequest.mockRejectedValue(error);
 
-			await expect(createFolder.call(mockExecuteFunctions, 0)).rejects.toThrow('API request failed');
+			await expect(createFolder.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'API request failed',
+			);
 		});
 
 		it('should handle folder already exists errors', async () => {
@@ -162,7 +167,9 @@ describe('createFolder operation', () => {
 			(conflictError as any).statusCode = 409;
 			mockPterodactylApiRequest.mockRejectedValue(conflictError);
 
-			await expect(createFolder.call(mockExecuteFunctions, 0)).rejects.toThrow('Folder already exists');
+			await expect(createFolder.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Folder already exists',
+			);
 		});
 
 		it('should handle invalid folder name errors', async () => {
@@ -170,7 +177,9 @@ describe('createFolder operation', () => {
 			(validationError as any).statusCode = 400;
 			mockPterodactylApiRequest.mockRejectedValue(validationError);
 
-			await expect(createFolder.call(mockExecuteFunctions, 0)).rejects.toThrow('Invalid folder name');
+			await expect(createFolder.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Invalid folder name',
+			);
 		});
 
 		it('should handle permission errors', async () => {

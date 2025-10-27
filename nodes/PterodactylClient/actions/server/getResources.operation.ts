@@ -32,8 +32,15 @@ export async function getResources(this: IExecuteFunctions, index: number): Prom
 	}
 
 	const serverId = this.getNodeParameter('serverId', index) as string;
-	const response = await pterodactylApiRequest.call(this, 'GET',
+	const response = await pterodactylApiRequest.call(
+		this,
+		'GET',
 		'/api/client',
-		`/servers/${serverId}/resources`, {}, {}, {}, index);
+		`/servers/${serverId}/resources`,
+		{},
+		{},
+		{},
+		index,
+	);
 	return response.attributes || response;
 }

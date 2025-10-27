@@ -226,7 +226,7 @@ export const updateServerBuildOperation: INodeProperties[] = [
 			},
 		},
 		default: [],
-		description: 'Available allocations from the server\'s node to add to this server',
+		description: "Available allocations from the server's node to add to this server",
 	},
 	{
 		displayName: 'Remove Allocations',
@@ -290,7 +290,8 @@ export async function updateServerBuild(this: IExecuteFunctions, index: number):
 		io: ioInput > 0 ? ioInput : currentServer.limits.io,
 		feature_limits: {
 			databases: databasesInput >= 0 ? databasesInput : currentServer.feature_limits.databases,
-			allocations: allocationsInput >= 0 ? allocationsInput : currentServer.feature_limits.allocations,
+			allocations:
+				allocationsInput >= 0 ? allocationsInput : currentServer.feature_limits.allocations,
 			backups: backupsInput >= 0 ? backupsInput : currentServer.feature_limits.backups,
 		},
 	};
@@ -305,11 +306,11 @@ export async function updateServerBuild(this: IExecuteFunctions, index: number):
 	}
 
 	if (addAllocationsInput && addAllocationsInput.length > 0) {
-		body.add_allocations = addAllocationsInput.map(id => parseInt(id, 10));
+		body.add_allocations = addAllocationsInput.map((id) => parseInt(id, 10));
 	}
 
 	if (removeAllocationsInput && removeAllocationsInput.length > 0) {
-		body.remove_allocations = removeAllocationsInput.map(id => parseInt(id, 10));
+		body.remove_allocations = removeAllocationsInput.map((id) => parseInt(id, 10));
 	}
 
 	const response = await pterodactylApiRequest.call(

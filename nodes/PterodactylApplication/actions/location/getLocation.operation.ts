@@ -18,7 +18,7 @@ export const getLocationOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The location to retrieve',
-	}
+	},
 ];
 
 export async function getLocation(this: IExecuteFunctions, index: number): Promise<any> {

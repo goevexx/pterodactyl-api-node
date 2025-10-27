@@ -7,7 +7,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('deleteApiKey operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -80,10 +83,7 @@ describe('deleteApiKey operation', () => {
 
 			await deleteApiKey.call(mockExecuteFunctions, 0);
 
-			expect(mockPterodactylApiRequest).toHaveBeenCalledWith(
-				'DELETE',
-				'/account/api-keys/abc123',
-			);
+			expect(mockPterodactylApiRequest).toHaveBeenCalledWith('DELETE', '/account/api-keys/abc123');
 		});
 
 		it('should construct correct endpoint URL with identifier', async () => {
@@ -102,10 +102,7 @@ describe('deleteApiKey operation', () => {
 			await deleteApiKey.call(mockExecuteFunctions, 0);
 
 			// Verify no body is passed (DELETE requests typically don't have body)
-			expect(mockPterodactylApiRequest).toHaveBeenCalledWith(
-				'DELETE',
-				'/account/api-keys/abc123',
-			);
+			expect(mockPterodactylApiRequest).toHaveBeenCalledWith('DELETE', '/account/api-keys/abc123');
 			expect(mockPterodactylApiRequest.mock.calls[0].length).toBe(2);
 		});
 	});
@@ -189,7 +186,9 @@ describe('deleteApiKey operation', () => {
 			const error = new Error('API request failed');
 			mockPterodactylApiRequest.mockRejectedValue(error);
 
-			await expect(deleteApiKey.call(mockExecuteFunctions, 0)).rejects.toThrow('API request failed');
+			await expect(deleteApiKey.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'API request failed',
+			);
 		});
 
 		it('should handle authentication errors', async () => {
@@ -219,7 +218,9 @@ describe('deleteApiKey operation', () => {
 			(permissionError as any).statusCode = 403;
 			mockPterodactylApiRequest.mockRejectedValue(permissionError);
 
-			await expect(deleteApiKey.call(mockExecuteFunctions, 0)).rejects.toThrow('Insufficient permissions');
+			await expect(deleteApiKey.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Insufficient permissions',
+			);
 		});
 	});
 });

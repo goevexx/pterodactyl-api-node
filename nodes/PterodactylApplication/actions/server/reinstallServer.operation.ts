@@ -18,7 +18,7 @@ export const reinstallServerOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The server to reinstall',
-	}
+	},
 ];
 
 export async function reinstallServer(this: IExecuteFunctions, index: number): Promise<any> {

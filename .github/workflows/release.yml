@@ -40,8 +40,8 @@ jobs:
           skip-version-file: false
           skip-commit: false
           skip-ci: false
-          skip-tag: true           # Don't create tag yet
-          git-push: false          # Don't push directly
+          skip-tag: true # Don't create tag yet
+          git-push: false # Don't push directly
           git-message: 'chore(release): {version}'
           preset: 'conventionalcommits'
           tag-prefix: 'v'

@@ -79,16 +79,9 @@ describe('Auto Tag Release - Regex Pattern Validation', () => {
 		});
 
 		it('should match realistic version numbers', () => {
-			const versions = [
-				'1.0.0',
-				'1.1.0',
-				'2.0.0',
-				'1.0.1',
-				'3.14.159',
-				'100.0.0',
-			];
+			const versions = ['1.0.0', '1.1.0', '2.0.0', '1.0.1', '3.14.159', '100.0.0'];
 
-			versions.forEach(version => {
+			versions.forEach((version) => {
 				const title = `chore(release): v${version}`;
 				expect(isReleaseTitle(title)).toBe(true);
 				expect(extractVersion(title)).toBe(version);
@@ -265,7 +258,7 @@ describe('Auto Tag Release - Regex Pattern Validation', () => {
 				'chore(release): v1.1.0',
 			];
 
-			realExamples.forEach(title => {
+			realExamples.forEach((title) => {
 				expect(isReleaseTitle(title)).toBe(true);
 				expect(extractVersion(title)).toMatch(/^\d+\.\d+\.\d+$/);
 			});
@@ -280,7 +273,7 @@ describe('Auto Tag Release - Regex Pattern Validation', () => {
 				'test: add credential validation tests',
 			];
 
-			nonReleaseExamples.forEach(title => {
+			nonReleaseExamples.forEach((title) => {
 				expect(isReleaseTitle(title)).toBe(false);
 				expect(extractVersion(title)).toBeNull();
 			});
@@ -361,7 +354,7 @@ describe('Auto Tag Release - Regex Pattern Validation', () => {
 				'chore(release): v1.2.3.4',
 			];
 
-			invalidTitles.forEach(title => {
+			invalidTitles.forEach((title) => {
 				expect(extractVersion(title)).toBeNull();
 			});
 		});

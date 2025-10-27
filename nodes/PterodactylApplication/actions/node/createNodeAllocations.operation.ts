@@ -63,7 +63,7 @@ export const createNodeAllocationsOperation: INodeProperties[] = [
 		default: '',
 		description: 'Optional IP alias for display purposes',
 		placeholder: 'Node1-Main',
-	}
+	},
 ];
 
 export async function createNodeAllocations(this: IExecuteFunctions, index: number): Promise<any> {
@@ -74,7 +74,7 @@ export async function createNodeAllocations(this: IExecuteFunctions, index: numb
 
 	const body: any = {
 		ip,
-		ports: ports.split(',').map(p => p.trim()),
+		ports: ports.split(',').map((p) => p.trim()),
 	};
 
 	if (alias) {
@@ -105,13 +105,13 @@ export async function createNodeAllocations(this: IExecuteFunctions, index: numb
 
 	// If response is empty or invalid, fetch the allocations we just created
 	// This works around the API bug by listing allocations and filtering for the ones we created
-	const portsArray = ports.split(',').map(p => p.trim());
+	const portsArray = ports.split(',').map((p) => p.trim());
 
 	// Expand port ranges (e.g., "25566-25570" -> ["25566", "25567", "25568", "25569", "25570"])
 	const expandedPorts: string[] = [];
 	for (const portStr of portsArray) {
 		if (portStr.includes('-')) {
-			const [start, end] = portStr.split('-').map(p => parseInt(p.trim()));
+			const [start, end] = portStr.split('-').map((p) => parseInt(p.trim()));
 			for (let port = start; port <= end; port++) {
 				expandedPorts.push(String(port));
 			}

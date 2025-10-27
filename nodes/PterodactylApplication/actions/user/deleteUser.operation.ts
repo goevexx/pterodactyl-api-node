@@ -18,7 +18,7 @@ export const deleteUserOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The user to delete',
-	}
+	},
 ];
 
 export async function deleteUser(this: IExecuteFunctions, index: number): Promise<any> {

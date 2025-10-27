@@ -88,10 +88,12 @@ export class PterodactylWebsocket implements INodeType {
 					const servers = response.data || [];
 
 					if (servers.length === 0) {
-						return [{
-							name: 'No servers found',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No servers found',
+								value: '',
+							},
+						];
 					}
 
 					return servers.map((server: any) => ({
@@ -100,10 +102,12 @@ export class PterodactylWebsocket implements INodeType {
 					}));
 				} catch (error) {
 					console.error('Error fetching servers:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 		},

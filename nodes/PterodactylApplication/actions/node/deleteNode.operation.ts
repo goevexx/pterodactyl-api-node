@@ -18,7 +18,7 @@ export const deleteNodeOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The node to delete',
-	}
+	},
 ];
 
 export async function deleteNode(this: IExecuteFunctions, index: number): Promise<any> {

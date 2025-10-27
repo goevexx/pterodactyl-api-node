@@ -1,639 +1,639 @@
 {
-  "name": "Comprehensive Pterodactyl Dropdown Test",
-  "nodes": [
-    {
-      "parameters": {},
-      "id": "start",
-      "name": "Start",
-      "type": "n8n-nodes-base.manualTrigger",
-      "typeVersion": 1,
-      "position": [240, 300]
-    },
-    {
-      "parameters": {
-        "content": "# Pterodactyl Comprehensive Dropdown Test\n\nThis workflow tests ALL dropdown fields across both Application and Client APIs.\n\n## Test Order:\n1. Application API - Core Entities\n2. Application API - Dependent Dropdowns\n3. Client API - Server Operations\n4. Client API - Dependent Operations\n\n**Instructions:**\n- Each node is set up to test dropdown functionality\n- Fill in your Pterodactyl credentials in each node\n- Select entities from dropdowns (don't manually enter IDs)\n- Execute nodes one by one to verify dropdowns work\n\n**What to verify:**\n- ✅ Dropdowns load entity lists\n- ✅ Entity names display with IDs\n- ✅ Dependent dropdowns update when parent changes\n- ✅ Empty states show helpful messages\n- ✅ Errors display user-friendly messages",
-        "height": 400,
-        "width": 600
-      },
-      "id": "sticky-note",
-      "name": "Test Instructions",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [240, 100]
-    },
-    {
-      "parameters": {
-        "resource": "user",
-        "operation": "list"
-      },
-      "id": "app-list-users",
-      "name": "App: List Users",
-      "type": "n8n-nodes-pterodactyl-application",
-      "typeVersion": 1,
-      "position": [460, 300],
-      "credentials": {
-        "pterodactylApplicationApi": {
-          "id": "1",
-          "name": "Pterodactyl Application API"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "user",
-        "operation": "get"
-      },
-      "id": "app-get-user",
-      "name": "App: Get User (Dropdown Test)",
-      "type": "n8n-nodes-pterodactyl-application",
-      "typeVersion": 1,
-      "position": [680, 300],
-      "credentials": {
-        "pterodactylApplicationApi": {
-          "id": "1",
-          "name": "Pterodactyl Application API"
-        }
-      },
-      "notes": "TEST: Select a user from dropdown instead of entering ID"
-    },
-    {
-      "parameters": {
-        "resource": "location",
-        "operation": "list"
-      },
-      "id": "app-list-locations",
-      "name": "App: List Locations",
-      "type": "n8n-nodes-pterodactyl-application",
-      "typeVersion": 1,
-      "position": [460, 420],
-      "credentials": {
-        "pterodactylApplicationApi": {
-          "id": "1",
-          "name": "Pterodactyl Application API"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "location",
-        "operation": "get"
-      },
-      "id": "app-get-location",
-      "name": "App: Get Location (Dropdown Test)",
-      "type": "n8n-nodes-pterodactyl-application",
-      "typeVersion": 1,
-      "position": [680, 420],
-      "credentials": {
-        "pterodactylApplicationApi": {
-          "id": "1",
-          "name": "Pterodactyl Application API"
-        }
-      },
-      "notes": "TEST: Select a location from dropdown"
-    },
-    {
-      "parameters": {
-        "resource": "node",
-        "operation": "list"
-      },
-      "id": "app-list-nodes",
-      "name": "App: List Nodes",
-      "type": "n8n-nodes-pterodactyl-application",
-      "typeVersion": 1,
-      "position": [460, 540],
-      "credentials": {
-        "pterodactylApplicationApi": {
-          "id": "1",
-          "name": "Pterodactyl Application API"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "node",
-        "operation": "get"
-      },
-      "id": "app-get-node",
-      "name": "App: Get Node (Dropdown Test)",
-      "type": "n8n-nodes-pterodactyl-application",
-      "typeVersion": 1,
-      "position": [680, 540],
-      "credentials": {
-        "pterodactylApplicationApi": {
-          "id": "1",
-          "name": "Pterodactyl Application API"
-        }
-      },
-      "notes": "TEST: Select a node from dropdown"
-    },
-    {
-      "parameters": {
-        "resource": "nest",
-        "operation": "list"
-      },
-      "id": "app-list-nests",
-      "name": "App: List Nests",
-      "type": "n8n-nodes-pterodactyl-application",
-      "typeVersion": 1,
-      "position": [460, 660],
-      "credentials": {
-        "pterodactylApplicationApi": {
-          "id": "1",
-          "name": "Pterodactyl Application API"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "nest",
-        "operation": "getNest"
-      },
-      "id": "app-get-nest",
-      "name": "App: Get Nest (Dropdown Test)",
-      "type": "n8n-nodes-pterodactyl-application",
-      "typeVersion": 1,
-      "position": [680, 660],
-      "credentials": {
-        "pterodactylApplicationApi": {
-          "id": "1",
-          "name": "Pterodactyl Application API"
-        }
-      },
-      "notes": "TEST: Select a nest from dropdown"
-    },
-    {
-      "parameters": {
-        "resource": "nest",
-        "operation": "getEgg"
-      },
-      "id": "app-get-egg",
-      "name": "App: Get Egg (DEPENDENT Dropdown Test)",
-      "type": "n8n-nodes-pterodactyl-application",
-      "typeVersion": 1,
-      "position": [900, 660],
-      "credentials": {
-        "pterodactylApplicationApi": {
-          "id": "1",
-          "name": "Pterodactyl Application API"
-        }
-      },
-      "notes": "TEST: 1) Select nest, 2) Watch egg dropdown populate, 3) Select egg"
-    },
-    {
-      "parameters": {
-        "resource": "server",
-        "operation": "list"
-      },
-      "id": "app-list-servers",
-      "name": "App: List Servers",
-      "type": "n8n-nodes-pterodactyl-application",
-      "typeVersion": 1,
-      "position": [460, 780],
-      "credentials": {
-        "pterodactylApplicationApi": {
-          "id": "1",
-          "name": "Pterodactyl Application API"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "server",
-        "operation": "get"
-      },
-      "id": "app-get-server",
-      "name": "App: Get Server (Dropdown Test)",
-      "type": "n8n-nodes-pterodactyl-application",
-      "typeVersion": 1,
-      "position": [680, 780],
-      "credentials": {
-        "pterodactylApplicationApi": {
-          "id": "1",
-          "name": "Pterodactyl Application API"
-        }
-      },
-      "notes": "TEST: Select a server from dropdown"
-    },
-    {
-      "parameters": {
-        "resource": "node",
-        "operation": "listAllocations"
-      },
-      "id": "app-list-allocations",
-      "name": "App: List Allocations (DEPENDENT Test)",
-      "type": "n8n-nodes-pterodactyl-application",
-      "typeVersion": 1,
-      "position": [900, 540],
-      "credentials": {
-        "pterodactylApplicationApi": {
-          "id": "1",
-          "name": "Pterodactyl Application API"
-        }
-      },
-      "notes": "TEST: Select node, verify dropdown works"
-    },
-    {
-      "parameters": {
-        "content": "## Client API Tests\n\nTest all Client API dropdown functionality including nested dependencies",
-        "height": 200,
-        "width": 400
-      },
-      "id": "client-sticky",
-      "name": "Client API Section",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [240, 1000]
-    },
-    {
-      "parameters": {
-        "resource": "server",
-        "operation": "list"
-      },
-      "id": "client-list-servers",
-      "name": "Client: List Servers",
-      "type": "n8n-nodes-pterodactyl-client",
-      "typeVersion": 1,
-      "position": [460, 1100],
-      "credentials": {
-        "pterodactylClientApi": {
-          "id": "2",
-          "name": "Pterodactyl Client API"
-        }
-      }
-    },
-    {
-      "parameters": {
-        "resource": "server",
-        "operation": "get"
-      },
-      "id": "client-get-server",
-      "name": "Client: Get Server (Dropdown Test)",
-      "type": "n8n-nodes-pterodactyl-client",
-      "typeVersion": 1,
-      "position": [680, 1100],
-      "credentials": {
-        "pterodactylClientApi": {
-          "id": "2",
-          "name": "Pterodactyl Client API"
-        }
-      },
-      "notes": "TEST: Select server from dropdown"
-    },
-    {
-      "parameters": {
-        "resource": "backup",
-        "operation": "list"
-      },
-      "id": "client-list-backups",
-      "name": "Client: List Backups (DEPENDENT Test)",
-      "type": "n8n-nodes-pterodactyl-client",
-      "typeVersion": 1,
-      "position": [900, 1100],
-      "credentials": {
-        "pterodactylClientApi": {
-          "id": "2",
-          "name": "Pterodactyl Client API"
-        }
-      },
-      "notes": "TEST: Select server, dropdown should work"
-    },
-    {
-      "parameters": {
-        "resource": "database",
-        "operation": "list"
-      },
-      "id": "client-list-databases",
-      "name": "Client: List Databases (DEPENDENT Test)",
-      "type": "n8n-nodes-pterodactyl-client",
-      "typeVersion": 1,
-      "position": [460, 1220],
-      "credentials": {
-        "pterodactylClientApi": {
-          "id": "2",
-          "name": "Pterodactyl Client API"
-        }
-      },
-      "notes": "TEST: Select server from dropdown"
-    },
-    {
-      "parameters": {
-        "resource": "schedule",
-        "operation": "list"
-      },
-      "id": "client-list-schedules",
-      "name": "Client: List Schedules (DEPENDENT Test)",
-      "type": "n8n-nodes-pterodactyl-client",
-      "typeVersion": 1,
-      "position": [680, 1220],
-      "credentials": {
-        "pterodactylClientApi": {
-          "id": "2",
-          "name": "Pterodactyl Client API"
-        }
-      },
-      "notes": "TEST: Select server from dropdown"
-    },
-    {
-      "parameters": {
-        "resource": "schedule",
-        "operation": "get"
-      },
-      "id": "client-get-schedule",
-      "name": "Client: Get Schedule (NESTED DEPENDENT)",
-      "type": "n8n-nodes-pterodactyl-client",
-      "typeVersion": 1,
-      "position": [900, 1220],
-      "credentials": {
-        "pterodactylClientApi": {
-          "id": "2",
-          "name": "Pterodactyl Client API"
-        }
-      },
-      "notes": "TEST: 1) Select server, 2) Select schedule, both dropdowns should work"
-    },
-    {
-      "parameters": {
-        "resource": "network",
-        "operation": "list"
-      },
-      "id": "client-list-allocations",
-      "name": "Client: List Allocations (DEPENDENT Test)",
-      "type": "n8n-nodes-pterodactyl-client",
-      "typeVersion": 1,
-      "position": [460, 1340],
-      "credentials": {
-        "pterodactylClientApi": {
-          "id": "2",
-          "name": "Pterodactyl Client API"
-        }
-      },
-      "notes": "TEST: Select server from dropdown"
-    },
-    {
-      "parameters": {
-        "resource": "subuser",
-        "operation": "list"
-      },
-      "id": "client-list-subusers",
-      "name": "Client: List Subusers (DEPENDENT Test)",
-      "type": "n8n-nodes-pterodactyl-client",
-      "typeVersion": 1,
-      "position": [680, 1340],
-      "credentials": {
-        "pterodactylClientApi": {
-          "id": "2",
-          "name": "Pterodactyl Client API"
-        }
-      },
-      "notes": "TEST: Select server from dropdown"
-    },
-    {
-      "parameters": {
-        "resource": "file",
-        "operation": "list"
-      },
-      "id": "client-list-files",
-      "name": "Client: List Files (DEPENDENT Test)",
-      "type": "n8n-nodes-pterodactyl-client",
-      "typeVersion": 1,
-      "position": [900, 1340],
-      "credentials": {
-        "pterodactylClientApi": {
-          "id": "2",
-          "name": "Pterodactyl Client API"
-        }
-      },
-      "notes": "TEST: Select server from dropdown"
-    },
-    {
-      "parameters": {
-        "content": "## Test Results Summary\n\n### Application API Dropdowns:\n- [ ] User dropdown works\n- [ ] Location dropdown works\n- [ ] Node dropdown works\n- [ ] Nest dropdown works\n- [ ] Egg dropdown (dependent on nest) works\n- [ ] Server dropdown works\n- [ ] Allocation dropdown (dependent on node) works\n\n### Client API Dropdowns:\n- [ ] Server dropdown works\n- [ ] Backup dropdown (dependent on server) works\n- [ ] Database dropdown (dependent on server) works\n- [ ] Schedule dropdown (dependent on server) works\n- [ ] Task dropdown (nested: server → schedule) works\n- [ ] Network allocation dropdown (dependent on server) works\n- [ ] Subuser dropdown (dependent on server) works\n- [ ] File operations dropdown (dependent on server) works\n\n### Dependency Chain Tests:\n- [ ] Node → Allocation cascade works\n- [ ] Nest → Egg cascade works\n- [ ] Server → Backup/Database/Schedule cascade works\n- [ ] Server → Schedule → Task nested cascade works\n\n**All tests passed?** ✅ Ready for production!",
-        "height": 600,
-        "width": 500
-      },
-      "id": "results-sticky",
-      "name": "Test Checklist",
-      "type": "n8n-nodes-base.stickyNote",
-      "typeVersion": 1,
-      "position": [1200, 300]
-    }
-  ],
-  "connections": {
-    "Start": {
-      "main": [
-        [
-          {
-            "node": "App: List Users",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "App: List Users": {
-      "main": [
-        [
-          {
-            "node": "App: Get User (Dropdown Test)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "App: Get User (Dropdown Test)": {
-      "main": [
-        [
-          {
-            "node": "App: List Locations",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "App: List Locations": {
-      "main": [
-        [
-          {
-            "node": "App: Get Location (Dropdown Test)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "App: Get Location (Dropdown Test)": {
-      "main": [
-        [
-          {
-            "node": "App: List Nodes",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "App: List Nodes": {
-      "main": [
-        [
-          {
-            "node": "App: Get Node (Dropdown Test)",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "App: List Allocations (DEPENDENT Test)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "App: Get Node (Dropdown Test)": {
-      "main": [
-        [
-          {
-            "node": "App: List Nests",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "App: List Nests": {
-      "main": [
-        [
-          {
-            "node": "App: Get Nest (Dropdown Test)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "App: Get Nest (Dropdown Test)": {
-      "main": [
-        [
-          {
-            "node": "App: Get Egg (DEPENDENT Dropdown Test)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "App: Get Egg (DEPENDENT Dropdown Test)": {
-      "main": [
-        [
-          {
-            "node": "App: List Servers",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "App: List Servers": {
-      "main": [
-        [
-          {
-            "node": "App: Get Server (Dropdown Test)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "App: Get Server (Dropdown Test)": {
-      "main": [
-        [
-          {
-            "node": "Client: List Servers",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Client: List Servers": {
-      "main": [
-        [
-          {
-            "node": "Client: Get Server (Dropdown Test)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Client: Get Server (Dropdown Test)": {
-      "main": [
-        [
-          {
-            "node": "Client: List Backups (DEPENDENT Test)",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Client: List Databases (DEPENDENT Test)",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Client: List Schedules (DEPENDENT Test)",
-            "type": "main",
-            "index": 0
-          },
-          {
-            "node": "Client: List Allocations (DEPENDENT Test)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Client: List Schedules (DEPENDENT Test)": {
-      "main": [
-        [
-          {
-            "node": "Client: Get Schedule (NESTED DEPENDENT)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Client: List Allocations (DEPENDENT Test)": {
-      "main": [
-        [
-          {
-            "node": "Client: List Subusers (DEPENDENT Test)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    },
-    "Client: List Subusers (DEPENDENT Test)": {
-      "main": [
-        [
-          {
-            "node": "Client: List Files (DEPENDENT Test)",
-            "type": "main",
-            "index": 0
-          }
-        ]
-      ]
-    }
-  },
-  "pinData": {},
-  "settings": {
-    "executionOrder": "v1"
-  },
-  "staticData": null,
-  "tags": [],
-  "triggerCount": 1,
-  "updatedAt": "2025-10-24T00:00:00.000Z",
-  "versionId": "1"
+	"name": "Comprehensive Pterodactyl Dropdown Test",
+	"nodes": [
+		{
+			"parameters": {},
+			"id": "start",
+			"name": "Start",
+			"type": "n8n-nodes-base.manualTrigger",
+			"typeVersion": 1,
+			"position": [240, 300]
+		},
+		{
+			"parameters": {
+				"content": "# Pterodactyl Comprehensive Dropdown Test\n\nThis workflow tests ALL dropdown fields across both Application and Client APIs.\n\n## Test Order:\n1. Application API - Core Entities\n2. Application API - Dependent Dropdowns\n3. Client API - Server Operations\n4. Client API - Dependent Operations\n\n**Instructions:**\n- Each node is set up to test dropdown functionality\n- Fill in your Pterodactyl credentials in each node\n- Select entities from dropdowns (don't manually enter IDs)\n- Execute nodes one by one to verify dropdowns work\n\n**What to verify:**\n- ✅ Dropdowns load entity lists\n- ✅ Entity names display with IDs\n- ✅ Dependent dropdowns update when parent changes\n- ✅ Empty states show helpful messages\n- ✅ Errors display user-friendly messages",
+				"height": 400,
+				"width": 600
+			},
+			"id": "sticky-note",
+			"name": "Test Instructions",
+			"type": "n8n-nodes-base.stickyNote",
+			"typeVersion": 1,
+			"position": [240, 100]
+		},
+		{
+			"parameters": {
+				"resource": "user",
+				"operation": "list"
+			},
+			"id": "app-list-users",
+			"name": "App: List Users",
+			"type": "n8n-nodes-pterodactyl-application",
+			"typeVersion": 1,
+			"position": [460, 300],
+			"credentials": {
+				"pterodactylApplicationApi": {
+					"id": "1",
+					"name": "Pterodactyl Application API"
+				}
+			}
+		},
+		{
+			"parameters": {
+				"resource": "user",
+				"operation": "get"
+			},
+			"id": "app-get-user",
+			"name": "App: Get User (Dropdown Test)",
+			"type": "n8n-nodes-pterodactyl-application",
+			"typeVersion": 1,
+			"position": [680, 300],
+			"credentials": {
+				"pterodactylApplicationApi": {
+					"id": "1",
+					"name": "Pterodactyl Application API"
+				}
+			},
+			"notes": "TEST: Select a user from dropdown instead of entering ID"
+		},
+		{
+			"parameters": {
+				"resource": "location",
+				"operation": "list"
+			},
+			"id": "app-list-locations",
+			"name": "App: List Locations",
+			"type": "n8n-nodes-pterodactyl-application",
+			"typeVersion": 1,
+			"position": [460, 420],
+			"credentials": {
+				"pterodactylApplicationApi": {
+					"id": "1",
+					"name": "Pterodactyl Application API"
+				}
+			}
+		},
+		{
+			"parameters": {
+				"resource": "location",
+				"operation": "get"
+			},
+			"id": "app-get-location",
+			"name": "App: Get Location (Dropdown Test)",
+			"type": "n8n-nodes-pterodactyl-application",
+			"typeVersion": 1,
+			"position": [680, 420],
+			"credentials": {
+				"pterodactylApplicationApi": {
+					"id": "1",
+					"name": "Pterodactyl Application API"
+				}
+			},
+			"notes": "TEST: Select a location from dropdown"
+		},
+		{
+			"parameters": {
+				"resource": "node",
+				"operation": "list"
+			},
+			"id": "app-list-nodes",
+			"name": "App: List Nodes",
+			"type": "n8n-nodes-pterodactyl-application",
+			"typeVersion": 1,
+			"position": [460, 540],
+			"credentials": {
+				"pterodactylApplicationApi": {
+					"id": "1",
+					"name": "Pterodactyl Application API"
+				}
+			}
+		},
+		{
+			"parameters": {
+				"resource": "node",
+				"operation": "get"
+			},
+			"id": "app-get-node",
+			"name": "App: Get Node (Dropdown Test)",
+			"type": "n8n-nodes-pterodactyl-application",
+			"typeVersion": 1,
+			"position": [680, 540],
+			"credentials": {
+				"pterodactylApplicationApi": {
+					"id": "1",
+					"name": "Pterodactyl Application API"
+				}
+			},
+			"notes": "TEST: Select a node from dropdown"
+		},
+		{
+			"parameters": {
+				"resource": "nest",
+				"operation": "list"
+			},
+			"id": "app-list-nests",
+			"name": "App: List Nests",
+			"type": "n8n-nodes-pterodactyl-application",
+			"typeVersion": 1,
+			"position": [460, 660],
+			"credentials": {
+				"pterodactylApplicationApi": {
+					"id": "1",
+					"name": "Pterodactyl Application API"
+				}
+			}
+		},
+		{
+			"parameters": {
+				"resource": "nest",
+				"operation": "getNest"
+			},
+			"id": "app-get-nest",
+			"name": "App: Get Nest (Dropdown Test)",
+			"type": "n8n-nodes-pterodactyl-application",
+			"typeVersion": 1,
+			"position": [680, 660],
+			"credentials": {
+				"pterodactylApplicationApi": {
+					"id": "1",
+					"name": "Pterodactyl Application API"
+				}
+			},
+			"notes": "TEST: Select a nest from dropdown"
+		},
+		{
+			"parameters": {
+				"resource": "nest",
+				"operation": "getEgg"
+			},
+			"id": "app-get-egg",
+			"name": "App: Get Egg (DEPENDENT Dropdown Test)",
+			"type": "n8n-nodes-pterodactyl-application",
+			"typeVersion": 1,
+			"position": [900, 660],
+			"credentials": {
+				"pterodactylApplicationApi": {
+					"id": "1",
+					"name": "Pterodactyl Application API"
+				}
+			},
+			"notes": "TEST: 1) Select nest, 2) Watch egg dropdown populate, 3) Select egg"
+		},
+		{
+			"parameters": {
+				"resource": "server",
+				"operation": "list"
+			},
+			"id": "app-list-servers",
+			"name": "App: List Servers",
+			"type": "n8n-nodes-pterodactyl-application",
+			"typeVersion": 1,
+			"position": [460, 780],
+			"credentials": {
+				"pterodactylApplicationApi": {
+					"id": "1",
+					"name": "Pterodactyl Application API"
+				}
+			}
+		},
+		{
+			"parameters": {
+				"resource": "server",
+				"operation": "get"
+			},
+			"id": "app-get-server",
+			"name": "App: Get Server (Dropdown Test)",
+			"type": "n8n-nodes-pterodactyl-application",
+			"typeVersion": 1,
+			"position": [680, 780],
+			"credentials": {
+				"pterodactylApplicationApi": {
+					"id": "1",
+					"name": "Pterodactyl Application API"
+				}
+			},
+			"notes": "TEST: Select a server from dropdown"
+		},
+		{
+			"parameters": {
+				"resource": "node",
+				"operation": "listAllocations"
+			},
+			"id": "app-list-allocations",
+			"name": "App: List Allocations (DEPENDENT Test)",
+			"type": "n8n-nodes-pterodactyl-application",
+			"typeVersion": 1,
+			"position": [900, 540],
+			"credentials": {
+				"pterodactylApplicationApi": {
+					"id": "1",
+					"name": "Pterodactyl Application API"
+				}
+			},
+			"notes": "TEST: Select node, verify dropdown works"
+		},
+		{
+			"parameters": {
+				"content": "## Client API Tests\n\nTest all Client API dropdown functionality including nested dependencies",
+				"height": 200,
+				"width": 400
+			},
+			"id": "client-sticky",
+			"name": "Client API Section",
+			"type": "n8n-nodes-base.stickyNote",
+			"typeVersion": 1,
+			"position": [240, 1000]
+		},
+		{
+			"parameters": {
+				"resource": "server",
+				"operation": "list"
+			},
+			"id": "client-list-servers",
+			"name": "Client: List Servers",
+			"type": "n8n-nodes-pterodactyl-client",
+			"typeVersion": 1,
+			"position": [460, 1100],
+			"credentials": {
+				"pterodactylClientApi": {
+					"id": "2",
+					"name": "Pterodactyl Client API"
+				}
+			}
+		},
+		{
+			"parameters": {
+				"resource": "server",
+				"operation": "get"
+			},
+			"id": "client-get-server",
+			"name": "Client: Get Server (Dropdown Test)",
+			"type": "n8n-nodes-pterodactyl-client",
+			"typeVersion": 1,
+			"position": [680, 1100],
+			"credentials": {
+				"pterodactylClientApi": {
+					"id": "2",
+					"name": "Pterodactyl Client API"
+				}
+			},
+			"notes": "TEST: Select server from dropdown"
+		},
+		{
+			"parameters": {
+				"resource": "backup",
+				"operation": "list"
+			},
+			"id": "client-list-backups",
+			"name": "Client: List Backups (DEPENDENT Test)",
+			"type": "n8n-nodes-pterodactyl-client",
+			"typeVersion": 1,
+			"position": [900, 1100],
+			"credentials": {
+				"pterodactylClientApi": {
+					"id": "2",
+					"name": "Pterodactyl Client API"
+				}
+			},
+			"notes": "TEST: Select server, dropdown should work"
+		},
+		{
+			"parameters": {
+				"resource": "database",
+				"operation": "list"
+			},
+			"id": "client-list-databases",
+			"name": "Client: List Databases (DEPENDENT Test)",
+			"type": "n8n-nodes-pterodactyl-client",
+			"typeVersion": 1,
+			"position": [460, 1220],
+			"credentials": {
+				"pterodactylClientApi": {
+					"id": "2",
+					"name": "Pterodactyl Client API"
+				}
+			},
+			"notes": "TEST: Select server from dropdown"
+		},
+		{
+			"parameters": {
+				"resource": "schedule",
+				"operation": "list"
+			},
+			"id": "client-list-schedules",
+			"name": "Client: List Schedules (DEPENDENT Test)",
+			"type": "n8n-nodes-pterodactyl-client",
+			"typeVersion": 1,
+			"position": [680, 1220],
+			"credentials": {
+				"pterodactylClientApi": {
+					"id": "2",
+					"name": "Pterodactyl Client API"
+				}
+			},
+			"notes": "TEST: Select server from dropdown"
+		},
+		{
+			"parameters": {
+				"resource": "schedule",
+				"operation": "get"
+			},
+			"id": "client-get-schedule",
+			"name": "Client: Get Schedule (NESTED DEPENDENT)",
+			"type": "n8n-nodes-pterodactyl-client",
+			"typeVersion": 1,
+			"position": [900, 1220],
+			"credentials": {
+				"pterodactylClientApi": {
+					"id": "2",
+					"name": "Pterodactyl Client API"
+				}
+			},
+			"notes": "TEST: 1) Select server, 2) Select schedule, both dropdowns should work"
+		},
+		{
+			"parameters": {
+				"resource": "network",
+				"operation": "list"
+			},
+			"id": "client-list-allocations",
+			"name": "Client: List Allocations (DEPENDENT Test)",
+			"type": "n8n-nodes-pterodactyl-client",
+			"typeVersion": 1,
+			"position": [460, 1340],
+			"credentials": {
+				"pterodactylClientApi": {
+					"id": "2",
+					"name": "Pterodactyl Client API"
+				}
+			},
+			"notes": "TEST: Select server from dropdown"
+		},
+		{
+			"parameters": {
+				"resource": "subuser",
+				"operation": "list"
+			},
+			"id": "client-list-subusers",
+			"name": "Client: List Subusers (DEPENDENT Test)",
+			"type": "n8n-nodes-pterodactyl-client",
+			"typeVersion": 1,
+			"position": [680, 1340],
+			"credentials": {
+				"pterodactylClientApi": {
+					"id": "2",
+					"name": "Pterodactyl Client API"
+				}
+			},
+			"notes": "TEST: Select server from dropdown"
+		},
+		{
+			"parameters": {
+				"resource": "file",
+				"operation": "list"
+			},
+			"id": "client-list-files",
+			"name": "Client: List Files (DEPENDENT Test)",
+			"type": "n8n-nodes-pterodactyl-client",
+			"typeVersion": 1,
+			"position": [900, 1340],
+			"credentials": {
+				"pterodactylClientApi": {
+					"id": "2",
+					"name": "Pterodactyl Client API"
+				}
+			},
+			"notes": "TEST: Select server from dropdown"
+		},
+		{
+			"parameters": {
+				"content": "## Test Results Summary\n\n### Application API Dropdowns:\n- [ ] User dropdown works\n- [ ] Location dropdown works\n- [ ] Node dropdown works\n- [ ] Nest dropdown works\n- [ ] Egg dropdown (dependent on nest) works\n- [ ] Server dropdown works\n- [ ] Allocation dropdown (dependent on node) works\n\n### Client API Dropdowns:\n- [ ] Server dropdown works\n- [ ] Backup dropdown (dependent on server) works\n- [ ] Database dropdown (dependent on server) works\n- [ ] Schedule dropdown (dependent on server) works\n- [ ] Task dropdown (nested: server → schedule) works\n- [ ] Network allocation dropdown (dependent on server) works\n- [ ] Subuser dropdown (dependent on server) works\n- [ ] File operations dropdown (dependent on server) works\n\n### Dependency Chain Tests:\n- [ ] Node → Allocation cascade works\n- [ ] Nest → Egg cascade works\n- [ ] Server → Backup/Database/Schedule cascade works\n- [ ] Server → Schedule → Task nested cascade works\n\n**All tests passed?** ✅ Ready for production!",
+				"height": 600,
+				"width": 500
+			},
+			"id": "results-sticky",
+			"name": "Test Checklist",
+			"type": "n8n-nodes-base.stickyNote",
+			"typeVersion": 1,
+			"position": [1200, 300]
+		}
+	],
+	"connections": {
+		"Start": {
+			"main": [
+				[
+					{
+						"node": "App: List Users",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"App: List Users": {
+			"main": [
+				[
+					{
+						"node": "App: Get User (Dropdown Test)",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"App: Get User (Dropdown Test)": {
+			"main": [
+				[
+					{
+						"node": "App: List Locations",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"App: List Locations": {
+			"main": [
+				[
+					{
+						"node": "App: Get Location (Dropdown Test)",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"App: Get Location (Dropdown Test)": {
+			"main": [
+				[
+					{
+						"node": "App: List Nodes",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"App: List Nodes": {
+			"main": [
+				[
+					{
+						"node": "App: Get Node (Dropdown Test)",
+						"type": "main",
+						"index": 0
+					},
+					{
+						"node": "App: List Allocations (DEPENDENT Test)",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"App: Get Node (Dropdown Test)": {
+			"main": [
+				[
+					{
+						"node": "App: List Nests",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"App: List Nests": {
+			"main": [
+				[
+					{
+						"node": "App: Get Nest (Dropdown Test)",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"App: Get Nest (Dropdown Test)": {
+			"main": [
+				[
+					{
+						"node": "App: Get Egg (DEPENDENT Dropdown Test)",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"App: Get Egg (DEPENDENT Dropdown Test)": {
+			"main": [
+				[
+					{
+						"node": "App: List Servers",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"App: List Servers": {
+			"main": [
+				[
+					{
+						"node": "App: Get Server (Dropdown Test)",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"App: Get Server (Dropdown Test)": {
+			"main": [
+				[
+					{
+						"node": "Client: List Servers",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Client: List Servers": {
+			"main": [
+				[
+					{
+						"node": "Client: Get Server (Dropdown Test)",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Client: Get Server (Dropdown Test)": {
+			"main": [
+				[
+					{
+						"node": "Client: List Backups (DEPENDENT Test)",
+						"type": "main",
+						"index": 0
+					},
+					{
+						"node": "Client: List Databases (DEPENDENT Test)",
+						"type": "main",
+						"index": 0
+					},
+					{
+						"node": "Client: List Schedules (DEPENDENT Test)",
+						"type": "main",
+						"index": 0
+					},
+					{
+						"node": "Client: List Allocations (DEPENDENT Test)",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Client: List Schedules (DEPENDENT Test)": {
+			"main": [
+				[
+					{
+						"node": "Client: Get Schedule (NESTED DEPENDENT)",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Client: List Allocations (DEPENDENT Test)": {
+			"main": [
+				[
+					{
+						"node": "Client: List Subusers (DEPENDENT Test)",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		},
+		"Client: List Subusers (DEPENDENT Test)": {
+			"main": [
+				[
+					{
+						"node": "Client: List Files (DEPENDENT Test)",
+						"type": "main",
+						"index": 0
+					}
+				]
+			]
+		}
+	},
+	"pinData": {},
+	"settings": {
+		"executionOrder": "v1"
+	},
+	"staticData": null,
+	"tags": [],
+	"triggerCount": 1,
+	"updatedAt": "2025-10-24T00:00:00.000Z",
+	"versionId": "1"
 }

@@ -18,7 +18,7 @@ export const getNodeOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The node to retrieve',
-	}
+	},
 ];
 
 export async function getNode(this: IExecuteFunctions, index: number): Promise<any> {

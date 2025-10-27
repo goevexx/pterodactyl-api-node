@@ -54,7 +54,8 @@ export const updateServerStartupOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Docker image to use for this server (loaded from selected egg). Leave empty to keep current image.',
+		description:
+			'Docker image to use for this server (loaded from selected egg). Leave empty to keep current image.',
 	},
 
 	// ========== Startup Command ==========
@@ -73,7 +74,8 @@ export const updateServerStartupOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Read-only preview. Shows [Current] server startup command, or [New Egg Default] if you select a new egg above. To override, use the field below.',
+		description:
+			'Read-only preview. Shows [Current] server startup command, or [New Egg Default] if you select a new egg above. To override, use the field below.',
 	},
 	{
 		displayName: 'Override Startup Command',
@@ -90,8 +92,10 @@ export const updateServerStartupOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Override the startup command. Leave empty to keep current/egg default shown above. Type Pterodactyl variables like {{SERVER_MEMORY}} directly (no expression mode). In expressions, escape braces: {{ \'\\{\\{SERVER_MEMORY\\}\\}\' }}',
-		placeholder: 'Leave empty for current/egg default, or: java -Xmx{{SERVER_MEMORY}}M -jar {{SERVER_JARFILE}}',
+		description:
+			"Override the startup command. Leave empty to keep current/egg default shown above. Type Pterodactyl variables like {{SERVER_MEMORY}} directly (no expression mode). In expressions, escape braces: {{ '\\{\\{SERVER_MEMORY\\}\\}' }}",
+		placeholder:
+			'Leave empty for current/egg default, or: java -Xmx{{SERVER_MEMORY}}M -jar {{SERVER_JARFILE}}',
 	},
 
 	// ========== Environment Variables ==========
@@ -109,7 +113,8 @@ export const updateServerStartupOperation: INodeProperties[] = [
 			},
 		},
 		default: {},
-		description: 'Environment variables for the server. Current values are preserved. These UI values override current values. For dynamic variables from previous nodes, use the JSON field below (highest priority).',
+		description:
+			'Environment variables for the server. Current values are preserved. These UI values override current values. For dynamic variables from previous nodes, use the JSON field below (highest priority).',
 		placeholder: 'Add Environment Variable',
 		options: [
 			{
@@ -150,7 +155,8 @@ export const updateServerStartupOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Environment variables as JSON object. This will override both current values and UI key-values. Use expressions like {{ $json.envVars }} to inject dynamic variables from previous nodes.',
+		description:
+			'Environment variables as JSON object. This will override both current values and UI key-values. Use expressions like {{ $json.envVars }} to inject dynamic variables from previous nodes.',
 		placeholder: '{"MINECRAFT_VERSION": "1.20.1", "SERVER_NAME": "My Server"}',
 	},
 ];
@@ -240,7 +246,11 @@ export async function updateServerStartup(this: IExecuteFunctions, index: number
 		if (eggData.relationships?.variables?.data) {
 			eggData.relationships.variables.data.forEach((variable: any) => {
 				const varAttrs = variable.attributes;
-				if (varAttrs.user_editable && varAttrs.default_value !== null && varAttrs.default_value !== '') {
+				if (
+					varAttrs.user_editable &&
+					varAttrs.default_value !== null &&
+					varAttrs.default_value !== ''
+				) {
 					environment[varAttrs.env_variable] = String(varAttrs.default_value);
 				}
 			});

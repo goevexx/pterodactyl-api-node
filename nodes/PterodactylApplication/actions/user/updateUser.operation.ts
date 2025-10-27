@@ -129,7 +129,8 @@ export const updateUserOperation: INodeProperties[] = [
 			},
 		],
 		default: '',
-		description: 'User\'s preferred language. Only languages installed in your Pterodactyl panel are shown. Leave as "Keep Current Value" to preserve existing language setting.',
+		description:
+			'User\'s preferred language. Only languages installed in your Pterodactyl panel are shown. Leave as "Keep Current Value" to preserve existing language setting.',
 	},
 	{
 		displayName: 'Update Root Admin',
@@ -143,7 +144,8 @@ export const updateUserOperation: INodeProperties[] = [
 			},
 		},
 		default: false,
-		description: 'Check this box if you want to change the root admin status. Leave unchecked to keep current value.',
+		description:
+			'Check this box if you want to change the root admin status. Leave unchecked to keep current value.',
 	},
 	{
 		displayName: 'Root Admin',
@@ -159,7 +161,7 @@ export const updateUserOperation: INodeProperties[] = [
 		},
 		default: false,
 		description: 'Whether the user should have administrator privileges',
-	}
+	},
 ];
 
 export async function updateUser(this: IExecuteFunctions, index: number): Promise<any> {
@@ -188,7 +190,9 @@ export async function updateUser(this: IExecuteFunctions, index: number): Promis
 	const passwordInput = this.getNodeParameter('password', index, '') as string;
 	const languageInput = this.getNodeParameter('language', index, '') as string;
 	const updateRootAdmin = this.getNodeParameter('updateRootAdmin', index, false) as boolean;
-	const rootAdminInput = updateRootAdmin ? this.getNodeParameter('rootAdmin', index, false) as boolean : null;
+	const rootAdminInput = updateRootAdmin
+		? (this.getNodeParameter('rootAdmin', index, false) as boolean)
+		: null;
 
 	// Use input values OR fall back to current values
 	const email = emailInput || currentUser.email;
@@ -198,13 +202,15 @@ export async function updateUser(this: IExecuteFunctions, index: number): Promis
 	const externalId = externalIdInput || currentUser.external_id || '';
 	const password = passwordInput; // Only use if explicitly provided
 	const language = languageInput || currentUser.language || 'en';
-	const rootAdmin = rootAdminInput !== null ? rootAdminInput : (currentUser.root_admin || false);
+	const rootAdmin = rootAdminInput !== null ? rootAdminInput : currentUser.root_admin || false;
 
 	// Validate email format (only if email is being changed)
 	if (emailInput) {
 		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 		if (!emailRegex.test(emailInput)) {
-			throw new Error(`Invalid email address: ${emailInput}. Please provide a valid email address.`);
+			throw new Error(
+				`Invalid email address: ${emailInput}. Please provide a valid email address.`,
+			);
 		}
 	}
 

@@ -7,7 +7,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('listApiKeys operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -265,7 +268,9 @@ describe('listApiKeys operation', () => {
 			(permissionError as any).statusCode = 403;
 			mockPterodactylApiRequest.mockRejectedValue(permissionError);
 
-			await expect(listApiKeys.call(mockExecuteFunctions, 0)).rejects.toThrow('Insufficient permissions');
+			await expect(listApiKeys.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Insufficient permissions',
+			);
 		});
 
 		it('should handle network errors', async () => {
@@ -281,7 +286,9 @@ describe('listApiKeys operation', () => {
 			(serverError as any).statusCode = 500;
 			mockPterodactylApiRequest.mockRejectedValue(serverError);
 
-			await expect(listApiKeys.call(mockExecuteFunctions, 0)).rejects.toThrow('Internal server error');
+			await expect(listApiKeys.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Internal server error',
+			);
 		});
 	});
 

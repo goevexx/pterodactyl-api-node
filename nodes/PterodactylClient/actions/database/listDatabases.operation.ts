@@ -33,8 +33,15 @@ export async function listDatabases(this: IExecuteFunctions, index: number): Pro
 
 	const serverId = this.getNodeParameter('serverId', index) as string;
 
-	const response = await pterodactylApiRequest.call(this, 'GET',
+	const response = await pterodactylApiRequest.call(
+		this,
+		'GET',
 		'/api/client',
-		`/servers/${serverId}/databases`, {}, {}, {}, index);
+		`/servers/${serverId}/databases`,
+		{},
+		{},
+		{},
+		index,
+	);
 	return response.data || [];
 }

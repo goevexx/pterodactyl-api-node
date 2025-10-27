@@ -18,7 +18,7 @@ export const forceDeleteServerOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The server to force delete',
-	}
+	},
 ];
 
 export async function forceDeleteServer(this: IExecuteFunctions, index: number): Promise<any> {

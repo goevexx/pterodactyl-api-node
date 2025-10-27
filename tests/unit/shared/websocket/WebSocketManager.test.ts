@@ -26,7 +26,10 @@ jest.mock('ws', () => {
 
 		private sentMessages: string[] = [];
 
-		constructor(public url: string, public options?: any) {
+		constructor(
+			public url: string,
+			public options?: any,
+		) {
 			super();
 			// Immediately set to open for testing
 			this.readyState = 1; // OPEN
@@ -705,7 +708,6 @@ describe('PterodactylWebSocketManager', () => {
 	describe('Cleanup', () => {
 		// TODO: Fix fake timer compatibility with async WebSocket mock
 		test.skip('should clear all timers on close', async () => {
-
 			wsManager = new PterodactylWebSocketManager(
 				{
 					serverId: 'test-server',

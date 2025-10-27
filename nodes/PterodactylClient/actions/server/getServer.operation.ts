@@ -23,8 +23,15 @@ export const getServerOperation: INodeProperties[] = [
 
 export async function getServer(this: IExecuteFunctions, index: number): Promise<any> {
 	const serverId = this.getNodeParameter('serverId', index) as string;
-	const response = await pterodactylApiRequest.call(this, 'GET',
+	const response = await pterodactylApiRequest.call(
+		this,
+		'GET',
 		'/api/client',
-		`/servers/${serverId}`, {}, {}, {}, index);
+		`/servers/${serverId}`,
+		{},
+		{},
+		{},
+		index,
+	);
 	return response.attributes || response;
 }

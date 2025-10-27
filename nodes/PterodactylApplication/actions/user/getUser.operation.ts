@@ -18,7 +18,7 @@ export const getUserOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The user to retrieve',
-	}
+	},
 ];
 
 export async function getUser(this: IExecuteFunctions, index: number): Promise<any> {

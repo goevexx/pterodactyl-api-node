@@ -90,9 +90,7 @@ describe('PterodactylApplication - createLocation operation', () => {
 	});
 
 	it('should include short code in request body', async () => {
-		mockExecuteFunctions.getNodeParameter
-			.mockReturnValueOnce('asia-south')
-			.mockReturnValueOnce('');
+		mockExecuteFunctions.getNodeParameter.mockReturnValueOnce('asia-south').mockReturnValueOnce('');
 
 		mockExecuteFunctions.helpers.httpRequest.mockResolvedValue({
 			statusCode: 201,
@@ -122,9 +120,7 @@ describe('PterodactylApplication - createLocation operation', () => {
 	});
 
 	it('should use pterodactylApplicationApi credentials', async () => {
-		mockExecuteFunctions.getNodeParameter
-			.mockReturnValueOnce('test-loc')
-			.mockReturnValueOnce('');
+		mockExecuteFunctions.getNodeParameter.mockReturnValueOnce('test-loc').mockReturnValueOnce('');
 
 		mockExecuteFunctions.helpers.httpRequest.mockResolvedValue({
 			statusCode: 201,
@@ -140,9 +136,7 @@ describe('PterodactylApplication - createLocation operation', () => {
 	});
 
 	it('should handle validation error for duplicate location', async () => {
-		mockExecuteFunctions.getNodeParameter
-			.mockReturnValueOnce('us-east')
-			.mockReturnValueOnce('');
+		mockExecuteFunctions.getNodeParameter.mockReturnValueOnce('us-east').mockReturnValueOnce('');
 
 		mockExecuteFunctions.helpers.httpRequest.mockResolvedValue({
 			statusCode: 422,

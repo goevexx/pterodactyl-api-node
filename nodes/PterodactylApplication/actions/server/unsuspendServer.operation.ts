@@ -18,7 +18,7 @@ export const unsuspendServerOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The server to unsuspend',
-	}
+	},
 ];
 
 export async function unsuspendServer(this: IExecuteFunctions, index: number): Promise<any> {

@@ -62,7 +62,8 @@ export const updateServerDetailsOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'External ID for integration with other systems. Leave empty to keep current value.',
+		description:
+			'External ID for integration with other systems. Leave empty to keep current value.',
 	},
 	{
 		displayName: 'Description',
@@ -80,7 +81,7 @@ export const updateServerDetailsOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'Server description. Leave empty to keep current value.',
-	}
+	},
 ];
 
 export async function updateServerDetails(this: IExecuteFunctions, index: number): Promise<any> {
@@ -109,8 +110,8 @@ export async function updateServerDetails(this: IExecuteFunctions, index: number
 	// Use input values OR fall back to current values
 	const name = nameInput || currentServer.name;
 	const userId = userIdInput || currentServer.user;
-	const externalId = externalIdInput !== '' ? externalIdInput : (currentServer.external_id || '');
-	const description = descriptionInput !== '' ? descriptionInput : (currentServer.description || '');
+	const externalId = externalIdInput !== '' ? externalIdInput : currentServer.external_id || '';
+	const description = descriptionInput !== '' ? descriptionInput : currentServer.description || '';
 
 	const response = await pterodactylApiRequest.call(
 		this,

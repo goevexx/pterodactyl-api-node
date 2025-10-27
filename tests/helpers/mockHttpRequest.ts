@@ -14,11 +14,7 @@ export function createMockHttpResponse(data: any, statusCode: number = 200) {
 /**
  * Create a mock Pterodactyl error response
  */
-export function createMockErrorResponse(
-	message: string,
-	statusCode: number = 400,
-	errors?: any[]
-) {
+export function createMockErrorResponse(message: string, statusCode: number = 400, errors?: any[]) {
 	return {
 		statusCode,
 		body: {

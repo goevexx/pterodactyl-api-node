@@ -6,7 +6,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('decompressFile operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -171,7 +174,9 @@ describe('decompressFile operation', () => {
 			const error = new Error('API request failed');
 			mockPterodactylApiRequest.mockRejectedValue(error);
 
-			await expect(decompressFile.call(mockExecuteFunctions, 0)).rejects.toThrow('API request failed');
+			await expect(decompressFile.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'API request failed',
+			);
 		});
 
 		it('should handle file not found errors', async () => {
@@ -179,7 +184,9 @@ describe('decompressFile operation', () => {
 			(notFoundError as any).statusCode = 404;
 			mockPterodactylApiRequest.mockRejectedValue(notFoundError);
 
-			await expect(decompressFile.call(mockExecuteFunctions, 0)).rejects.toThrow('Archive not found');
+			await expect(decompressFile.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Archive not found',
+			);
 		});
 
 		it('should handle invalid archive errors', async () => {
@@ -187,7 +194,9 @@ describe('decompressFile operation', () => {
 			(validationError as any).statusCode = 400;
 			mockPterodactylApiRequest.mockRejectedValue(validationError);
 
-			await expect(decompressFile.call(mockExecuteFunctions, 0)).rejects.toThrow('Invalid or corrupted archive');
+			await expect(decompressFile.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Invalid or corrupted archive',
+			);
 		});
 
 		it('should handle permission errors', async () => {
@@ -195,7 +204,9 @@ describe('decompressFile operation', () => {
 			(permissionError as any).statusCode = 403;
 			mockPterodactylApiRequest.mockRejectedValue(permissionError);
 
-			await expect(decompressFile.call(mockExecuteFunctions, 0)).rejects.toThrow('Permission denied');
+			await expect(decompressFile.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Permission denied',
+			);
 		});
 	});
 });

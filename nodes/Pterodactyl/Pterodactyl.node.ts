@@ -81,7 +81,8 @@ export class Pterodactyl implements INodeType {
 		group: ['transform'],
 		version: 1,
 		subtitle: '={{$parameter["operation"] + ": " + $parameter["resource"]}}',
-		description: '⚠️ DEPRECATED: Use "Pterodactyl Client" for user-level operations or "Pterodactyl Application" for admin operations instead. This node will be removed in a future version.',
+		description:
+			'⚠️ DEPRECATED: Use "Pterodactyl Client" for user-level operations or "Pterodactyl Application" for admin operations instead. This node will be removed in a future version.',
 		defaults: {
 			name: 'Pterodactyl (Deprecated)',
 		},

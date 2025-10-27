@@ -59,7 +59,7 @@ export async function createSubuser(this: IExecuteFunctions, index: number): Pro
 		'POST',
 		'/api/client',
 		`/servers/${serverId}/users`,
-		{ email, permissions: permissions.split(',').map(p => p.trim()) },
+		{ email, permissions: permissions.split(',').map((p) => p.trim()) },
 		{},
 		{},
 		index,

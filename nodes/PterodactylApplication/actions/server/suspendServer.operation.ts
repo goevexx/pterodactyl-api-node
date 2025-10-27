@@ -18,7 +18,7 @@ export const suspendServerOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The server to suspend',
-	}
+	},
 ];
 
 export async function suspendServer(this: IExecuteFunctions, index: number): Promise<any> {

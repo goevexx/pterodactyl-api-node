@@ -63,7 +63,7 @@ export async function updateSubuser(this: IExecuteFunctions, index: number): Pro
 		'POST',
 		'/api/client',
 		`/servers/${serverId}/users/${uuid}`,
-		{ permissions: permissions.split(',').map(p => p.trim()) },
+		{ permissions: permissions.split(',').map((p) => p.trim()) },
 		{},
 		{},
 		index,

@@ -61,7 +61,8 @@ describe('Shared Utils - errorHandling', () => {
 		});
 
 		it('should work with Pterodactyl error format messages', () => {
-			const pterodactylError = 'Pterodactyl API Error [ResourceNotFoundException]: Server not found';
+			const pterodactylError =
+				'Pterodactyl API Error [ResourceNotFoundException]: Server not found';
 			const result = enhanceErrorMessage(pterodactylError, 404);
 			expect(result).toContain('Pterodactyl API Error');
 			expect(result).toContain('Resource not found');

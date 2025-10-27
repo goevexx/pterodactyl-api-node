@@ -233,9 +233,9 @@ describe('PterodactylWebsocket - Connection', () => {
 
 	describe('Error Handling', () => {
 		test('should handle missing credentials', async () => {
-			mockExecuteFunctions.getCredentials = jest.fn().mockRejectedValue(
-				new Error('Credentials not found'),
-			);
+			mockExecuteFunctions.getCredentials = jest
+				.fn()
+				.mockRejectedValue(new Error('Credentials not found'));
 			mockExecuteFunctions.getNodeParameter = jest.fn(
 				(param: string, _index: number, defaultValue?: any) => {
 					if (param === 'resource') return 'connection';
@@ -277,10 +277,10 @@ describe('PterodactylWebsocket - Connection', () => {
 			]);
 
 			mockExecuteFunctions.getNodeParameter = jest.fn(
-			(param: string, index: number, defaultValue?: any) => {
-				if (param === 'resource') return 'connection';
-				if (param === 'operation') return 'testConnection';
-				if (param === 'serverId') return `server-${index + 1}`;
+				(param: string, index: number, defaultValue?: any) => {
+					if (param === 'resource') return 'connection';
+					if (param === 'operation') return 'testConnection';
+					if (param === 'serverId') return `server-${index + 1}`;
 					return defaultValue;
 				},
 			);

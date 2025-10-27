@@ -6,7 +6,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('listDatabases operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -59,10 +62,7 @@ describe('listDatabases operation', () => {
 
 			await listDatabases.call(mockExecuteFunctions, 0);
 
-			expect(mockPterodactylApiRequest).toHaveBeenCalledWith(
-				'GET',
-				'/servers/abc123/databases',
-			);
+			expect(mockPterodactylApiRequest).toHaveBeenCalledWith('GET', '/servers/abc123/databases');
 		});
 
 		it('should use GET method', async () => {
@@ -158,7 +158,9 @@ describe('listDatabases operation', () => {
 			const error = new Error('API request failed');
 			mockPterodactylApiRequest.mockRejectedValue(error);
 
-			await expect(listDatabases.call(mockExecuteFunctions, 0)).rejects.toThrow('API request failed');
+			await expect(listDatabases.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'API request failed',
+			);
 		});
 
 		it('should handle server not found errors', async () => {

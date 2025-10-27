@@ -112,7 +112,8 @@ export const createNodeOperation: INodeProperties[] = [
 			},
 		},
 		default: 0,
-		description: 'Percentage of memory to overallocate (e.g., 20 for 20%). Use -1 to disable checking.',
+		description:
+			'Percentage of memory to overallocate (e.g., 20 for 20%). Use -1 to disable checking.',
 	},
 	{
 		displayName: 'Disk',
@@ -140,7 +141,8 @@ export const createNodeOperation: INodeProperties[] = [
 			},
 		},
 		default: 0,
-		description: 'Percentage of disk space to overallocate (e.g., 20 for 20%). Use -1 to disable checking.',
+		description:
+			'Percentage of disk space to overallocate (e.g., 20 for 20%). Use -1 to disable checking.',
 	},
 	{
 		displayName: 'Upload Size',
@@ -226,7 +228,7 @@ export const createNodeOperation: INodeProperties[] = [
 		},
 		default: true,
 		description: 'Whether the node is publicly accessible for automatic allocation',
-	}
+	},
 ];
 
 export async function createNode(this: IExecuteFunctions, index: number): Promise<any> {
@@ -238,7 +240,11 @@ export async function createNode(this: IExecuteFunctions, index: number): Promis
 	const memoryOverallocate = this.getNodeParameter('memoryOverallocate', index, 0) as number;
 	const disk = this.getNodeParameter('disk', index) as number;
 	const diskOverallocate = this.getNodeParameter('diskOverallocate', index, 0) as number;
-	const daemonBase = this.getNodeParameter('daemonBase', index, '/var/lib/pterodactyl/volumes') as string;
+	const daemonBase = this.getNodeParameter(
+		'daemonBase',
+		index,
+		'/var/lib/pterodactyl/volumes',
+	) as string;
 	const daemonSftp = this.getNodeParameter('daemonSftp', index, 2022) as number;
 	const daemonListen = this.getNodeParameter('daemonListen', index, 8080) as number;
 	const publicNode = this.getNodeParameter('public', index, true) as boolean;
@@ -266,7 +272,7 @@ export async function createNode(this: IExecuteFunctions, index: number): Promis
 			public: publicNode,
 			behind_proxy: behindProxy,
 			maintenance_mode: maintenanceMode,
-			upload_size: uploadSize
+			upload_size: uploadSize,
 		},
 		{},
 		{},

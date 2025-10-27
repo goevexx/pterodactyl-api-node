@@ -15,7 +15,7 @@ export const getServerByExternalIdOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'External ID of the server',
-	}
+	},
 ];
 
 export async function getServerByExternalId(this: IExecuteFunctions, index: number): Promise<any> {

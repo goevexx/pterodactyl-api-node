@@ -18,7 +18,7 @@ export const getNodeConfigurationOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The node to get configuration for',
-	}
+	},
 ];
 
 export async function getNodeConfiguration(this: IExecuteFunctions, index: number): Promise<any> {

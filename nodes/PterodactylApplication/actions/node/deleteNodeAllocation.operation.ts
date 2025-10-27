@@ -36,7 +36,7 @@ export const deleteNodeAllocationOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The allocation to delete',
-	}
+	},
 ];
 
 export async function deleteNodeAllocation(this: IExecuteFunctions, index: number): Promise<any> {

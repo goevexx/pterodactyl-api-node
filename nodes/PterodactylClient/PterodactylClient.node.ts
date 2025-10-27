@@ -717,10 +717,12 @@ export class PterodactylClient implements INodeType {
 					const servers = response.data || [];
 
 					if (servers.length === 0) {
-						return [{
-							name: 'No servers found',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No servers found',
+								value: '',
+							},
+						];
 					}
 
 					return servers.map((server: any) => ({
@@ -729,10 +731,12 @@ export class PterodactylClient implements INodeType {
 					}));
 				} catch (error) {
 					console.error('Error fetching client servers:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -759,10 +763,12 @@ export class PterodactylClient implements INodeType {
 					const backups = response.data || [];
 
 					if (backups.length === 0) {
-						return [{
-							name: 'No backups found for this server',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No backups found for this server',
+								value: '',
+							},
+						];
 					}
 
 					return backups.map((backup: any) => ({
@@ -771,10 +777,12 @@ export class PterodactylClient implements INodeType {
 					}));
 				} catch (error) {
 					console.error('Error fetching backups:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -801,10 +809,12 @@ export class PterodactylClient implements INodeType {
 					const databases = response.data || [];
 
 					if (databases.length === 0) {
-						return [{
-							name: 'No databases found for this server',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No databases found for this server',
+								value: '',
+							},
+						];
 					}
 
 					return databases.map((database: any) => ({
@@ -813,10 +823,12 @@ export class PterodactylClient implements INodeType {
 					}));
 				} catch (error) {
 					console.error('Error fetching databases:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -843,10 +855,12 @@ export class PterodactylClient implements INodeType {
 					const schedules = response.data || [];
 
 					if (schedules.length === 0) {
-						return [{
-							name: 'No schedules found for this server',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No schedules found for this server',
+								value: '',
+							},
+						];
 					}
 
 					return schedules.map((schedule: any) => ({
@@ -855,10 +869,12 @@ export class PterodactylClient implements INodeType {
 					}));
 				} catch (error) {
 					console.error('Error fetching schedules:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -886,10 +902,12 @@ export class PterodactylClient implements INodeType {
 					const tasks = response.attributes?.relationships?.tasks?.data || [];
 
 					if (tasks.length === 0) {
-						return [{
-							name: 'No tasks found for this schedule',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No tasks found for this schedule',
+								value: '',
+							},
+						];
 					}
 
 					return tasks.map((task: any) => ({
@@ -898,10 +916,12 @@ export class PterodactylClient implements INodeType {
 					}));
 				} catch (error) {
 					console.error('Error fetching tasks:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -928,10 +948,12 @@ export class PterodactylClient implements INodeType {
 					const allocations = response.data || [];
 
 					if (allocations.length === 0) {
-						return [{
-							name: 'No allocations found for this server',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No allocations found for this server',
+								value: '',
+							},
+						];
 					}
 
 					return allocations.map((allocation: any) => ({
@@ -940,10 +962,12 @@ export class PterodactylClient implements INodeType {
 					}));
 				} catch (error) {
 					console.error('Error fetching allocations:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -970,10 +994,12 @@ export class PterodactylClient implements INodeType {
 					const subusers = response.data || [];
 
 					if (subusers.length === 0) {
-						return [{
-							name: 'No subusers found for this server',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No subusers found for this server',
+								value: '',
+							},
+						];
 					}
 
 					return subusers.map((subuser: any) => ({
@@ -982,10 +1008,12 @@ export class PterodactylClient implements INodeType {
 					}));
 				} catch (error) {
 					console.error('Error fetching subusers:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -1006,10 +1034,12 @@ export class PterodactylClient implements INodeType {
 					const apiKeys = response.data || [];
 
 					if (apiKeys.length === 0) {
-						return [{
-							name: 'No API keys found',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No API keys found',
+								value: '',
+							},
+						];
 					}
 
 					return apiKeys.map((apiKey: any) => ({
@@ -1018,10 +1048,12 @@ export class PterodactylClient implements INodeType {
 					}));
 				} catch (error) {
 					console.error('Error fetching API keys:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 		},

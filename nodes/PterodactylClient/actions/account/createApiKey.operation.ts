@@ -36,9 +36,7 @@ export async function createApiKey(this: IExecuteFunctions, index: number): Prom
 	const description = this.getNodeParameter('description', index) as string;
 	const allowedIpsRaw = this.getNodeParameter('allowedIps', index, '') as string;
 
-	const allowed_ips = allowedIpsRaw
-		? allowedIpsRaw.split(',').map((ip) => ip.trim())
-		: [];
+	const allowed_ips = allowedIpsRaw ? allowedIpsRaw.split(',').map((ip) => ip.trim()) : [];
 
 	const response = await pterodactylApiRequest.call(
 		this,

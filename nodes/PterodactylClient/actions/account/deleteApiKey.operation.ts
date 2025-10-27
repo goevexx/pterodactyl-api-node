@@ -1,4 +1,4 @@
-import { IExecuteFunctions, INodeProperties} from 'n8n-workflow';
+import { IExecuteFunctions, INodeProperties } from 'n8n-workflow';
 import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const deleteApiKeyOperation: INodeProperties[] = [

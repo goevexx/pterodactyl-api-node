@@ -6,7 +6,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('rotatePassword operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -152,7 +155,9 @@ describe('rotatePassword operation', () => {
 			const error = new Error('API request failed');
 			mockPterodactylApiRequest.mockRejectedValue(error);
 
-			await expect(rotatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow('API request failed');
+			await expect(rotatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'API request failed',
+			);
 		});
 
 		it('should handle database not found errors', async () => {
@@ -160,7 +165,9 @@ describe('rotatePassword operation', () => {
 			(notFoundError as any).statusCode = 404;
 			mockPterodactylApiRequest.mockRejectedValue(notFoundError);
 
-			await expect(rotatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow('Database not found');
+			await expect(rotatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Database not found',
+			);
 		});
 
 		it('should handle permission errors', async () => {
@@ -168,7 +175,9 @@ describe('rotatePassword operation', () => {
 			(permissionError as any).statusCode = 403;
 			mockPterodactylApiRequest.mockRejectedValue(permissionError);
 
-			await expect(rotatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow('Insufficient permissions');
+			await expect(rotatePassword.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Insufficient permissions',
+			);
 		});
 	});
 });

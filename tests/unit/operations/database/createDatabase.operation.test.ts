@@ -6,7 +6,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('createDatabase operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -70,14 +73,10 @@ describe('createDatabase operation', () => {
 
 			await createDatabase.call(mockExecuteFunctions, 0);
 
-			expect(mockPterodactylApiRequest).toHaveBeenCalledWith(
-				'POST',
-				'/servers/abc123/databases',
-				{
-					database: 'my_database',
-					remote: '%',
-				},
-			);
+			expect(mockPterodactylApiRequest).toHaveBeenCalledWith('POST', '/servers/abc123/databases', {
+				database: 'my_database',
+				remote: '%',
+			});
 		});
 
 		it('should use POST method', async () => {
@@ -210,7 +209,9 @@ describe('createDatabase operation', () => {
 			const error = new Error('API request failed');
 			mockPterodactylApiRequest.mockRejectedValue(error);
 
-			await expect(createDatabase.call(mockExecuteFunctions, 0)).rejects.toThrow('API request failed');
+			await expect(createDatabase.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'API request failed',
+			);
 		});
 
 		it('should handle database limit exceeded errors', async () => {
@@ -218,7 +219,9 @@ describe('createDatabase operation', () => {
 			(limitError as any).statusCode = 422;
 			mockPterodactylApiRequest.mockRejectedValue(limitError);
 
-			await expect(createDatabase.call(mockExecuteFunctions, 0)).rejects.toThrow('Database limit exceeded');
+			await expect(createDatabase.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Database limit exceeded',
+			);
 		});
 
 		it('should handle invalid database name errors', async () => {
@@ -226,7 +229,9 @@ describe('createDatabase operation', () => {
 			(validationError as any).statusCode = 400;
 			mockPterodactylApiRequest.mockRejectedValue(validationError);
 
-			await expect(createDatabase.call(mockExecuteFunctions, 0)).rejects.toThrow('Invalid database name');
+			await expect(createDatabase.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Invalid database name',
+			);
 		});
 
 		it('should handle duplicate database errors', async () => {
@@ -234,7 +239,9 @@ describe('createDatabase operation', () => {
 			(duplicateError as any).statusCode = 409;
 			mockPterodactylApiRequest.mockRejectedValue(duplicateError);
 
-			await expect(createDatabase.call(mockExecuteFunctions, 0)).rejects.toThrow('Database already exists');
+			await expect(createDatabase.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Database already exists',
+			);
 		});
 	});
 });

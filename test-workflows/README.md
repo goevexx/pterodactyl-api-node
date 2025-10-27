@@ -7,12 +7,14 @@ This directory contains comprehensive test workflows for validating the dropdown
 ### 1. Import the Workflow
 
 **Option A: Via n8n UI**
+
 1. Open n8n in your browser
 2. Click "Workflows" → "Import from File"
 3. Select `comprehensive-dropdown-test.json`
 4. Click "Import"
 
 **Option B: Via n8n CLI**
+
 ```bash
 n8n import:workflow --input=test-workflows/comprehensive-dropdown-test.json
 ```
@@ -22,6 +24,7 @@ n8n import:workflow --input=test-workflows/comprehensive-dropdown-test.json
 The workflow requires two credential sets:
 
 **Application API Credential:**
+
 1. In n8n, go to "Credentials"
 2. Create new "Pterodactyl Application API" credential
 3. Enter your panel URL (e.g., `https://panel.example.com`)
@@ -29,6 +32,7 @@ The workflow requires two credential sets:
 5. Save as "Pterodactyl Application API"
 
 **Client API Credential:**
+
 1. Create new "Pterodactyl Client API" credential
 2. Enter your panel URL
 3. Enter your Client API key
@@ -47,34 +51,34 @@ The workflow requires two credential sets:
 
 ### Application API Tests (Nodes 1-13)
 
-| Node | Test Type | What to Verify |
-|------|-----------|----------------|
-| **App: List Users** | List operation | Baseline data |
-| **App: Get User** | ✅ **DROPDOWN** | User dropdown loads and displays |
-| **App: List Locations** | List operation | Baseline data |
-| **App: Get Location** | ✅ **DROPDOWN** | Location dropdown loads |
-| **App: List Nodes** | List operation | Baseline data |
-| **App: Get Node** | ✅ **DROPDOWN** | Node dropdown loads |
+| Node                      | Test Type        | What to Verify                      |
+| ------------------------- | ---------------- | ----------------------------------- |
+| **App: List Users**       | List operation   | Baseline data                       |
+| **App: Get User**         | ✅ **DROPDOWN**  | User dropdown loads and displays    |
+| **App: List Locations**   | List operation   | Baseline data                       |
+| **App: Get Location**     | ✅ **DROPDOWN**  | Location dropdown loads             |
+| **App: List Nodes**       | List operation   | Baseline data                       |
+| **App: Get Node**         | ✅ **DROPDOWN**  | Node dropdown loads                 |
 | **App: List Allocations** | ✅ **DEPENDENT** | Allocation dropdown depends on node |
-| **App: List Nests** | List operation | Baseline data |
-| **App: Get Nest** | ✅ **DROPDOWN** | Nest dropdown loads |
-| **App: Get Egg** | ✅ **DEPENDENT** | Egg dropdown depends on nest |
-| **App: List Servers** | List operation | Baseline data |
-| **App: Get Server** | ✅ **DROPDOWN** | Server dropdown loads |
+| **App: List Nests**       | List operation   | Baseline data                       |
+| **App: Get Nest**         | ✅ **DROPDOWN**  | Nest dropdown loads                 |
+| **App: Get Egg**          | ✅ **DEPENDENT** | Egg dropdown depends on nest        |
+| **App: List Servers**     | List operation   | Baseline data                       |
+| **App: Get Server**       | ✅ **DROPDOWN**  | Server dropdown loads               |
 
 ### Client API Tests (Nodes 14-23)
 
-| Node | Test Type | What to Verify |
-|------|-----------|----------------|
-| **Client: List Servers** | List operation | Baseline data |
-| **Client: Get Server** | ✅ **DROPDOWN** | Server dropdown loads |
-| **Client: List Backups** | ✅ **DEPENDENT** | Backup dropdown depends on server |
-| **Client: List Databases** | ✅ **DEPENDENT** | Database dropdown depends on server |
-| **Client: List Schedules** | ✅ **DEPENDENT** | Schedule dropdown depends on server |
-| **Client: Get Schedule** | ✅ **NESTED** | Schedule depends on server + scheduleId |
-| **Client: List Allocations** | ✅ **DEPENDENT** | Allocation dropdown depends on server |
-| **Client: List Subusers** | ✅ **DEPENDENT** | Subuser dropdown depends on server |
-| **Client: List Files** | ✅ **DEPENDENT** | File path dropdown depends on server |
+| Node                         | Test Type        | What to Verify                          |
+| ---------------------------- | ---------------- | --------------------------------------- |
+| **Client: List Servers**     | List operation   | Baseline data                           |
+| **Client: Get Server**       | ✅ **DROPDOWN**  | Server dropdown loads                   |
+| **Client: List Backups**     | ✅ **DEPENDENT** | Backup dropdown depends on server       |
+| **Client: List Databases**   | ✅ **DEPENDENT** | Database dropdown depends on server     |
+| **Client: List Schedules**   | ✅ **DEPENDENT** | Schedule dropdown depends on server     |
+| **Client: Get Schedule**     | ✅ **NESTED**    | Schedule depends on server + scheduleId |
+| **Client: List Allocations** | ✅ **DEPENDENT** | Allocation dropdown depends on server   |
+| **Client: List Subusers**    | ✅ **DEPENDENT** | Subuser dropdown depends on server      |
+| **Client: List Files**       | ✅ **DEPENDENT** | File path dropdown depends on server    |
 
 ---
 
@@ -83,6 +87,7 @@ The workflow requires two credential sets:
 ### ✅ Dropdown Loading Tests
 
 For each dropdown node, verify:
+
 - [ ] Dropdown appears (not a text input field)
 - [ ] Entity names are displayed with IDs (e.g., "Main Server (ID: 1)")
 - [ ] Multiple entities show in the list
@@ -92,6 +97,7 @@ For each dropdown node, verify:
 ### ✅ Dependent Dropdown Tests
 
 For dependent dropdowns (Egg, Allocation, Backups, etc.):
+
 - [ ] Dropdown is empty before parent is selected
 - [ ] Dropdown populates after parent entity is selected
 - [ ] Dropdown updates when parent selection changes
@@ -100,6 +106,7 @@ For dependent dropdowns (Egg, Allocation, Backups, etc.):
 ### ✅ Nested Dependency Tests
 
 For multi-level dependencies (Server → Schedule → Task):
+
 - [ ] First level dropdown works independently
 - [ ] Second level depends on first level
 - [ ] Changing first level resets and updates second level
@@ -108,6 +115,7 @@ For multi-level dependencies (Server → Schedule → Task):
 ### ✅ Type Consistency Tests
 
 Verify correct data types:
+
 - [ ] Application API: All IDs are numbers
 - [ ] Client API: All IDs/identifiers are strings
 - [ ] No type mismatch errors in execution
@@ -192,6 +200,7 @@ Verify correct data types:
 ## Expected Dropdown Behavior
 
 ### When Dropdown Loads Successfully:
+
 ```
 ┌─────────────────────────────────────┐
 │ Server                        ▼     │
@@ -203,6 +212,7 @@ Verify correct data types:
 ```
 
 ### When No Entities Exist:
+
 ```
 ┌─────────────────────────────────────┐
 │ Server                        ▼     │
@@ -212,6 +222,7 @@ Verify correct data types:
 ```
 
 ### When API Error Occurs:
+
 ```
 ┌─────────────────────────────────────┐
 │ Server                        ▼     │
@@ -221,6 +232,7 @@ Verify correct data types:
 ```
 
 ### Dependent Dropdown (Before Parent Selected):
+
 ```
 ┌─────────────────────────────────────┐
 │ Egg                           ▼     │
@@ -230,6 +242,7 @@ Verify correct data types:
 ```
 
 ### Dependent Dropdown (After Parent Selected):
+
 ```
 Nest: Minecraft
 
@@ -250,12 +263,14 @@ Nest: Minecraft
 
 **Problem:** Dropdown shows as text input instead of dropdown
 **Solution:**
+
 - Verify you're using the latest version with dropdown support
 - Check that `loadOptionsMethod` is defined in the node
 - Rebuild the project: `npm run build`
 
 **Problem:** Dropdown is empty (no options)
 **Solution:**
+
 - Check API credentials are correct
 - Verify the Pterodactyl panel is accessible
 - Check that entities exist (e.g., you have users/servers created)
@@ -265,6 +280,7 @@ Nest: Minecraft
 
 **Problem:** Child dropdown doesn't populate after parent selection
 **Solution:**
+
 - Ensure parent field is set correctly
 - Check that `loadOptionsDependsOn` is configured
 - Try deselecting and reselecting the parent
@@ -273,6 +289,7 @@ Nest: Minecraft
 
 **Problem:** "Expected number but got string" errors
 **Solution:**
+
 - Application API should use number type
 - Client API should use string type
 - Verify the operation file has correct type definitions
@@ -299,19 +316,23 @@ All tests pass if:
 Beyond the workflow, manually test these scenarios:
 
 ### 1. Create Server with All Dropdowns
+
 - Create a new server using Application API
 - Verify: User, Nest, Egg, Node, Allocation all use dropdowns
 - Verify: Egg dropdown changes when Nest changes
 
 ### 2. Update Operations
+
 - Test update operations (updateServerDetails, updateUser, etc.)
 - Verify dropdowns work in update context
 
 ### 3. Delete Operations
+
 - Test delete operations
 - Verify entity selection via dropdown works
 
 ### 4. Edge Cases
+
 - Test with 100+ entities (performance)
 - Test with special characters in names
 - Test with very long entity names
@@ -340,6 +361,7 @@ If you find dropdown issues:
    - Pterodactyl panel version
 
 4. **Open an issue:**
+
    ```
    Title: Dropdown not working for [Resource] [Operation]
 

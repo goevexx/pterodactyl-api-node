@@ -18,7 +18,7 @@ export const getServerOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The server to retrieve',
-	}
+	},
 ];
 
 export async function getServer(this: IExecuteFunctions, index: number): Promise<any> {

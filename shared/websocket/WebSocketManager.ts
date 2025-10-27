@@ -34,10 +34,7 @@ export class PterodactylWebSocketManager {
 	 * @param config - Configuration options
 	 * @param tokenFetchFn - Function to fetch WebSocket token from API
 	 */
-	constructor(
-		config: WebSocketManagerConfig,
-		tokenFetchFn: () => Promise<WebSocketTokenResponse>,
-	) {
+	constructor(config: WebSocketManagerConfig, tokenFetchFn: () => Promise<WebSocketTokenResponse>) {
 		this.config = {
 			autoReconnect: true,
 			maxReconnectAttempts: 5,
@@ -111,7 +108,7 @@ export class PterodactylWebSocketManager {
 
 			// Wait for authentication to be processed by Wings
 			// Wings needs a moment to validate the JWT before accepting commands
-			await new Promise(resolve => setTimeout(resolve, 200));
+			await new Promise((resolve) => setTimeout(resolve, 200));
 
 			// Reset reconnection state on successful connection
 			this.reconnectionState = {
@@ -249,7 +246,7 @@ export class PterodactylWebSocketManager {
 			this.sendCommand({ event: 'auth', args: [this.token] });
 
 			// Wait for re-authentication to be processed
-			await new Promise(resolve => setTimeout(resolve, 200));
+			await new Promise((resolve) => setTimeout(resolve, 200));
 
 			// Schedule next refresh
 			const tokenParts = this.token.split('.');
@@ -296,7 +293,10 @@ export class PterodactylWebSocketManager {
 		this.reconnectionState.attempt++;
 
 		// Calculate exponential backoff delay: 1s, 2s, 4s, 8s, 16s
-		const delay = Math.min(this.reconnectionState.delay * Math.pow(2, this.reconnectionState.attempt - 1), 16000);
+		const delay = Math.min(
+			this.reconnectionState.delay * Math.pow(2, this.reconnectionState.attempt - 1),
+			16000,
+		);
 
 		console.log(
 			`[WebSocketManager] Scheduling reconnection attempt ${this.reconnectionState.attempt} in ${delay}ms`,

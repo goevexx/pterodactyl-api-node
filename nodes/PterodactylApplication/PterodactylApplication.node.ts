@@ -494,10 +494,12 @@ export class PterodactylApplication implements INodeType {
 					const servers = response.data || [];
 
 					if (servers.length === 0) {
-						return [{
-							name: 'No servers found - create one first',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No servers found - create one first',
+								value: '',
+							},
+						];
 					}
 
 					return servers.map((server: any) => ({
@@ -506,10 +508,12 @@ export class PterodactylApplication implements INodeType {
 					}));
 				} catch (error) {
 					console.error('Error fetching servers:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -530,10 +534,12 @@ export class PterodactylApplication implements INodeType {
 					const users = response.data || [];
 
 					if (users.length === 0) {
-						return [{
-							name: 'No users found - create one first',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No users found - create one first',
+								value: '',
+							},
+						];
 					}
 
 					return users.map((user: any) => ({
@@ -542,10 +548,12 @@ export class PterodactylApplication implements INodeType {
 					}));
 				} catch (error) {
 					console.error('Error fetching users:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -566,10 +574,12 @@ export class PterodactylApplication implements INodeType {
 					const locations = response.data || [];
 
 					if (locations.length === 0) {
-						return [{
-							name: 'No locations found - create one first',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No locations found - create one first',
+								value: '',
+							},
+						];
 					}
 
 					return locations.map((location: any) => ({
@@ -578,10 +588,12 @@ export class PterodactylApplication implements INodeType {
 					}));
 				} catch (error) {
 					console.error('Error fetching locations:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -602,10 +614,12 @@ export class PterodactylApplication implements INodeType {
 					const nests = response.data || [];
 
 					if (nests.length === 0) {
-						return [{
-							name: 'No nests found',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No nests found',
+								value: '',
+							},
+						];
 					}
 
 					return nests.map((nest: any) => ({
@@ -614,10 +628,12 @@ export class PterodactylApplication implements INodeType {
 					}));
 				} catch (error) {
 					console.error('Error fetching nests:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -632,10 +648,12 @@ export class PterodactylApplication implements INodeType {
 					}
 
 					if (!nestId) {
-						return [{
-							name: 'Please select a nest first',
-							value: '',
-						}];
+						return [
+							{
+								name: 'Please select a nest first',
+								value: '',
+							},
+						];
 					}
 
 					const { pterodactylApiRequest } = await import('../../shared/transport');
@@ -653,10 +671,12 @@ export class PterodactylApplication implements INodeType {
 					const eggs = response.data || [];
 
 					if (eggs.length === 0) {
-						return [{
-							name: 'No eggs found for this nest',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No eggs found for this nest',
+								value: '',
+							},
+						];
 					}
 
 					return eggs.map((egg: any) => ({
@@ -665,10 +685,12 @@ export class PterodactylApplication implements INodeType {
 					}));
 				} catch (error) {
 					console.error('Error fetching eggs:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -713,19 +735,23 @@ export class PterodactylApplication implements INodeType {
 					}
 
 					if (allEggs.length === 0) {
-						return [{
-							name: 'No eggs found',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No eggs found',
+								value: '',
+							},
+						];
 					}
 
 					return allEggs;
 				} catch (error) {
 					console.error('Error fetching all eggs:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -735,17 +761,21 @@ export class PterodactylApplication implements INodeType {
 					const eggId = this.getCurrentNodeParameter('egg') as number;
 
 					if (!nestId) {
-						return [{
-							name: 'Please select a nest first',
-							value: '',
-						}];
+						return [
+							{
+								name: 'Please select a nest first',
+								value: '',
+							},
+						];
 					}
 
 					if (!eggId) {
-						return [{
-							name: 'Please select an egg first',
-							value: '',
-						}];
+						return [
+							{
+								name: 'Please select an egg first',
+								value: '',
+							},
+						];
 					}
 
 					const { pterodactylApiRequest } = await import('../../shared/transport');
@@ -771,38 +801,48 @@ export class PterodactylApplication implements INodeType {
 					}));
 
 					if (images.length === 0 && defaultImage) {
-						return [{
-							name: `Default: ${defaultImage}`,
-							value: defaultImage,
-						}];
+						return [
+							{
+								name: `Default: ${defaultImage}`,
+								value: defaultImage,
+							},
+						];
 					}
 
 					if (images.length === 0) {
-						return [{
-							name: 'No docker images available for this egg',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No docker images available for this egg',
+								value: '',
+							},
+						];
 					}
 
 					return images;
 				} catch (error) {
 					console.error('Error fetching docker images:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
-			async getDockerImagesForEggById(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+			async getDockerImagesForEggById(
+				this: ILoadOptionsFunctions,
+			): Promise<INodePropertyOptions[]> {
 				try {
 					const eggId = this.getCurrentNodeParameter('egg') as number;
 
 					if (!eggId) {
-						return [{
-							name: 'Please select an egg first',
-							value: '',
-						}];
+						return [
+							{
+								name: 'Please select an egg first',
+								value: '',
+							},
+						];
 					}
 
 					const { pterodactylApiRequest } = await import('../../shared/transport');
@@ -844,10 +884,12 @@ export class PterodactylApplication implements INodeType {
 					}
 
 					if (!eggData) {
-						return [{
-							name: 'Egg not found',
-							value: '',
-						}];
+						return [
+							{
+								name: 'Egg not found',
+								value: '',
+							},
+						];
 					}
 
 					const dockerImages = eggData.docker_images || {};
@@ -860,26 +902,32 @@ export class PterodactylApplication implements INodeType {
 					}));
 
 					if (images.length === 0 && defaultImage) {
-						return [{
-							name: `Default: ${defaultImage}`,
-							value: defaultImage,
-						}];
+						return [
+							{
+								name: `Default: ${defaultImage}`,
+								value: defaultImage,
+							},
+						];
 					}
 
 					if (images.length === 0) {
-						return [{
-							name: 'No docker images available for this egg',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No docker images available for this egg',
+								value: '',
+							},
+						];
 					}
 
 					return images;
 				} catch (error) {
 					console.error('Error fetching docker images by egg ID:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -889,17 +937,21 @@ export class PterodactylApplication implements INodeType {
 					const eggId = this.getCurrentNodeParameter('egg') as number;
 
 					if (!nestId) {
-						return [{
-							name: 'Please select a nest first',
-							value: '',
-						}];
+						return [
+							{
+								name: 'Please select a nest first',
+								value: '',
+							},
+						];
 					}
 
 					if (!eggId) {
-						return [{
-							name: 'Please select an egg first',
-							value: '',
-						}];
+						return [
+							{
+								name: 'Please select an egg first',
+								value: '',
+							},
+						];
 					}
 
 					const { pterodactylApiRequest } = await import('../../shared/transport');
@@ -917,16 +969,20 @@ export class PterodactylApplication implements INodeType {
 					const eggData = response.attributes || response;
 					const startup = eggData.startup || 'No default startup command defined';
 
-					return [{
-						name: startup,
-						value: startup, // Keep original - user sees this as preview only
-					}];
+					return [
+						{
+							name: startup,
+							value: startup, // Keep original - user sees this as preview only
+						},
+					];
 				} catch (error) {
 					console.error('Error fetching egg startup command:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -935,10 +991,12 @@ export class PterodactylApplication implements INodeType {
 					const serverId = this.getCurrentNodeParameter('serverId') as number;
 
 					if (!serverId) {
-						return [{
-							name: 'Please select a server first',
-							value: '',
-						}];
+						return [
+							{
+								name: 'Please select a server first',
+								value: '',
+							},
+						];
 					}
 
 					const { pterodactylApiRequest } = await import('../../shared/transport');
@@ -957,10 +1015,12 @@ export class PterodactylApplication implements INodeType {
 					const allocations = serverData.relationships?.allocations?.data || [];
 
 					if (allocations.length === 0) {
-						return [{
-							name: 'No allocations found for this server',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No allocations found for this server',
+								value: '',
+							},
+						];
 					}
 
 					return allocations.map((allocation: any) => {
@@ -973,10 +1033,12 @@ export class PterodactylApplication implements INodeType {
 					});
 				} catch (error) {
 					console.error('Error fetching server allocations:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -986,10 +1048,12 @@ export class PterodactylApplication implements INodeType {
 					const eggId = this.getCurrentNodeParameter('egg') as string;
 
 					if (!serverId) {
-						return [{
-							name: 'Please select a server first',
-							value: '',
-						}];
+						return [
+							{
+								name: 'Please select a server first',
+								value: '',
+							},
+						];
 					}
 
 					const { pterodactylApiRequest } = await import('../../shared/transport');
@@ -1048,43 +1112,55 @@ export class PterodactylApplication implements INodeType {
 
 						if (eggData) {
 							const startup = eggData.startup || 'No default startup command defined';
-							return [{
-								name: `[New Egg Default] ${startup}`,
-								value: startup,
-							}];
+							return [
+								{
+									name: `[New Egg Default] ${startup}`,
+									value: startup,
+								},
+							];
 						} else {
-							return [{
-								name: 'Could not find egg startup command',
-								value: '',
-							}];
+							return [
+								{
+									name: 'Could not find egg startup command',
+									value: '',
+								},
+							];
 						}
 					}
 
 					// Otherwise, show current server startup command
 					const startup = serverData.container?.startup_command || 'No startup command defined';
 
-					return [{
-						name: `[Current] ${startup}`,
-						value: startup,
-					}];
+					return [
+						{
+							name: `[Current] ${startup}`,
+							value: startup,
+						},
+					];
 				} catch (error) {
 					console.error('Error fetching server startup command:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
-			async getAvailableAllocationsForServer(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+			async getAvailableAllocationsForServer(
+				this: ILoadOptionsFunctions,
+			): Promise<INodePropertyOptions[]> {
 				try {
 					const serverId = this.getCurrentNodeParameter('serverId') as number;
 
 					if (!serverId) {
-						return [{
-							name: 'Please select a server first',
-							value: '',
-						}];
+						return [
+							{
+								name: 'Please select a server first',
+								value: '',
+							},
+						];
 					}
 
 					const { pterodactylApiRequest } = await import('../../shared/transport');
@@ -1103,10 +1179,12 @@ export class PterodactylApplication implements INodeType {
 
 					const nodeId = serverResponse.attributes?.node;
 					if (!nodeId) {
-						return [{
-							name: 'Could not determine server node',
-							value: '',
-						}];
+						return [
+							{
+								name: 'Could not determine server node',
+								value: '',
+							},
+						];
 					}
 
 					// Get all allocations for the node
@@ -1130,10 +1208,12 @@ export class PterodactylApplication implements INodeType {
 					});
 
 					if (availableAllocations.length === 0) {
-						return [{
-							name: 'No available allocations on this node',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No available allocations on this node',
+								value: '',
+							},
+						];
 					}
 
 					return availableAllocations.map((allocation: any) => {
@@ -1146,10 +1226,12 @@ export class PterodactylApplication implements INodeType {
 					});
 				} catch (error) {
 					console.error('Error fetching available allocations:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 
@@ -1196,10 +1278,12 @@ export class PterodactylApplication implements INodeType {
 					const allocations = response.data || [];
 
 					if (allocations.length === 0) {
-						return [{
-							name: 'No allocations found - create allocations first',
-							value: '',
-						}];
+						return [
+							{
+								name: 'No allocations found - create allocations first',
+								value: '',
+							},
+						];
 					}
 
 					// Map all allocations and mark assigned ones
@@ -1217,10 +1301,12 @@ export class PterodactylApplication implements INodeType {
 					});
 				} catch (error) {
 					console.error('Error fetching allocations:', error);
-					return [{
-						name: `Error: ${(error as Error).message}`,
-						value: '',
-					}];
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
 				}
 			},
 		},

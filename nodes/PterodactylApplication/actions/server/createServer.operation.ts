@@ -64,7 +64,8 @@ export const createServerOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'External identifier for integration with other systems (billing, management tools, etc.)',
+		description:
+			'External identifier for integration with other systems (billing, management tools, etc.)',
 		placeholder: 'invoice-12345',
 	},
 
@@ -137,7 +138,8 @@ export const createServerOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Preview of the egg\'s default startup command. This is read-only. To override, use the field below.',
+		description:
+			"Preview of the egg's default startup command. This is read-only. To override, use the field below.",
 	},
 	{
 		displayName: 'Override Startup Command',
@@ -154,8 +156,10 @@ export const createServerOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Override the egg\'s default startup command. Leave empty to use the egg default shown above. Type Pterodactyl variables like {{SERVER_MEMORY}} directly (no expression mode). In expressions, escape braces: {{ \'\\{\\{SERVER_MEMORY\\}\\}\' }}',
-		placeholder: 'Leave empty for egg default, or: java -Xmx{{SERVER_MEMORY}}M -jar {{SERVER_JARFILE}}',
+		description:
+			"Override the egg's default startup command. Leave empty to use the egg default shown above. Type Pterodactyl variables like {{SERVER_MEMORY}} directly (no expression mode). In expressions, escape braces: {{ '\\{\\{SERVER_MEMORY\\}\\}' }}",
+		placeholder:
+			'Leave empty for egg default, or: java -Xmx{{SERVER_MEMORY}}M -jar {{SERVER_JARFILE}}',
 	},
 
 	// ========== Resource Limits ==========
@@ -333,7 +337,8 @@ export const createServerOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'The primary IP:Port allocation for this server (only shows unassigned allocations)',
+		description:
+			'The primary IP:Port allocation for this server (only shows unassigned allocations)',
 	},
 
 	// ========== Environment Variables ==========
@@ -351,7 +356,8 @@ export const createServerOperation: INodeProperties[] = [
 			},
 		},
 		default: {},
-		description: 'Environment variables for the server. The selected egg\'s default variables will be automatically included. These UI values override egg defaults. For dynamic variables from previous nodes, use the JSON field below (highest priority).',
+		description:
+			"Environment variables for the server. The selected egg's default variables will be automatically included. These UI values override egg defaults. For dynamic variables from previous nodes, use the JSON field below (highest priority).",
 		placeholder: 'Add Environment Variable',
 		options: [
 			{
@@ -392,7 +398,8 @@ export const createServerOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Environment variables as JSON object. This will override both egg defaults and UI key-values. Use expressions like {{ $json.envVars }} to inject dynamic variables from previous nodes.',
+		description:
+			'Environment variables as JSON object. This will override both egg defaults and UI key-values. Use expressions like {{ $json.envVars }} to inject dynamic variables from previous nodes.',
 		placeholder: '{"MINECRAFT_VERSION": "1.20.1", "SERVER_NAME": "My Server"}',
 	},
 
@@ -508,7 +515,11 @@ export async function createServer(this: IExecuteFunctions, index: number): Prom
 		eggData.relationships.variables.data.forEach((variable: any) => {
 			const varAttrs = variable.attributes;
 			// Only include user-editable variables with default values
-			if (varAttrs.user_editable && varAttrs.default_value !== null && varAttrs.default_value !== '') {
+			if (
+				varAttrs.user_editable &&
+				varAttrs.default_value !== null &&
+				varAttrs.default_value !== ''
+			) {
 				environment[varAttrs.env_variable] = String(varAttrs.default_value);
 			}
 		});

@@ -277,10 +277,13 @@ export async function executeSendCommand(
 				});
 
 				// Give it a moment to receive output
-				setTimeout(() => {
-					clearTimeout(timeout);
-					resolve(outputs);
-				}, Math.min(responseTimeout, 2000));
+				setTimeout(
+					() => {
+						clearTimeout(timeout);
+						resolve(outputs);
+					},
+					Math.min(responseTimeout, 2000),
+				);
 			});
 		} else {
 			// No response needed - just send command

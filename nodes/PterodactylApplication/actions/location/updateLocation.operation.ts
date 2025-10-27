@@ -51,7 +51,7 @@ export const updateLocationOperation: INodeProperties[] = [
 		default: '',
 		description: 'New detailed description of the location',
 		placeholder: 'Data center located on the US East Coast',
-	}
+	},
 ];
 
 export async function updateLocation(this: IExecuteFunctions, index: number): Promise<any> {

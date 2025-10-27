@@ -3,7 +3,9 @@ import { IExecuteFunctions, INode } from 'n8n-workflow';
 /**
  * Create a mock IExecuteFunctions for testing
  */
-export function createMockExecuteFunctions(overrides: Partial<IExecuteFunctions> = {}): IExecuteFunctions {
+export function createMockExecuteFunctions(
+	overrides: Partial<IExecuteFunctions> = {},
+): IExecuteFunctions {
 	const mockNode: INode = {
 		id: 'test-node-id',
 		name: 'Pterodactyl',

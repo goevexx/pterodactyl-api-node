@@ -82,15 +82,18 @@ export const requestCommands = {
  */
 export const tokenResponses: Record<string, WebSocketTokenResponse> = {
 	valid: {
-		token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZXhwIjoxNzMwMDAwMDAwfQ.signature',
+		token:
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiZXhwIjoxNzMwMDAwMDAwfQ.signature',
 		socket: 'wss://pterodactyl.example.com:8080',
 	},
 	expiringSoon: {
-		token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiZXhwIjoxNjAwMDAwMDAwfQ.signature',
+		token:
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiZXhwIjoxNjAwMDAwMDAwfQ.signature',
 		socket: 'wss://pterodactyl.example.com:8080',
 	},
 	expired: {
-		token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiZXhwIjoxNTAwMDAwMDAwfQ.signature',
+		token:
+			'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiZXhwIjoxNTAwMDAwMDAwfQ.signature',
 		socket: 'wss://pterodactyl.example.com:8080',
 	},
 	invalidFormat: {
@@ -391,7 +394,9 @@ export const errorScenarios = {
 /**
  * Helper to create a mock WebSocket token response
  */
-export function createMockTokenResponse(overrides?: Partial<WebSocketTokenResponse>): WebSocketTokenResponse {
+export function createMockTokenResponse(
+	overrides?: Partial<WebSocketTokenResponse>,
+): WebSocketTokenResponse {
 	return {
 		token: tokenResponses.valid.token,
 		socket: tokenResponses.valid.socket,

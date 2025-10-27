@@ -6,7 +6,10 @@ jest.mock('../../../../nodes/Pterodactyl/transport/PterodactylApiRequest');
 
 describe('compressFiles operation', () => {
 	let mockExecuteFunctions: any;
-	const mockPterodactylApiRequest = PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<typeof PterodactylApiRequest.pterodactylApiRequest>;
+	const mockPterodactylApiRequest =
+		PterodactylApiRequest.pterodactylApiRequest as jest.MockedFunction<
+			typeof PterodactylApiRequest.pterodactylApiRequest
+		>;
 
 	beforeEach(() => {
 		mockExecuteFunctions = createMockExecuteFunctions();
@@ -137,7 +140,12 @@ describe('compressFiles operation', () => {
 			await compressFiles.call(mockExecuteFunctions, 0);
 
 			const callArgs = mockPterodactylApiRequest.mock.calls[0];
-			expect((callArgs[2] as any).files).toEqual(['config.json', 'data.db', 'logs.txt', 'readme.md']);
+			expect((callArgs[2] as any).files).toEqual([
+				'config.json',
+				'data.db',
+				'logs.txt',
+				'readme.md',
+			]);
 		});
 	});
 
@@ -205,7 +213,9 @@ describe('compressFiles operation', () => {
 			const error = new Error('API request failed');
 			mockPterodactylApiRequest.mockRejectedValue(error);
 
-			await expect(compressFiles.call(mockExecuteFunctions, 0)).rejects.toThrow('API request failed');
+			await expect(compressFiles.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'API request failed',
+			);
 		});
 
 		it('should handle file not found errors', async () => {
@@ -213,7 +223,9 @@ describe('compressFiles operation', () => {
 			(notFoundError as any).statusCode = 404;
 			mockPterodactylApiRequest.mockRejectedValue(notFoundError);
 
-			await expect(compressFiles.call(mockExecuteFunctions, 0)).rejects.toThrow('One or more files not found');
+			await expect(compressFiles.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'One or more files not found',
+			);
 		});
 
 		it('should handle insufficient disk space errors', async () => {
@@ -221,7 +233,9 @@ describe('compressFiles operation', () => {
 			(spaceError as any).statusCode = 507;
 			mockPterodactylApiRequest.mockRejectedValue(spaceError);
 
-			await expect(compressFiles.call(mockExecuteFunctions, 0)).rejects.toThrow('Insufficient disk space');
+			await expect(compressFiles.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Insufficient disk space',
+			);
 		});
 
 		it('should handle permission errors', async () => {
@@ -229,7 +243,9 @@ describe('compressFiles operation', () => {
 			(permissionError as any).statusCode = 403;
 			mockPterodactylApiRequest.mockRejectedValue(permissionError);
 
-			await expect(compressFiles.call(mockExecuteFunctions, 0)).rejects.toThrow('Permission denied');
+			await expect(compressFiles.call(mockExecuteFunctions, 0)).rejects.toThrow(
+				'Permission denied',
+			);
 		});
 	});
 });

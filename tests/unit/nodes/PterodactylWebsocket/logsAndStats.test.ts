@@ -352,9 +352,7 @@ describe('PterodactylWebsocket - Logs & Stats', () => {
 				},
 			);
 
-			await expect(node.execute.call(mockExecuteFunctions)).rejects.toThrow(
-				'Connection failed',
-			);
+			await expect(node.execute.call(mockExecuteFunctions)).rejects.toThrow('Connection failed');
 		});
 
 		test('should continue on fail when enabled', async () => {

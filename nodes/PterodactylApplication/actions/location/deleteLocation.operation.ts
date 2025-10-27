@@ -18,7 +18,7 @@ export const deleteLocationOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The location to delete',
-	}
+	},
 ];
 
 export async function deleteLocation(this: IExecuteFunctions, index: number): Promise<any> {

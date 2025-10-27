@@ -18,7 +18,7 @@ export const getNestOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The nest to retrieve',
-	}
+	},
 ];
 
 export async function getNest(this: IExecuteFunctions, index: number): Promise<any> {

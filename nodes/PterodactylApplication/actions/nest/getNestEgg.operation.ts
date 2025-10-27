@@ -36,7 +36,7 @@ export const getNestEggOperation: INodeProperties[] = [
 		},
 		default: '',
 		description: 'The egg to retrieve',
-	}
+	},
 ];
 
 export async function getNestEgg(this: IExecuteFunctions, index: number): Promise<any> {

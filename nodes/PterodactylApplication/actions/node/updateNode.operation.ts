@@ -129,7 +129,8 @@ export const updateNodeOperation: INodeProperties[] = [
 			},
 		},
 		default: 0,
-		description: 'Percentage of memory to overallocate (e.g., 20 for 20%). Use -1 to disable checking.',
+		description:
+			'Percentage of memory to overallocate (e.g., 20 for 20%). Use -1 to disable checking.',
 	},
 	{
 		displayName: 'Disk',
@@ -157,7 +158,8 @@ export const updateNodeOperation: INodeProperties[] = [
 			},
 		},
 		default: 0,
-		description: 'Percentage of disk space to overallocate (e.g., 20 for 20%). Use -1 to disable checking.',
+		description:
+			'Percentage of disk space to overallocate (e.g., 20 for 20%). Use -1 to disable checking.',
 	},
 	{
 		displayName: 'Upload Size',
@@ -243,7 +245,7 @@ export const updateNodeOperation: INodeProperties[] = [
 		},
 		default: true,
 		description: 'Whether the node is publicly accessible for automatic allocation',
-	}
+	},
 ];
 
 export async function updateNode(this: IExecuteFunctions, index: number): Promise<any> {
@@ -269,15 +271,23 @@ export async function updateNode(this: IExecuteFunctions, index: number): Promis
 	const fqdnInput = this.getNodeParameter('fqdn', index, '') as string;
 	const schemeInput = this.getNodeParameter('scheme', index, '') as string;
 	const memoryInput = this.getNodeParameter('memory', index, 0) as number;
-	const memoryOverallocateInput = this.getNodeParameter('memoryOverallocate', index, -999) as number;
+	const memoryOverallocateInput = this.getNodeParameter(
+		'memoryOverallocate',
+		index,
+		-999,
+	) as number;
 	const diskInput = this.getNodeParameter('disk', index, 0) as number;
 	const diskOverallocateInput = this.getNodeParameter('diskOverallocate', index, -999) as number;
 	const daemonBaseInput = this.getNodeParameter('daemonBase', index, '') as string;
 	const daemonSftpInput = this.getNodeParameter('daemonSftp', index, 0) as number;
 	const daemonListenInput = this.getNodeParameter('daemonListen', index, 0) as number;
 	const publicInput = this.getNodeParameter('public', index, undefined) as boolean | undefined;
-	const behindProxyInput = this.getNodeParameter('behindProxy', index, undefined) as boolean | undefined;
-	const maintenanceModeInput = this.getNodeParameter('maintenanceMode', index, undefined) as boolean | undefined;
+	const behindProxyInput = this.getNodeParameter('behindProxy', index, undefined) as
+		| boolean
+		| undefined;
+	const maintenanceModeInput = this.getNodeParameter('maintenanceMode', index, undefined) as
+		| boolean
+		| undefined;
 	const uploadSizeInput = this.getNodeParameter('uploadSize', index, 0) as number;
 
 	// Use input values OR fall back to current values
@@ -286,15 +296,18 @@ export async function updateNode(this: IExecuteFunctions, index: number): Promis
 	const fqdn = fqdnInput || currentNode.fqdn;
 	const scheme = schemeInput || currentNode.scheme;
 	const memory = memoryInput || currentNode.memory;
-	const memoryOverallocate = memoryOverallocateInput !== -999 ? memoryOverallocateInput : currentNode.memory_overallocate;
+	const memoryOverallocate =
+		memoryOverallocateInput !== -999 ? memoryOverallocateInput : currentNode.memory_overallocate;
 	const disk = diskInput || currentNode.disk;
-	const diskOverallocate = diskOverallocateInput !== -999 ? diskOverallocateInput : currentNode.disk_overallocate;
+	const diskOverallocate =
+		diskOverallocateInput !== -999 ? diskOverallocateInput : currentNode.disk_overallocate;
 	const daemonBase = daemonBaseInput || currentNode.daemon_base;
 	const daemonSftp = daemonSftpInput || currentNode.daemon_sftp;
 	const daemonListen = daemonListenInput || currentNode.daemon_listen;
 	const publicNode = publicInput !== undefined ? publicInput : currentNode.public;
 	const behindProxy = behindProxyInput !== undefined ? behindProxyInput : currentNode.behind_proxy;
-	const maintenanceMode = maintenanceModeInput !== undefined ? maintenanceModeInput : currentNode.maintenance_mode;
+	const maintenanceMode =
+		maintenanceModeInput !== undefined ? maintenanceModeInput : currentNode.maintenance_mode;
 	const uploadSize = uploadSizeInput || currentNode.upload_size;
 
 	const response = await pterodactylApiRequest.call(
@@ -317,7 +330,7 @@ export async function updateNode(this: IExecuteFunctions, index: number): Promis
 			public: publicNode,
 			behind_proxy: behindProxy,
 			maintenance_mode: maintenanceMode,
-			upload_size: uploadSize
+			upload_size: uploadSize,
 		},
 		{},
 		{},
