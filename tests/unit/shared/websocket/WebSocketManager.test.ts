@@ -825,4 +825,267 @@ describe('PterodactylWebSocketManager', () => {
 			expect(wsManager.isConnected()).toBe(false);
 		});
 	});
+
+	describe('Auto Reconnection', () => {
+		test('should not reconnect when manually disconnected', async () => {
+			wsManager = new PterodactylWebSocketManager(
+				{
+					serverId: 'test-server',
+					apiKey: 'test-key',
+					panelUrl: 'https://panel.test',
+					autoReconnect: true,
+					maxReconnectAttempts: 3,
+				},
+				mockTokenFetch,
+			);
+
+			await wsManager.connect();
+
+			// Manually close
+			wsManager.close();
+
+			// Wait for potential reconnection attempt
+			await new Promise((resolve) => setTimeout(resolve, 200));
+
+			// Should not have reconnected
+			expect(wsManager.isConnected()).toBe(false);
+		});
+
+		test('should schedule reconnect when connection drops unexpectedly', async () => {
+			wsManager = new PterodactylWebSocketManager(
+				{
+					serverId: 'test-server',
+					apiKey: 'test-key',
+					panelUrl: 'https://panel.test',
+					autoReconnect: true,
+					maxReconnectAttempts: 3,
+				},
+				mockTokenFetch,
+			);
+
+			await wsManager.connect();
+
+			const socket = (wsManager as any).socket as MockedWebSocket;
+
+			// Simulate unexpected close
+			socket.close(1006, 'Connection lost');
+
+			// Wait for close to be processed
+			await new Promise((resolve) => setTimeout(resolve, 100));
+
+			// Should schedule reconnection
+			expect((wsManager as any).reconnectionState.inProgress).toBe(true);
+		});
+
+		test('should not reconnect when autoReconnect is false', async () => {
+			wsManager = new PterodactylWebSocketManager(
+				{
+					serverId: 'test-server',
+					apiKey: 'test-key',
+					panelUrl: 'https://panel.test',
+					autoReconnect: false,
+				},
+				mockTokenFetch,
+			);
+
+			await wsManager.connect();
+
+			const socket = (wsManager as any).socket as MockedWebSocket;
+
+			// Simulate connection drop
+			socket.close(1006, 'Connection lost');
+
+			await new Promise((resolve) => setTimeout(resolve, 100));
+
+			// Should not be in reconnection state
+			expect((wsManager as any).reconnectionState.inProgress).toBe(false);
+		});
+	});
+
+	describe('JWT Token Handling', () => {
+		test('should handle invalid JWT token gracefully and still connect', async () => {
+			// Mock token with only 2 parts (invalid JWT format)
+			const invalidTokenFetch = jest.fn().mockResolvedValue({
+				socket: 'wss://wings.test/socket',
+				token: 'header.payload', // Missing signature
+			});
+
+			wsManager = new PterodactylWebSocketManager(
+				{
+					serverId: 'test-server',
+					apiKey: 'test-key',
+					panelUrl: 'https://panel.test',
+					autoReconnect: false,
+				},
+				invalidTokenFetch,
+			);
+
+			// Should still connect even with invalid JWT
+			await wsManager.connect();
+
+			expect(wsManager.isConnected()).toBe(true);
+		});
+
+		test('should handle JWT with negative expiration time', async () => {
+			// Create a JWT token that expired 1 hour ago
+			const expiredTime = Math.floor(Date.now() / 1000) - 3600;
+			const expiredPayload = { exp: expiredTime };
+			const expiredToken = `header.${Buffer.from(JSON.stringify(expiredPayload)).toString('base64')}.signature`;
+
+			const expiredTokenFetch = jest.fn().mockResolvedValue({
+				socket: 'wss://wings.test/socket',
+				token: expiredToken,
+			});
+
+			wsManager = new PterodactylWebSocketManager(
+				{
+					serverId: 'test-server',
+					apiKey: 'test-key',
+					panelUrl: 'https://panel.test',
+					autoReconnect: false,
+				},
+				expiredTokenFetch,
+			);
+
+			await wsManager.connect();
+
+			// Should connect successfully even though token is already expired
+			expect(wsManager.isConnected()).toBe(true);
+		});
+	});
+
+	describe('Token Refresh Edge Cases', () => {
+		test('should handle token refresh failure and close connection', async () => {
+			const failingTokenFetch = jest.fn()
+				.mockResolvedValueOnce({
+					socket: 'wss://wings.test/socket',
+					token: tokenResponses.valid.socket,
+				})
+				.mockRejectedValueOnce(new Error('Token refresh failed'));
+
+			wsManager = new PterodactylWebSocketManager(
+				{
+					serverId: 'test-server',
+					apiKey: 'test-key',
+					panelUrl: 'https://panel.test',
+					autoReconnect: true,
+				},
+				failingTokenFetch,
+			);
+
+			await wsManager.connect();
+
+			const socket = (wsManager as any).socket as MockedWebSocket;
+
+			// Simulate token expired event
+			socket.simulateMessage({ event: 'token expired', args: [] });
+
+			await new Promise((resolve) => setTimeout(resolve, 100));
+
+			// Connection should be closed after failed refresh
+			expect(wsManager.isConnected()).toBe(false);
+		});
+
+		test('should emit jwt error event', async () => {
+			wsManager = new PterodactylWebSocketManager(
+				{
+					serverId: 'test-server',
+					apiKey: 'test-key',
+					panelUrl: 'https://panel.test',
+					autoReconnect: false,
+				},
+				mockTokenFetch,
+			);
+
+			await wsManager.connect();
+
+			const jwtErrorHandler = jest.fn();
+			wsManager.on('jwt error', jwtErrorHandler);
+
+			const socket = (wsManager as any).socket as MockedWebSocket;
+			socket.simulateMessage({ event: 'jwt error', args: ['Invalid token'] });
+
+			expect(jwtErrorHandler).toHaveBeenCalledWith(['Invalid token']);
+		});
+	});
+
+	describe('WebSocket Event Handlers', () => {
+		test('should handle ping/pong', async () => {
+			wsManager = new PterodactylWebSocketManager(
+				{
+					serverId: 'test-server',
+					apiKey: 'test-key',
+					panelUrl: 'https://panel.test',
+					autoReconnect: false,
+				},
+				mockTokenFetch,
+			);
+
+			await wsManager.connect();
+
+			const socket = (wsManager as any).socket as MockedWebSocket;
+			const pongSpy = jest.spyOn(socket, 'pong');
+
+			socket.simulatePing();
+
+			expect(pongSpy).toHaveBeenCalled();
+		});
+
+		test('should handle close with code and reason', async () => {
+			wsManager = new PterodactylWebSocketManager(
+				{
+					serverId: 'test-server',
+					apiKey: 'test-key',
+					panelUrl: 'https://panel.test',
+					autoReconnect: false,
+				},
+				mockTokenFetch,
+			);
+
+			await wsManager.connect();
+
+			const disconnectHandler = jest.fn();
+			wsManager.on('disconnected', disconnectHandler);
+
+			const socket = (wsManager as any).socket as MockedWebSocket;
+			socket.close(1000, 'Normal closure');
+
+			await new Promise((resolve) => setTimeout(resolve, 50));
+
+			expect(disconnectHandler).toHaveBeenCalledWith({
+				code: 1000,
+				reason: 'Normal closure',
+			});
+		});
+	});
+
+	describe('Connection Edge Cases', () => {
+		test('should handle reconnection state when already in progress', async () => {
+			wsManager = new PterodactylWebSocketManager(
+				{
+					serverId: 'test-server',
+					apiKey: 'test-key',
+					panelUrl: 'https://panel.test',
+					autoReconnect: true,
+					maxReconnectAttempts: 3,
+				},
+				mockTokenFetch,
+			);
+
+			await wsManager.connect();
+
+			const socket = (wsManager as any).socket as MockedWebSocket;
+
+			// Set reconnection state to in progress
+			(wsManager as any).reconnectionState.inProgress = true;
+
+			// Simulate close - should not start another reconnection
+			socket.close(1006, 'Connection lost');
+
+			await new Promise((resolve) => setTimeout(resolve, 100));
+
+			// Should still be in reconnection state (not duplicated)
+			expect((wsManager as any).reconnectionState.inProgress).toBe(true);
+		});
+	});
 });

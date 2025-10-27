@@ -618,5 +618,148 @@ describe('Shared Transport - pterodactylApiRequest', () => {
 				'Rate limit exceeded. Enable "Retry On Fail" in node settings (5 tries, 5000ms wait).',
 			);
 		});
+
+		it('should handle ConfigurationNotPersistedException as warning from response body', async () => {
+			const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+
+			mockExecuteFunctions.helpers.httpRequest.mockResolvedValue({
+				statusCode: 500,
+				body: {
+					errors: [
+						{
+							code: 'ConfigurationNotPersistedException',
+							detail: 'Wings configuration could not be persisted',
+						},
+					],
+				},
+			});
+
+			const result = await pterodactylApiRequest.call(
+				mockExecuteFunctions,
+				'POST',
+				'/api/application',
+				'/servers/1',
+				{},
+				{ startup: 'java -jar server.jar' },
+				{},
+				0,
+			);
+
+			expect(consoleWarnSpy).toHaveBeenCalledWith(
+				'Warning: Wings configuration could not be persisted',
+			);
+			expect(result).toEqual({
+				errors: [
+					{
+						code: 'ConfigurationNotPersistedException',
+						detail: 'Wings configuration could not be persisted',
+					},
+				],
+			});
+
+			consoleWarnSpy.mockRestore();
+		});
+
+		it('should handle ConfigurationNotPersistedException from error.response', async () => {
+			const consoleWarnSpy = jest.spyOn(console, 'warn').mockImplementation();
+
+			const error: any = new Error('Request failed');
+			error.response = {
+				body: {
+					errors: [
+						{
+							code: 'ConfigurationNotPersistedException',
+							detail: 'Wings sync failed but operation succeeded',
+						},
+					],
+				},
+			};
+
+			mockExecuteFunctions.helpers.httpRequest.mockRejectedValue(error);
+
+			const result = await pterodactylApiRequest.call(
+				mockExecuteFunctions,
+				'PUT',
+				'/api/application',
+				'/servers/1/startup',
+				{},
+				{ startup: 'new command' },
+				{},
+				0,
+			);
+
+			expect(consoleWarnSpy).toHaveBeenCalledWith(
+				'Warning: Wings sync failed but operation succeeded',
+			);
+			expect(result).toEqual({
+				errors: [
+					{
+						code: 'ConfigurationNotPersistedException',
+						detail: 'Wings sync failed but operation succeeded',
+					},
+				],
+			});
+
+			consoleWarnSpy.mockRestore();
+		});
+
+		it('should throw error for other Pterodactyl errors in response', async () => {
+			mockExecuteFunctions.helpers.httpRequest.mockResolvedValue({
+				statusCode: 500,
+				body: {
+					errors: [
+						{
+							code: 'ServerStateConflictException',
+							detail: 'Server must be offline to perform this action',
+						},
+					],
+				},
+			});
+
+			await expect(
+				pterodactylApiRequest.call(
+					mockExecuteFunctions,
+					'POST',
+					'/api/client',
+					'/servers/abc/power',
+					{},
+					{ signal: 'start' },
+					{},
+					0,
+				),
+			).rejects.toThrow(
+				'Pterodactyl API Error [ServerStateConflictException]: Server must be offline to perform this action',
+			);
+		});
+
+		it('should throw error for other Pterodactyl errors in error.response', async () => {
+			const error: any = new Error('Request failed');
+			error.response = {
+				body: {
+					errors: [
+						{
+							code: 'ResourceNotFoundException',
+							detail: 'Server not found',
+						},
+					],
+				},
+			};
+			error.statusCode = 404;
+
+			mockExecuteFunctions.helpers.httpRequest.mockRejectedValue(error);
+
+			await expect(
+				pterodactylApiRequest.call(
+					mockExecuteFunctions,
+					'GET',
+					'/api/client',
+					'/servers/invalid',
+					{},
+					{},
+					{},
+					0,
+				),
+			).rejects.toThrow('Pterodactyl API Error [ResourceNotFoundException]: Server not found');
+		});
 	});
 });

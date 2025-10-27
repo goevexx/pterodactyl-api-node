@@ -265,5 +265,52 @@ describe('pterodactylApiRequestAllItems', () => {
 			expect(mockExecuteFunctions.helpers.httpRequest.mock.calls[1][0].qs.page).toBe(2);
 			expect(mockExecuteFunctions.helpers.httpRequest.mock.calls[2][0].qs.page).toBe(3);
 		});
+
+		it('should handle response without pagination metadata', async () => {
+			mockExecuteFunctions.helpers.httpRequest.mockResolvedValue({
+				statusCode: 200,
+				body: {
+					data: [{ id: 1 }, { id: 2 }],
+					// No meta field at all
+				},
+			});
+
+			const result = await pterodactylApiRequestAllItems.call(
+				mockExecuteFunctions,
+				'GET',
+				'/servers',
+				{},
+				{},
+				0,
+			);
+
+			expect(result).toEqual([{ id: 1 }, { id: 2 }]);
+			expect(mockExecuteFunctions.helpers.httpRequest).toHaveBeenCalledTimes(1);
+		});
+
+		it('should handle response with meta but no pagination field', async () => {
+			mockExecuteFunctions.helpers.httpRequest.mockResolvedValue({
+				statusCode: 200,
+				body: {
+					data: [{ id: 1 }],
+					meta: {
+						// meta exists but no pagination field
+						other_field: 'value',
+					},
+				},
+			});
+
+			const result = await pterodactylApiRequestAllItems.call(
+				mockExecuteFunctions,
+				'GET',
+				'/servers',
+				{},
+				{},
+				0,
+			);
+
+			expect(result).toEqual([{ id: 1 }]);
+			expect(mockExecuteFunctions.helpers.httpRequest).toHaveBeenCalledTimes(1);
+		});
 	});
 });

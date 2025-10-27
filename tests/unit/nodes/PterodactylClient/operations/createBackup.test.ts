@@ -129,4 +129,70 @@ describe('PterodactylClient - createBackup operation', () => {
 			'Create Backup operation requires Client API credentials',
 		);
 	});
+
+	it('should include ignored field when provided', async () => {
+		mockExecuteFunctions.getNodeParameter
+			.mockReturnValueOnce('server123') // serverId
+			.mockReturnValueOnce('Test Backup') // name
+			.mockReturnValueOnce('*.log,cache/*') // ignored
+			.mockReturnValueOnce(false); // isLocked
+
+		mockExecuteFunctions.helpers.httpRequest.mockResolvedValue({
+			statusCode: 201,
+			body: { attributes: { uuid: 'backup-uuid', name: 'Test Backup' } },
+		});
+
+		await createBackup.call(mockExecuteFunctions, 0);
+
+		expect(mockExecuteFunctions.helpers.httpRequest).toHaveBeenCalledWith(
+			expect.objectContaining({
+				body: expect.objectContaining({
+					ignored: '*.log,cache/*',
+				}),
+			}),
+		);
+	});
+
+	it('should include is_locked field when isLocked is true', async () => {
+		mockExecuteFunctions.getNodeParameter
+			.mockReturnValueOnce('server123') // serverId
+			.mockReturnValueOnce('Locked Backup') // name
+			.mockReturnValueOnce('') // ignored
+			.mockReturnValueOnce(true); // isLocked
+
+		mockExecuteFunctions.helpers.httpRequest.mockResolvedValue({
+			statusCode: 201,
+			body: { attributes: { uuid: 'backup-uuid', is_locked: true } },
+		});
+
+		await createBackup.call(mockExecuteFunctions, 0);
+
+		expect(mockExecuteFunctions.helpers.httpRequest).toHaveBeenCalledWith(
+			expect.objectContaining({
+				body: expect.objectContaining({
+					is_locked: true,
+				}),
+			}),
+		);
+	});
+
+	it('should omit optional fields when not provided', async () => {
+		mockExecuteFunctions.getNodeParameter
+			.mockReturnValueOnce('server123') // serverId
+			.mockReturnValueOnce('') // name - empty
+			.mockReturnValueOnce('') // ignored - empty
+			.mockReturnValueOnce(false); // isLocked - false
+
+		mockExecuteFunctions.helpers.httpRequest.mockResolvedValue({
+			statusCode: 201,
+			body: { attributes: { uuid: 'backup-uuid' } },
+		});
+
+		await createBackup.call(mockExecuteFunctions, 0);
+
+		const callArgs = mockExecuteFunctions.helpers.httpRequest.mock.calls[0][0];
+		expect(callArgs.body).not.toHaveProperty('name');
+		expect(callArgs.body).not.toHaveProperty('ignored');
+		expect(callArgs.body).not.toHaveProperty('is_locked');
+	});
 });

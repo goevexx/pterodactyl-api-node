@@ -13,7 +13,7 @@ module.exports = {
 	],
 	coverageThreshold: {
 		global: {
-			branches: 74, // Temporarily lowered from 80 for v1.1.0 - WebSocket implementation needs additional coverage
+			branches: 80,
 			functions: 80,
 			lines: 80,
 			statements: 80,
