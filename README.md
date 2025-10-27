@@ -6,7 +6,7 @@
 [![Tests](https://github.com/goevexx/pterodactyl-api-node/actions/workflows/test.yml/badge.svg)](https://github.com/goevexx/pterodactyl-api-node/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Automate your Pterodactyl Panel with n8n workflows - manage game servers, monitor resources in real-time, and streamline your hosting operations.
+> Automate your Pterodactyl Panel with n8n workflows - manage game servers, monitor resources in real-time, and control infrastructure via API.
 
 [Pterodactyl Panel](https://pterodactyl.io/) is an open-source game server management platform built with PHP, React, and Go.
 
@@ -46,12 +46,12 @@
 
 ## Features
 
-- 🎮 **47+ Operations** - Comprehensive coverage of Pterodactyl APIs
-- ⚡ **Real-Time WebSocket** - Monitor servers and console output live
-- 👥 **Client & Application APIs** - Support for both user and admin operations
-- 🔐 **Smart Credentials** - Helpful validation and error messages
-- 🎨 **Dynamic Dropdowns** - Select servers and users from lists
-- 📦 **TypeScript** - Full type safety and IDE support
+- 🎮 **47+ Operations** - Server management, files, databases, backups, users, schedules, networks
+- ⚡ **Real-Time WebSocket** - Stream console output and resource statistics
+- 👥 **Client & Application APIs** - Both user and admin operations
+- 🔐 **Credential Validation** - Tests API connectivity on credential save
+- 🎨 **Dynamic Dropdowns** - Load servers, users, and locations from your panel
+- 📦 **TypeScript** - Full type definitions included
 
 ---
 
@@ -101,7 +101,7 @@ You'll need an API key from your Pterodactyl Panel:
 
 ### 3. Start Automating
 
-Try creating a simple workflow to list your servers and check their status!
+Create a workflow to list your servers and check their status.
 
 ---
 
@@ -175,7 +175,7 @@ Try creating a simple workflow to list your servers and check their status!
 
 ### Automated Backups
 
-Keep your servers safe with scheduled backups:
+Schedule daily backups for all servers:
 
 ```
 Schedule Trigger (Daily at 3 AM)
@@ -191,7 +191,7 @@ For each server
 
 ### Real-Time Monitoring
 
-Stay informed about server issues:
+Alert on server errors from console output:
 
 ```
 WebSocket Trigger
@@ -239,7 +239,7 @@ Send welcome email
 
 ### Client API Key
 
-Best for: Server management, file operations, backups
+Use for: Server management, file operations, backups
 
 1. Log into your Pterodactyl Panel
 2. Click your username → **Account Settings**
@@ -250,7 +250,7 @@ Best for: Server management, file operations, backups
 
 ### Application API Key
 
-Best for: User management, server creation, admin tasks
+Use for: User management, server creation, admin tasks
 
 1. Log into Pterodactyl as admin
 2. Go to **Admin Panel**
@@ -334,10 +334,10 @@ List operations handle pagination automatically:
 
 ### Error Handling
 
-The node includes smart error handling:
-- Automatic retry for temporary failures
-- Clear error messages when things go wrong
-- Graceful recovery for WebSocket connections
+Error handling features:
+- Retries on HTTP 429 (rate limit) and 5xx responses
+- ConfigurationNotPersistedException logged as warning instead of error
+- WebSocket reconnection with exponential backoff
 
 ---
 
