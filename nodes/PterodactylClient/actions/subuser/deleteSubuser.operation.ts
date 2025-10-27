@@ -53,5 +53,10 @@ export async function deleteSubuser(this: IExecuteFunctions, index: number): Pro
 		{},
 		index,
 	);
-	return { success: true };
+	return {
+		success: true,
+		uuid,
+		serverId,
+		action: 'deleted',
+	};
 }

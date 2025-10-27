@@ -1,7 +1,7 @@
 import { IExecuteFunctions, INodeProperties } from 'n8n-workflow';
 import { pterodactylApiRequest } from '../../../../shared/transport';
 
-export const deleteScheduleOperation: INodeProperties[] = [
+export const listScheduleTasksOperation: INodeProperties[] = [
 	{
 		displayName: 'Server',
 		name: 'serverId',
@@ -13,7 +13,7 @@ export const deleteScheduleOperation: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['schedule'],
-				operation: ['delete'],
+				operation: ['listTasks'],
 			},
 		},
 		default: '',
@@ -31,32 +31,31 @@ export const deleteScheduleOperation: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['schedule'],
-				operation: ['delete'],
+				operation: ['listTasks'],
 			},
 		},
 		default: '',
-		description: 'Select the schedule to delete',
+		description: 'Select the schedule to list tasks from',
 	},
 ];
 
-export async function deleteSchedule(this: IExecuteFunctions, index: number): Promise<any> {
+export async function listScheduleTasks(this: IExecuteFunctions, index: number): Promise<any> {
 	const serverId = this.getNodeParameter('serverId', index) as string;
 	const scheduleId = this.getNodeParameter('scheduleId', index) as string;
 
-	await pterodactylApiRequest.call(
+	const response = await pterodactylApiRequest.call(
 		this,
-		'DELETE',
+		'GET',
 		'/api/client',
 		`/servers/${serverId}/schedules/${scheduleId}`,
 		{},
-		{},
+		{ include: 'tasks' },
 		{},
 		index,
 	);
-	return {
-		success: true,
-		scheduleId,
-		serverId,
-		action: 'deleted',
-	};
+
+	// Extract tasks from the included relationships
+	const scheduleData = response.attributes || response;
+	const tasks = scheduleData.relationships?.tasks?.data || [];
+	return tasks;
 }

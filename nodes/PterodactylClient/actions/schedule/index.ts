@@ -1,4 +1,5 @@
 export * from './listSchedules.operation';
+export * from './listScheduleTasks.operation';
 export * from './getSchedule.operation';
 export * from './createSchedule.operation';
 export * from './updateSchedule.operation';

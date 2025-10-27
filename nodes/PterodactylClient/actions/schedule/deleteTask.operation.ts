@@ -72,5 +72,11 @@ export async function deleteTask(this: IExecuteFunctions, index: number): Promis
 		{},
 		index,
 	);
-	return { success: true };
+	return {
+		success: true,
+		taskId,
+		scheduleId,
+		serverId,
+		action: 'deleted',
+	};
 }

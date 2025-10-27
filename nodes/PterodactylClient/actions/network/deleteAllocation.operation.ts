@@ -53,5 +53,10 @@ export async function deleteAllocation(this: IExecuteFunctions, index: number): 
 		{},
 		index,
 	);
-	return { success: true };
+	return {
+		success: true,
+		allocationId,
+		serverId,
+		action: 'deleted',
+	};
 }

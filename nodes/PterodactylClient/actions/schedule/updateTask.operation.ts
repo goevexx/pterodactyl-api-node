@@ -87,19 +87,73 @@ export const updateTaskOperation: INodeProperties[] = [
 		description: 'Type of action to perform',
 	},
 	{
-		displayName: 'Payload',
-		name: 'payload',
+		displayName: 'Power Action',
+		name: 'powerAction',
+		type: 'options',
+		required: true,
+		displayOptions: {
+			show: {
+				resource: ['schedule'],
+				operation: ['updateTask'],
+				action: ['power'],
+			},
+		},
+		options: [
+			{
+				name: 'Start',
+				value: 'start',
+				description: 'Start the server',
+			},
+			{
+				name: 'Stop',
+				value: 'stop',
+				description: 'Stop the server',
+			},
+			{
+				name: 'Restart',
+				value: 'restart',
+				description: 'Restart the server',
+			},
+			{
+				name: 'Kill',
+				value: 'kill',
+				description: 'Forcefully kill the server',
+			},
+		],
+		default: 'start',
+		description: 'Power action to perform',
+	},
+	{
+		displayName: 'Command',
+		name: 'command',
 		type: 'string',
 		required: true,
 		displayOptions: {
 			show: {
 				resource: ['schedule'],
 				operation: ['updateTask'],
+				action: ['command'],
 			},
 		},
 		default: '',
 		placeholder: 'say Hello World',
-		description: 'The command, power action (start/stop/restart/kill), or backup name',
+		description: 'The console command to execute',
+	},
+	{
+		displayName: 'Backup Name',
+		name: 'backupName',
+		type: 'string',
+		required: false,
+		displayOptions: {
+			show: {
+				resource: ['schedule'],
+				operation: ['updateTask'],
+				action: ['backup'],
+			},
+		},
+		default: '',
+		placeholder: 'my-backup',
+		description: 'Optional custom backup filename. Leave empty for auto-generated name.',
 	},
 	{
 		displayName: 'Time Offset',
@@ -121,8 +175,17 @@ export async function updateTask(this: IExecuteFunctions, index: number): Promis
 	const scheduleId = this.getNodeParameter('scheduleId', index) as string;
 	const taskId = this.getNodeParameter('taskId', index) as string;
 	const action = this.getNodeParameter('action', index) as string;
-	const payload = this.getNodeParameter('payload', index) as string;
 	const timeOffset = this.getNodeParameter('timeOffset', index) as number;
+
+	// Get the appropriate payload based on action type
+	let payload = '';
+	if (action === 'power') {
+		payload = this.getNodeParameter('powerAction', index) as string;
+	} else if (action === 'command') {
+		payload = this.getNodeParameter('command', index) as string;
+	} else if (action === 'backup') {
+		payload = this.getNodeParameter('backupName', index, '') as string;
+	}
 
 	const body = {
 		action,

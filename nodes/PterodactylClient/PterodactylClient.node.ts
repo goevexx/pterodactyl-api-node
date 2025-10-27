@@ -77,6 +77,8 @@ import {
 import {
 	listSchedules,
 	listSchedulesOperation,
+	listScheduleTasks,
+	listScheduleTasksOperation,
 	getSchedule,
 	getScheduleOperation,
 	createSchedule,
@@ -498,6 +500,12 @@ export class PterodactylClient implements INodeType {
 						action: 'Execute schedule',
 					},
 					{
+						name: 'List Tasks',
+						value: 'listTasks',
+						description: 'List all tasks for a schedule',
+						action: 'List schedule tasks',
+					},
+					{
 						name: 'Create Task',
 						value: 'createTask',
 						description: 'Create a schedule task',
@@ -666,6 +674,7 @@ export class PterodactylClient implements INodeType {
 			...createApiKeyOperation,
 			...deleteApiKeyOperation,
 			...listSchedulesOperation,
+			...listScheduleTasksOperation,
 			...getScheduleOperation,
 			...createScheduleOperation,
 			...updateScheduleOperation,
@@ -1099,6 +1108,8 @@ export class PterodactylClient implements INodeType {
 				} else if (resource === 'schedule') {
 					if (operation === 'list') {
 						responseData = await listSchedules.call(this, i);
+					} else if (operation === 'listTasks') {
+						responseData = await listScheduleTasks.call(this, i);
 					} else if (operation === 'get') {
 						responseData = await getSchedule.call(this, i);
 					} else if (operation === 'create') {
