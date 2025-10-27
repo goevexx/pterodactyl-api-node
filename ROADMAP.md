@@ -42,7 +42,7 @@ All essential Pterodactyl Panel operations are implemented and tested:
   - Automated testing on pull requests
   - Automated npm publishing on releases
   - PR validation
-- [ ] Publish to npm registry
+- [x] Publish to npm registry (v1.2.0 published)
 - [ ] Submit to n8n Community Nodes catalog
 
 ### Documentation & Examples
