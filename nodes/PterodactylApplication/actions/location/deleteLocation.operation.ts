@@ -33,5 +33,9 @@ export async function deleteLocation(this: IExecuteFunctions, index: number): Pr
 		{},
 		index,
 	);
-	return { success: true };
+	return {
+		success: true,
+		locationId,
+		action: 'deleted',
+	};
 }

@@ -52,5 +52,10 @@ export async function deleteNodeAllocation(this: IExecuteFunctions, index: numbe
 		{},
 		index,
 	);
-	return { success: true };
+	return {
+		success: true,
+		allocationId,
+		nodeId,
+		action: 'deleted',
+	};
 }

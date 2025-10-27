@@ -33,5 +33,9 @@ export async function deleteUser(this: IExecuteFunctions, index: number): Promis
 		{},
 		index,
 	);
-	return { success: true };
+	return {
+		success: true,
+		userId,
+		action: 'deleted',
+	};
 }

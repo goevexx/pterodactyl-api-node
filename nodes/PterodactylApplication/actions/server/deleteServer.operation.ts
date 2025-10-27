@@ -33,5 +33,9 @@ export async function deleteServer(this: IExecuteFunctions, index: number): Prom
 		{},
 		index,
 	);
-	return { success: true };
+	return {
+		success: true,
+		serverId,
+		action: 'deleted',
+	};
 }

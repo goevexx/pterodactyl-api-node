@@ -33,5 +33,9 @@ export async function forceDeleteServer(this: IExecuteFunctions, index: number):
 		{},
 		index,
 	);
-	return { success: true };
+	return {
+		success: true,
+		serverId,
+		action: 'forceDeleted',
+	};
 }
