@@ -623,10 +623,19 @@ export class PterodactylApplication implements INodeType {
 
 			async getEggsForNest(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
 				try {
-					const nestId = this.getCurrentNodeParameter('nestId') as number || this.getCurrentNodeParameter('nest') as number;
+					// Try both 'nest' (createServer) and 'nestId' (getNestEgg) for compatibility
+					let nestId = this.getCurrentNodeParameter('nest') as number;
+
+					// If 'nest' is not found, try 'nestId' for Nest→Get Egg operation
+					if (!nestId) {
+						nestId = this.getCurrentNodeParameter('nestId') as number;
+					}
 
 					if (!nestId) {
-						return [];
+						return [{
+							name: 'Please select a nest first',
+							value: '',
+						}];
 					}
 
 					const { pterodactylApiRequest } = await import('../../shared/transport');
@@ -713,6 +722,430 @@ export class PterodactylApplication implements INodeType {
 					return allEggs;
 				} catch (error) {
 					console.error('Error fetching all eggs:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getDockerImagesForEgg(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const nestId = this.getCurrentNodeParameter('nest') as number;
+					const eggId = this.getCurrentNodeParameter('egg') as number;
+
+					if (!nestId) {
+						return [{
+							name: 'Please select a nest first',
+							value: '',
+						}];
+					}
+
+					if (!eggId) {
+						return [{
+							name: 'Please select an egg first',
+							value: '',
+						}];
+					}
+
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/application',
+						`/nests/${nestId}/eggs/${eggId}`,
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const eggData = response.attributes || response;
+					const dockerImages = eggData.docker_images || {};
+					const defaultImage = eggData.docker_image || '';
+
+					// docker_images is an object like: { "Java 17": "ghcr.io/pterodactyl/yolks:java_17", ... }
+					const images = Object.entries(dockerImages).map(([name, image]) => ({
+						name: `${name}${image === defaultImage ? ' (Default)' : ''}`,
+						value: image as string,
+					}));
+
+					if (images.length === 0 && defaultImage) {
+						return [{
+							name: `Default: ${defaultImage}`,
+							value: defaultImage,
+						}];
+					}
+
+					if (images.length === 0) {
+						return [{
+							name: 'No docker images available for this egg',
+							value: '',
+						}];
+					}
+
+					return images;
+				} catch (error) {
+					console.error('Error fetching docker images:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getDockerImagesForEggById(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const eggId = this.getCurrentNodeParameter('egg') as number;
+
+					if (!eggId) {
+						return [{
+							name: 'Please select an egg first',
+							value: '',
+						}];
+					}
+
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+
+					// First, get all nests to find which nest contains this egg
+					const nestsResponse = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/application',
+						'/nests',
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const nests = nestsResponse.data || [];
+					let eggData: any = null;
+
+					// Search through nests to find the egg
+					for (const nest of nests) {
+						try {
+							const response = await pterodactylApiRequest.call(
+								this as unknown as IExecuteFunctions,
+								'GET',
+								'/api/application',
+								`/nests/${nest.attributes.id}/eggs/${eggId}`,
+								{},
+								{},
+								{},
+								0,
+							);
+							eggData = response.attributes || response;
+							break; // Found it!
+						} catch (error) {
+							// Egg not in this nest, continue searching
+							continue;
+						}
+					}
+
+					if (!eggData) {
+						return [{
+							name: 'Egg not found',
+							value: '',
+						}];
+					}
+
+					const dockerImages = eggData.docker_images || {};
+					const defaultImage = eggData.docker_image || '';
+
+					// docker_images is an object like: { "Java 17": "ghcr.io/pterodactyl/yolks:java_17", ... }
+					const images = Object.entries(dockerImages).map(([name, image]) => ({
+						name: `${name}${image === defaultImage ? ' (Default)' : ''}`,
+						value: image as string,
+					}));
+
+					if (images.length === 0 && defaultImage) {
+						return [{
+							name: `Default: ${defaultImage}`,
+							value: defaultImage,
+						}];
+					}
+
+					if (images.length === 0) {
+						return [{
+							name: 'No docker images available for this egg',
+							value: '',
+						}];
+					}
+
+					return images;
+				} catch (error) {
+					console.error('Error fetching docker images by egg ID:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getEggStartupCommand(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const nestId = this.getCurrentNodeParameter('nest') as number;
+					const eggId = this.getCurrentNodeParameter('egg') as number;
+
+					if (!nestId) {
+						return [{
+							name: 'Please select a nest first',
+							value: '',
+						}];
+					}
+
+					if (!eggId) {
+						return [{
+							name: 'Please select an egg first',
+							value: '',
+						}];
+					}
+
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/application',
+						`/nests/${nestId}/eggs/${eggId}`,
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const eggData = response.attributes || response;
+					const startup = eggData.startup || 'No default startup command defined';
+
+					return [{
+						name: startup,
+						value: startup, // Keep original - user sees this as preview only
+					}];
+				} catch (error) {
+					console.error('Error fetching egg startup command:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getServerAllocations(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const serverId = this.getCurrentNodeParameter('serverId') as number;
+
+					if (!serverId) {
+						return [{
+							name: 'Please select a server first',
+							value: '',
+						}];
+					}
+
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/application',
+						`/servers/${serverId}?include=allocations`,
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const serverData = response.attributes || response;
+					const allocations = serverData.relationships?.allocations?.data || [];
+
+					if (allocations.length === 0) {
+						return [{
+							name: 'No allocations found for this server',
+							value: '',
+						}];
+					}
+
+					return allocations.map((allocation: any) => {
+						const attrs = allocation.attributes;
+						const name = `${attrs.ip}:${attrs.port}${attrs.alias ? ` (${attrs.alias})` : ''}${attrs.is_default ? ' [Default]' : ''}`;
+						return {
+							name,
+							value: attrs.id,
+						};
+					});
+				} catch (error) {
+					console.error('Error fetching server allocations:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getServerStartupCommand(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const serverId = this.getCurrentNodeParameter('serverId') as number;
+					const eggId = this.getCurrentNodeParameter('egg') as string;
+
+					if (!serverId) {
+						return [{
+							name: 'Please select a server first',
+							value: '',
+						}];
+					}
+
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+
+					// First, get the server to find its nest
+					const serverResponse = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/application',
+						`/servers/${serverId}`,
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const serverData = serverResponse.attributes || serverResponse;
+
+					// If egg is being changed, show new egg's startup command
+					if (eggId) {
+						// Need to find the nest for this egg by searching all nests
+						const nestsResponse = await pterodactylApiRequest.call(
+							this as unknown as IExecuteFunctions,
+							'GET',
+							'/api/application',
+							'/nests',
+							{},
+							{},
+							{},
+							0,
+						);
+
+						const nests = nestsResponse.data || [];
+						let eggData: any = null;
+
+						// Search each nest for the egg
+						for (const nest of nests) {
+							try {
+								const eggResponse = await pterodactylApiRequest.call(
+									this as unknown as IExecuteFunctions,
+									'GET',
+									'/api/application',
+									`/nests/${nest.attributes.id}/eggs/${eggId}`,
+									{},
+									{},
+									{},
+									0,
+								);
+								eggData = eggResponse.attributes || eggResponse;
+								break;
+							} catch (e) {
+								// Egg not in this nest, continue searching
+								continue;
+							}
+						}
+
+						if (eggData) {
+							const startup = eggData.startup || 'No default startup command defined';
+							return [{
+								name: `[New Egg Default] ${startup}`,
+								value: startup,
+							}];
+						} else {
+							return [{
+								name: 'Could not find egg startup command',
+								value: '',
+							}];
+						}
+					}
+
+					// Otherwise, show current server startup command
+					const startup = serverData.container?.startup_command || 'No startup command defined';
+
+					return [{
+						name: `[Current] ${startup}`,
+						value: startup,
+					}];
+				} catch (error) {
+					console.error('Error fetching server startup command:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+
+			async getAvailableAllocationsForServer(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const serverId = this.getCurrentNodeParameter('serverId') as number;
+
+					if (!serverId) {
+						return [{
+							name: 'Please select a server first',
+							value: '',
+						}];
+					}
+
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+
+					// First, get the server to find its node
+					const serverResponse = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/application',
+						`/servers/${serverId}`,
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const nodeId = serverResponse.attributes?.node;
+					if (!nodeId) {
+						return [{
+							name: 'Could not determine server node',
+							value: '',
+						}];
+					}
+
+					// Get all allocations for the node
+					const allocationsResponse = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/application',
+						`/nodes/${nodeId}?include=allocations`,
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const nodeData = allocationsResponse.attributes || allocationsResponse;
+					const allAllocations = nodeData.relationships?.allocations?.data || [];
+
+					// Filter only unassigned allocations
+					const availableAllocations = allAllocations.filter((allocation: any) => {
+						return !allocation.attributes.assigned;
+					});
+
+					if (availableAllocations.length === 0) {
+						return [{
+							name: 'No available allocations on this node',
+							value: '',
+						}];
+					}
+
+					return availableAllocations.map((allocation: any) => {
+						const attrs = allocation.attributes;
+						const name = `${attrs.ip}:${attrs.port}${attrs.alias ? ` (${attrs.alias})` : ''}`;
+						return {
+							name,
+							value: attrs.id,
+						};
+					});
+				} catch (error) {
+					console.error('Error fetching available allocations:', error);
 					return [{
 						name: `Error: ${(error as Error).message}`,
 						value: '',

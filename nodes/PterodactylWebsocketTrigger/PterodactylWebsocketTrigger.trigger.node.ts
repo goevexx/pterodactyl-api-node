@@ -4,6 +4,9 @@ import {
 	INodeTypeDescription,
 	ITriggerResponse,
 	IDataObject,
+	ILoadOptionsFunctions,
+	INodePropertyOptions,
+	IExecuteFunctions,
 } from 'n8n-workflow';
 import { PterodactylWebSocketManager, EventThrottler, WebSocketTokenResponse } from '../../shared/websocket';
 import { pterodactylApiRequest } from '../../shared/transport';
@@ -29,13 +32,15 @@ export class PterodactylWebsocketTrigger implements INodeType {
 		],
 		properties: [
 			{
-				displayName: 'Server ID',
+				displayName: 'Server',
 				name: 'serverId',
-				type: 'string',
+				type: 'options',
+				typeOptions: {
+					loadOptionsMethod: 'getClientServers',
+				},
 				default: '',
 				required: true,
-				description: 'The ID of the server to monitor',
-				placeholder: 'e.g., a1b2c3d4',
+				description: 'The server to monitor',
 			},
 			{
 				displayName: 'Events',
@@ -150,6 +155,46 @@ export class PterodactylWebsocketTrigger implements INodeType {
 				],
 			},
 		],
+	};
+
+	methods = {
+		loadOptions: {
+			async getClientServers(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/client',
+						'',
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const servers = response.data || [];
+
+					if (servers.length === 0) {
+						return [{
+							name: 'No servers found',
+							value: '',
+						}];
+					}
+
+					return servers.map((server: any) => ({
+						name: `${server.attributes.name} (${server.attributes.identifier})`,
+						value: server.attributes.identifier,
+					}));
+				} catch (error) {
+					console.error('Error fetching servers:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+		},
 	};
 
 	async trigger(this: ITriggerFunctions): Promise<ITriggerResponse> {

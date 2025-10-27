@@ -104,7 +104,7 @@ export const createNodeOperation: INodeProperties[] = [
 		displayName: 'Memory Overallocate',
 		name: 'memoryOverallocate',
 		type: 'number',
-		required: true,
+		required: false,
 		displayOptions: {
 			show: {
 				resource: ['node'],
@@ -132,7 +132,7 @@ export const createNodeOperation: INodeProperties[] = [
 		displayName: 'Disk Overallocate',
 		name: 'diskOverallocate',
 		type: 'number',
-		required: true,
+		required: false,
 		displayOptions: {
 			show: {
 				resource: ['node'],
@@ -160,7 +160,7 @@ export const createNodeOperation: INodeProperties[] = [
 		displayName: 'Daemon Base Directory',
 		name: 'daemonBase',
 		type: 'string',
-		required: true,
+		required: false,
 		displayOptions: {
 			show: {
 				resource: ['node'],
@@ -175,7 +175,7 @@ export const createNodeOperation: INodeProperties[] = [
 		displayName: 'Daemon SFTP Port',
 		name: 'daemonSftp',
 		type: 'number',
-		required: true,
+		required: false,
 		displayOptions: {
 			show: {
 				resource: ['node'],
@@ -189,7 +189,7 @@ export const createNodeOperation: INodeProperties[] = [
 		displayName: 'Daemon Listen Port',
 		name: 'daemonListen',
 		type: 'number',
-		required: true,
+		required: false,
 		displayOptions: {
 			show: {
 				resource: ['node'],
@@ -235,12 +235,12 @@ export async function createNode(this: IExecuteFunctions, index: number): Promis
 	const fqdn = this.getNodeParameter('fqdn', index) as string;
 	const scheme = this.getNodeParameter('scheme', index) as string;
 	const memory = this.getNodeParameter('memory', index) as number;
-	const memoryOverallocate = this.getNodeParameter('memoryOverallocate', index) as number;
+	const memoryOverallocate = this.getNodeParameter('memoryOverallocate', index, 0) as number;
 	const disk = this.getNodeParameter('disk', index) as number;
-	const diskOverallocate = this.getNodeParameter('diskOverallocate', index) as number;
-	const daemonBase = this.getNodeParameter('daemonBase', index) as string;
-	const daemonSftp = this.getNodeParameter('daemonSftp', index) as number;
-	const daemonListen = this.getNodeParameter('daemonListen', index) as number;
+	const diskOverallocate = this.getNodeParameter('diskOverallocate', index, 0) as number;
+	const daemonBase = this.getNodeParameter('daemonBase', index, '/var/lib/pterodactyl/volumes') as string;
+	const daemonSftp = this.getNodeParameter('daemonSftp', index, 2022) as number;
+	const daemonListen = this.getNodeParameter('daemonListen', index, 8080) as number;
 	const publicNode = this.getNodeParameter('public', index, true) as boolean;
 	const behindProxy = this.getNodeParameter('behindProxy', index, false) as boolean;
 	const maintenanceMode = this.getNodeParameter('maintenanceMode', index, false) as boolean;

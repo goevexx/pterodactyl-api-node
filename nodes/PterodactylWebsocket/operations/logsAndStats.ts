@@ -33,9 +33,12 @@ export const logsAndStatsOperations: INodeProperties[] = [
 		default: 'requestLogs',
 	},
 	{
-		displayName: 'Server ID',
+		displayName: 'Server',
 		name: 'serverId',
-		type: 'string',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getClientServers',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -43,7 +46,7 @@ export const logsAndStatsOperations: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'The ID of the server',
+		description: 'The server to get logs and stats from',
 	},
 	{
 		displayName: 'Line Limit',

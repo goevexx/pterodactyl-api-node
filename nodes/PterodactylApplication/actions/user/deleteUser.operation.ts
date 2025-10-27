@@ -13,7 +13,7 @@ export const deleteUserOperation: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['user'],
-				operation: ['deleteUser'],
+				operation: ['delete'],
 			},
 		},
 		default: '',

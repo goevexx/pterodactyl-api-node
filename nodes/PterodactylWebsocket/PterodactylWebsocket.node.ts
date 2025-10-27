@@ -3,6 +3,8 @@ import {
 	INodeExecutionData,
 	INodeType,
 	INodeTypeDescription,
+	ILoadOptionsFunctions,
+	INodePropertyOptions,
 } from 'n8n-workflow';
 import {
 	serverControlOperations,
@@ -65,6 +67,46 @@ export class PterodactylWebsocket implements INodeType {
 			...logsAndStatsOperations,
 			...connectionOperations,
 		],
+	};
+
+	methods = {
+		loadOptions: {
+			async getClientServers(this: ILoadOptionsFunctions): Promise<INodePropertyOptions[]> {
+				try {
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/client',
+						'',
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const servers = response.data || [];
+
+					if (servers.length === 0) {
+						return [{
+							name: 'No servers found',
+							value: '',
+						}];
+					}
+
+					return servers.map((server: any) => ({
+						name: `${server.attributes.name} (${server.attributes.identifier})`,
+						value: server.attributes.identifier,
+					}));
+				} catch (error) {
+					console.error('Error fetching servers:', error);
+					return [{
+						name: `Error: ${(error as Error).message}`,
+						value: '',
+					}];
+				}
+			},
+		},
 	};
 
 	async execute(this: IExecuteFunctions): Promise<INodeExecutionData[][]> {

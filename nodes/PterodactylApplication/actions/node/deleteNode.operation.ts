@@ -13,7 +13,7 @@ export const deleteNodeOperation: INodeProperties[] = [
 		displayOptions: {
 			show: {
 				resource: ['node'],
-				operation: ['deleteNode'],
+				operation: ['delete'],
 			},
 		},
 		default: '',

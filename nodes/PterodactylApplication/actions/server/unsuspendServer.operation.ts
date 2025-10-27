@@ -23,7 +23,7 @@ export const unsuspendServerOperation: INodeProperties[] = [
 
 export async function unsuspendServer(this: IExecuteFunctions, index: number): Promise<any> {
 	const serverId = this.getNodeParameter('serverId', index) as number;
-	const response = await pterodactylApiRequest.call(
+	await pterodactylApiRequest.call(
 		this,
 		'POST',
 		'/api/application',
@@ -33,5 +33,9 @@ export async function unsuspendServer(this: IExecuteFunctions, index: number): P
 		{},
 		index,
 	);
-	return response.attributes || response;
+	return {
+		success: true,
+		serverId,
+		action: 'unsuspended',
+	};
 }

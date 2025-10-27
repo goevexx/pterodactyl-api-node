@@ -107,8 +107,12 @@ export const createServerOperation: INodeProperties[] = [
 	{
 		displayName: 'Docker Image',
 		name: 'dockerImage',
-		type: 'string',
-		required: false,
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getDockerImagesForEgg',
+			loadOptionsDependsOn: ['nest', 'egg'],
+		},
+		required: true,
 		displayOptions: {
 			show: {
 				resource: ['server'],
@@ -116,13 +120,32 @@ export const createServerOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Override the default Docker image from the egg (leave empty to use egg default)',
-		placeholder: 'ghcr.io/pterodactyl/yolks:java_17',
+		description: 'Docker image to use for this server (loaded from selected egg)',
 	},
 	{
-		displayName: 'Startup Command',
+		displayName: 'Startup Command (Egg Default Preview)',
+		name: 'startupPreview',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getEggStartupCommand',
+			loadOptionsDependsOn: ['nest', 'egg'],
+		},
+		displayOptions: {
+			show: {
+				resource: ['server'],
+				operation: ['create'],
+			},
+		},
+		default: '',
+		description: 'Preview of the egg\'s default startup command. This is read-only. To override, use the field below.',
+	},
+	{
+		displayName: 'Override Startup Command',
 		name: 'startup',
 		type: 'string',
+		typeOptions: {
+			rows: 2,
+		},
 		required: false,
 		displayOptions: {
 			show: {
@@ -131,8 +154,8 @@ export const createServerOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Override the startup command from the egg (leave empty to use egg default)',
-		placeholder: 'java -Xms128M -Xmx{{SERVER_MEMORY}}M -jar {{SERVER_JARFILE}}',
+		description: 'Override the egg\'s default startup command. Leave empty to use the egg default shown above. Type Pterodactyl variables like {{SERVER_MEMORY}} directly (no expression mode). In expressions, escape braces: {{ \'\\{\\{SERVER_MEMORY\\}\\}\' }}',
+		placeholder: 'Leave empty for egg default, or: java -Xmx{{SERVER_MEMORY}}M -jar {{SERVER_JARFILE}}',
 	},
 
 	// ========== Resource Limits ==========
@@ -328,7 +351,7 @@ export const createServerOperation: INodeProperties[] = [
 			},
 		},
 		default: {},
-		description: 'Environment variables for the server',
+		description: 'Environment variables for the server. The selected egg\'s default variables will be automatically included. These UI values override egg defaults. For dynamic variables from previous nodes, use the JSON field below (highest priority).',
 		placeholder: 'Add Environment Variable',
 		options: [
 			{
@@ -354,6 +377,23 @@ export const createServerOperation: INodeProperties[] = [
 				],
 			},
 		],
+	},
+	{
+		displayName: 'Environment Variables (JSON)',
+		name: 'environmentJson',
+		type: 'string',
+		typeOptions: {
+			rows: 4,
+		},
+		displayOptions: {
+			show: {
+				resource: ['server'],
+				operation: ['create'],
+			},
+		},
+		default: '',
+		description: 'Environment variables as JSON object. This will override both egg defaults and UI key-values. Use expressions like {{ $json.envVars }} to inject dynamic variables from previous nodes.',
+		placeholder: '{"MINECRAFT_VERSION": "1.20.1", "SERVER_NAME": "My Server"}',
 	},
 
 	// ========== Advanced Options ==========
@@ -411,7 +451,7 @@ export async function createServer(this: IExecuteFunctions, index: number): Prom
 	// Server Configuration
 	const nestId = this.getNodeParameter('nest', index) as number;
 	const eggId = this.getNodeParameter('egg', index) as number;
-	let dockerImage = this.getNodeParameter('dockerImage', index, '') as string;
+	const dockerImage = this.getNodeParameter('dockerImage', index) as string;
 	let startup = this.getNodeParameter('startup', index, '') as string;
 
 	// Resource Limits
@@ -434,42 +474,69 @@ export async function createServer(this: IExecuteFunctions, index: number): Prom
 	const environmentCollection = this.getNodeParameter('environment', index, {}) as {
 		variables?: Array<{ key: string; value: string }>;
 	};
+	const environmentJson = this.getNodeParameter('environmentJson', index, '') as string;
 
 	// Advanced Options
 	const startOnCompletion = this.getNodeParameter('startOnCompletion', index, false) as boolean;
 	const skipScripts = this.getNodeParameter('skipScripts', index, false) as boolean;
 	const oomDisabled = this.getNodeParameter('oomDisabled', index, false) as boolean;
 
-	// If docker_image or startup not provided, fetch from egg
-	if (!dockerImage || !startup) {
-		const eggResponse = await pterodactylApiRequest.call(
-			this,
-			'GET',
-			'/api/application',
-			`/nests/${nestId}/eggs/${eggId}`,
-			{},
-			{},
-			{},
-			index,
-		);
+	// Fetch egg data for startup and environment defaults
+	const eggResponse = await pterodactylApiRequest.call(
+		this,
+		'GET',
+		'/api/application',
+		`/nests/${nestId}/eggs/${eggId}?include=variables`,
+		{},
+		{},
+		{},
+		index,
+	);
 
-		const eggData = eggResponse.attributes || eggResponse;
-		if (!dockerImage && eggData.docker_image) {
-			dockerImage = eggData.docker_image;
-		}
-		if (!startup && eggData.startup) {
-			startup = eggData.startup;
-		}
+	const eggData = eggResponse.attributes || eggResponse;
+
+	// Use egg startup if not provided
+	if (!startup && eggData.startup) {
+		startup = eggData.startup;
 	}
 
-	// Build environment object from fixedCollection
+	// Build environment object: start with egg defaults, then override with user inputs
 	const environment: Record<string, string> = {};
+
+	// First, populate with egg variable defaults
+	if (eggData.relationships?.variables?.data) {
+		eggData.relationships.variables.data.forEach((variable: any) => {
+			const varAttrs = variable.attributes;
+			// Only include user-editable variables with default values
+			if (varAttrs.user_editable && varAttrs.default_value !== null && varAttrs.default_value !== '') {
+				environment[varAttrs.env_variable] = String(varAttrs.default_value);
+			}
+		});
+	}
+
+	// Then, override with user-provided values from UI key-value pairs
 	if (environmentCollection.variables && environmentCollection.variables.length > 0) {
 		environmentCollection.variables.forEach((variable) => {
 			if (variable.key) {
 				environment[variable.key] = variable.value;
 			}
 		});
+	}
+
+	// Finally, override with JSON input (highest priority)
+	if (environmentJson && environmentJson.trim() !== '') {
+		try {
+			const jsonVars = JSON.parse(environmentJson);
+			if (typeof jsonVars === 'object' && jsonVars !== null && !Array.isArray(jsonVars)) {
+				Object.entries(jsonVars).forEach(([key, value]) => {
+					environment[key] = String(value);
+				});
+			} else {
+				throw new Error('Environment JSON must be an object with key-value pairs');
+			}
+		} catch (error) {
+			throw new Error(`Invalid Environment Variables JSON: ${(error as Error).message}`);
+		}
 	}
 
 	// Construct request body

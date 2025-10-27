@@ -31,7 +31,7 @@ export const updateServerDetailsOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Server name',
+		description: 'Server name. Leave empty to keep current value.',
 	},
 	{
 		displayName: 'Owner User',
@@ -48,7 +48,7 @@ export const updateServerDetailsOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'The user who will own this server',
+		description: 'The user who will own this server. Leave empty to keep current owner.',
 	},
 	{
 		displayName: 'External ID',
@@ -62,12 +62,15 @@ export const updateServerDetailsOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'External ID',
+		description: 'External ID for integration with other systems. Leave empty to keep current value.',
 	},
 	{
 		displayName: 'Description',
 		name: 'description',
 		type: 'string',
+		typeOptions: {
+			rows: 3,
+		},
 		required: false,
 		displayOptions: {
 			show: {
@@ -76,22 +79,50 @@ export const updateServerDetailsOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Server description',
+		description: 'Server description. Leave empty to keep current value.',
 	}
 ];
 
 export async function updateServerDetails(this: IExecuteFunctions, index: number): Promise<any> {
 	const serverId = this.getNodeParameter('serverId', index) as number;
-	const name = this.getNodeParameter('name', index) as string;
-	const userId = this.getNodeParameter('userId', index) as number;
-	const externalId = this.getNodeParameter('externalId', index) as string;
-	const description = this.getNodeParameter('description', index) as string;
+
+	// First, fetch the current server data
+	const currentServerResponse = await pterodactylApiRequest.call(
+		this,
+		'GET',
+		'/api/application',
+		`/servers/${serverId}`,
+		{},
+		{},
+		{},
+		index,
+	);
+
+	const currentServer = currentServerResponse.attributes;
+
+	// Get user input values (empty string if not provided)
+	const nameInput = this.getNodeParameter('name', index, '') as string;
+	const userIdInput = this.getNodeParameter('userId', index, '') as string;
+	const externalIdInput = this.getNodeParameter('externalId', index, '') as string;
+	const descriptionInput = this.getNodeParameter('description', index, '') as string;
+
+	// Use input values OR fall back to current values
+	const name = nameInput || currentServer.name;
+	const userId = userIdInput || currentServer.user;
+	const externalId = externalIdInput !== '' ? externalIdInput : (currentServer.external_id || '');
+	const description = descriptionInput !== '' ? descriptionInput : (currentServer.description || '');
+
 	const response = await pterodactylApiRequest.call(
 		this,
 		'PATCH',
 		'/api/application',
 		`/servers/${serverId}/details`,
-		{ ...(name && { name }), ...(userId && { user: userId }), ...(externalId && { external_id: externalId }), ...(description && { description }) },
+		{
+			name,
+			user: userId,
+			external_id: externalId,
+			description,
+		},
 		{},
 		{},
 		index,

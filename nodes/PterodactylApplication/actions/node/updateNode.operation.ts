@@ -3,9 +3,12 @@ import { pterodactylApiRequest } from '../../../../shared/transport';
 
 export const updateNodeOperation: INodeProperties[] = [
 	{
-		displayName: 'Node ID',
+		displayName: 'Node',
 		name: 'nodeId',
-		type: 'number',
+		type: 'options',
+		typeOptions: {
+			loadOptionsMethod: 'getNodes',
+		},
 		required: true,
 		displayOptions: {
 			show: {
@@ -13,8 +16,8 @@ export const updateNodeOperation: INodeProperties[] = [
 				operation: ['update'],
 			},
 		},
-		default: 1,
-		description: 'ID of the node to update',
+		default: '',
+		description: 'The node to update',
 	},
 	{
 		displayName: 'Name',
@@ -28,24 +31,7 @@ export const updateNodeOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Node name',
-	},
-	{
-		displayName: 'Description',
-		name: 'description',
-		type: 'string',
-		typeOptions: {
-			rows: 4,
-		},
-		required: false,
-		displayOptions: {
-			show: {
-				resource: ['node'],
-				operation: ['update'],
-			},
-		},
-		default: '',
-		description: 'Description of the node',
+		description: 'Node name. Leave empty to keep current value.',
 	},
 	{
 		displayName: 'Location',
@@ -62,7 +48,7 @@ export const updateNodeOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'The location for this node',
+		description: 'The location for this node. Leave empty to keep current value.',
 	},
 	{
 		displayName: 'FQDN',
@@ -76,7 +62,7 @@ export const updateNodeOperation: INodeProperties[] = [
 			},
 		},
 		default: '',
-		description: 'Fully qualified domain name for the node',
+		description: 'Fully qualified domain name for the node. Leave empty to keep current value.',
 		placeholder: 'node.example.com',
 	},
 	{
@@ -262,47 +248,77 @@ export const updateNodeOperation: INodeProperties[] = [
 
 export async function updateNode(this: IExecuteFunctions, index: number): Promise<any> {
 	const nodeId = this.getNodeParameter('nodeId', index) as number;
-	const name = this.getNodeParameter('name', index) as string;
-	const description = this.getNodeParameter('description', index) as string;
-	const locationId = this.getNodeParameter('locationId', index) as number;
-	const fqdn = this.getNodeParameter('fqdn', index) as string;
-	const scheme = this.getNodeParameter('scheme', index) as string;
-	const memory = this.getNodeParameter('memory', index) as number;
-	const memoryOverallocate = this.getNodeParameter('memoryOverallocate', index) as number;
-	const disk = this.getNodeParameter('disk', index) as number;
-	const diskOverallocate = this.getNodeParameter('diskOverallocate', index) as number;
-	const daemonBase = this.getNodeParameter('daemonBase', index) as string;
-	const daemonSftp = this.getNodeParameter('daemonSftp', index) as number;
-	const daemonListen = this.getNodeParameter('daemonListen', index) as number;
-	const publicNode = this.getNodeParameter('public', index) as boolean;
-	const behindProxy = this.getNodeParameter('behindProxy', index) as boolean;
-	const maintenanceMode = this.getNodeParameter('maintenanceMode', index) as boolean;
-	const uploadSize = this.getNodeParameter('uploadSize', index) as number;
 
-	const body: any = {};
-	if (name) body.name = name;
-	if (description) body.description = description;
-	if (locationId) body.location_id = locationId;
-	if (fqdn) body.fqdn = fqdn;
-	if (scheme) body.scheme = scheme;
-	if (memory) body.memory = memory;
-	if (memoryOverallocate !== undefined) body.memory_overallocate = memoryOverallocate;
-	if (disk) body.disk = disk;
-	if (diskOverallocate !== undefined) body.disk_overallocate = diskOverallocate;
-	if (daemonBase) body.daemon_base = daemonBase;
-	if (daemonSftp) body.daemon_sftp = daemonSftp;
-	if (daemonListen) body.daemon_listen = daemonListen;
-	if (publicNode !== undefined) body.public = publicNode;
-	if (behindProxy !== undefined) body.behind_proxy = behindProxy;
-	if (maintenanceMode !== undefined) body.maintenance_mode = maintenanceMode;
-	if (uploadSize) body.upload_size = uploadSize;
+	// First, fetch the current node data
+	const currentNodeResponse = await pterodactylApiRequest.call(
+		this,
+		'GET',
+		'/api/application',
+		`/nodes/${nodeId}`,
+		{},
+		{},
+		{},
+		index,
+	);
+
+	const currentNode = currentNodeResponse.attributes;
+
+	// Get user input values (empty string if not provided)
+	const nameInput = this.getNodeParameter('name', index, '') as string;
+	const locationIdInput = this.getNodeParameter('locationId', index, '') as string;
+	const fqdnInput = this.getNodeParameter('fqdn', index, '') as string;
+	const schemeInput = this.getNodeParameter('scheme', index, '') as string;
+	const memoryInput = this.getNodeParameter('memory', index, 0) as number;
+	const memoryOverallocateInput = this.getNodeParameter('memoryOverallocate', index, -999) as number;
+	const diskInput = this.getNodeParameter('disk', index, 0) as number;
+	const diskOverallocateInput = this.getNodeParameter('diskOverallocate', index, -999) as number;
+	const daemonBaseInput = this.getNodeParameter('daemonBase', index, '') as string;
+	const daemonSftpInput = this.getNodeParameter('daemonSftp', index, 0) as number;
+	const daemonListenInput = this.getNodeParameter('daemonListen', index, 0) as number;
+	const publicInput = this.getNodeParameter('public', index, undefined) as boolean | undefined;
+	const behindProxyInput = this.getNodeParameter('behindProxy', index, undefined) as boolean | undefined;
+	const maintenanceModeInput = this.getNodeParameter('maintenanceMode', index, undefined) as boolean | undefined;
+	const uploadSizeInput = this.getNodeParameter('uploadSize', index, 0) as number;
+
+	// Use input values OR fall back to current values
+	const name = nameInput || currentNode.name;
+	const locationId = locationIdInput || currentNode.location_id;
+	const fqdn = fqdnInput || currentNode.fqdn;
+	const scheme = schemeInput || currentNode.scheme;
+	const memory = memoryInput || currentNode.memory;
+	const memoryOverallocate = memoryOverallocateInput !== -999 ? memoryOverallocateInput : currentNode.memory_overallocate;
+	const disk = diskInput || currentNode.disk;
+	const diskOverallocate = diskOverallocateInput !== -999 ? diskOverallocateInput : currentNode.disk_overallocate;
+	const daemonBase = daemonBaseInput || currentNode.daemon_base;
+	const daemonSftp = daemonSftpInput || currentNode.daemon_sftp;
+	const daemonListen = daemonListenInput || currentNode.daemon_listen;
+	const publicNode = publicInput !== undefined ? publicInput : currentNode.public;
+	const behindProxy = behindProxyInput !== undefined ? behindProxyInput : currentNode.behind_proxy;
+	const maintenanceMode = maintenanceModeInput !== undefined ? maintenanceModeInput : currentNode.maintenance_mode;
+	const uploadSize = uploadSizeInput || currentNode.upload_size;
 
 	const response = await pterodactylApiRequest.call(
 		this,
 		'PATCH',
 		'/api/application',
 		`/nodes/${nodeId}`,
-		body,
+		{
+			name,
+			location_id: locationId,
+			fqdn,
+			scheme,
+			memory,
+			memory_overallocate: memoryOverallocate,
+			disk,
+			disk_overallocate: diskOverallocate,
+			daemon_base: daemonBase,
+			daemon_sftp: daemonSftp,
+			daemon_listen: daemonListen,
+			public: publicNode,
+			behind_proxy: behindProxy,
+			maintenance_mode: maintenanceMode,
+			upload_size: uploadSize
+		},
 		{},
 		{},
 		index,
