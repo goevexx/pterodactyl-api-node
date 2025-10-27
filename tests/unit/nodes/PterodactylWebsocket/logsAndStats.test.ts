@@ -11,7 +11,7 @@ jest.mock('../../../../shared/transport', () => ({
 }));
 
 // Mock the WebSocket manager
-let _mockEventHandlers: Map<string, Function[]>;
+let _mockEventHandlers: Map<string, ((...args: any[]) => void)[]>;
 let mockConnect: jest.Mock;
 let mockSendCommand: jest.Mock;
 let mockClose: jest.Mock;
@@ -23,7 +23,7 @@ jest.mock('../../../../shared/websocket/WebSocketManager', () => {
 
 			return {
 				connect: mockConnect,
-				on: jest.fn((event: string, handler: Function) => {
+				on: jest.fn((event: string, handler: (...args: any[]) => void) => {
 					if (!_mockEventHandlers.has(event)) {
 						_mockEventHandlers.set(event, []);
 					}

@@ -14,6 +14,7 @@ import {
 
 // Mock the ws module
 jest.mock('ws', () => {
+	// eslint-disable-next-line @typescript-eslint/no-var-requires
 	const { EventEmitter } = require('events');
 
 	class MockWebSocket extends EventEmitter {
