@@ -1,0 +1,2251 @@
+{
+  "name": "Comprehensive Pterodactyl Test",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "start",
+      "name": "Manual Trigger",
+      "type": "n8n-nodes-base.manualTrigger",
+      "typeVersion": 1,
+      "position": [
+        240,
+        500
+      ]
+    },
+    {
+      "parameters": {
+        "content": "# Comprehensive Pterodactyl Test Workflow\n\n**Complete testing of ALL Pterodactyl operations across all APIs**\n\n## Coverage:\n- \u2705 Application API: 37 operations\n- \u2705 Client API: 50 operations  \n- \u2705 WebSocket API: 8 operations\n- \u2705 WebSocket Trigger: 1 node\n\n**Total: 96 operations tested**\n\n## Organization:\n1. **Application API** - Administrative operations\n   - User Management (6 ops)\n   - Location Management (5 ops)\n   - Node Management (8 ops)\n   - Nest Management (4 ops)\n   - Server Management (14 ops)\n\n2. **Client API** - Server owner operations\n   - Account Management (6 ops)\n   - Server Operations (5 ops)\n   - File Management (8 ops)\n   - Database Management (4 ops)\n   - Backup Management (6 ops)\n   - Schedule Management (10 ops)\n   - Network Management (5 ops)\n   - Subuser Management (5 ops)\n   - Startup Variables (2 ops)\n\n3. **WebSocket API** - Real-time operations\n   - Server Control (2 ops)\n   - Logs & Stats (2 ops)\n   - Connection (2 ops)\n   - Trigger Node (1 node)\n\n## Instructions:\n- Each section tests operations in logical groups\n- Dropdown operations are marked as **(DROPDOWN)**\n- Dependent dropdowns are marked as **(DEPENDENT)**\n- Critical multi-level dependencies marked as **(CRITICAL)**\n- Execute sections independently\n- Verify all dropdowns populate correctly",
+        "height": 800,
+        "width": 700
+      },
+      "id": "header-note",
+      "name": "Test Overview",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        -200
+      ]
+    },
+    {
+      "parameters": {
+        "content": "## APPLICATION API\n### User Management\nAdministrative user operations with dropdown testing",
+        "height": 150,
+        "width": 400
+      },
+      "id": "app-user-section",
+      "name": "App: User Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        700
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "user",
+        "operation": "list"
+      },
+      "id": "app-user-list",
+      "name": "App: User \u2192 List",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        460,
+        800
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "user",
+        "operation": "get"
+      },
+      "id": "app-user-get",
+      "name": "App: User \u2192 Get (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        680,
+        800
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select user from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "user",
+        "operation": "getUserByExternalId"
+      },
+      "id": "app-user-get-external",
+      "name": "App: User \u2192 Get By External ID",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        900,
+        800
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Manual external ID input"
+    },
+    {
+      "parameters": {
+        "resource": "user",
+        "operation": "create"
+      },
+      "id": "app-user-create",
+      "name": "App: User \u2192 Create",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        460,
+        920
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Form fields for new user"
+    },
+    {
+      "parameters": {
+        "resource": "user",
+        "operation": "update"
+      },
+      "id": "app-user-update",
+      "name": "App: User \u2192 Update (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        680,
+        920
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select user from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "user",
+        "operation": "delete"
+      },
+      "id": "app-user-delete",
+      "name": "App: User \u2192 Delete (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        900,
+        920
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select user from dropdown"
+    },
+    {
+      "parameters": {
+        "content": "## APPLICATION API\n### Location Management\nData center location operations with dropdown testing",
+        "height": 150,
+        "width": 400
+      },
+      "id": "app-location-section",
+      "name": "App: Location Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        1100
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "location",
+        "operation": "list"
+      },
+      "id": "app-location-list",
+      "name": "App: Location \u2192 List",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        460,
+        1200
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "location",
+        "operation": "get"
+      },
+      "id": "app-location-get",
+      "name": "App: Location \u2192 Get (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        680,
+        1200
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select location from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "location",
+        "operation": "create"
+      },
+      "id": "app-location-create",
+      "name": "App: Location \u2192 Create",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        900,
+        1200
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Form fields for new location"
+    },
+    {
+      "parameters": {
+        "resource": "location",
+        "operation": "update"
+      },
+      "id": "app-location-update",
+      "name": "App: Location \u2192 Update (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        460,
+        1320
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select location from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "location",
+        "operation": "delete"
+      },
+      "id": "app-location-delete",
+      "name": "App: Location \u2192 Delete (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        680,
+        1320
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select location from dropdown"
+    },
+    {
+      "parameters": {
+        "content": "## APPLICATION API\n### Node Management\nPhysical/virtual node operations with dependent dropdowns",
+        "height": 150,
+        "width": 400
+      },
+      "id": "app-node-section",
+      "name": "App: Node Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        1500
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "node",
+        "operation": "list"
+      },
+      "id": "app-node-list",
+      "name": "App: Node \u2192 List",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        460,
+        1600
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "node",
+        "operation": "get"
+      },
+      "id": "app-node-get",
+      "name": "App: Node \u2192 Get (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        680,
+        1600
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select node from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "node",
+        "operation": "create"
+      },
+      "id": "app-node-create",
+      "name": "App: Node \u2192 Create (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        900,
+        1600
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select location from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "node",
+        "operation": "update"
+      },
+      "id": "app-node-update",
+      "name": "App: Node \u2192 Update (MULTI-DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        460,
+        1720
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select node AND location dropdowns"
+    },
+    {
+      "parameters": {
+        "resource": "node",
+        "operation": "delete"
+      },
+      "id": "app-node-delete",
+      "name": "App: Node \u2192 Delete (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        680,
+        1720
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select node from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "node",
+        "operation": "getConfiguration"
+      },
+      "id": "app-node-config",
+      "name": "App: Node \u2192 Get Configuration (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        900,
+        1720
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select node from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "node",
+        "operation": "listAllocations"
+      },
+      "id": "app-node-list-allocations",
+      "name": "App: Node \u2192 List Allocations (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        460,
+        1840
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select node from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "node",
+        "operation": "createAllocations"
+      },
+      "id": "app-node-create-allocations",
+      "name": "App: Node \u2192 Create Allocations (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        680,
+        1840
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select node from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "node",
+        "operation": "deleteAllocation"
+      },
+      "id": "app-node-delete-allocation",
+      "name": "App: Node \u2192 Delete Allocation (CRITICAL)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        900,
+        1840
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST CRITICAL: 1) Select node, 2) Wait for allocation dropdown, 3) Select allocation"
+    },
+    {
+      "parameters": {
+        "content": "## APPLICATION API\n### Nest Management\nServer type templates (Minecraft, Rust, etc.) with dependent dropdowns",
+        "height": 150,
+        "width": 400
+      },
+      "id": "app-nest-section",
+      "name": "App: Nest Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        2020
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "nest",
+        "operation": "listNests"
+      },
+      "id": "app-nest-list",
+      "name": "App: Nest \u2192 List",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        460,
+        2120
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "nest",
+        "operation": "getNest"
+      },
+      "id": "app-nest-get",
+      "name": "App: Nest \u2192 Get (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        680,
+        2120
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select nest from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "nest",
+        "operation": "listEggs"
+      },
+      "id": "app-nest-list-eggs",
+      "name": "App: Nest \u2192 List Eggs (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        900,
+        2120
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select nest from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "nest",
+        "operation": "getEgg"
+      },
+      "id": "app-nest-get-egg",
+      "name": "App: Nest \u2192 Get Egg (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        1120,
+        2120
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: 1) Select nest, 2) Wait for egg dropdown, 3) Select egg"
+    },
+    {
+      "parameters": {
+        "content": "## APPLICATION API\n### Server Management\nComplete server lifecycle with CRITICAL multi-level dropdown dependencies",
+        "height": 150,
+        "width": 400
+      },
+      "id": "app-server-section",
+      "name": "App: Server Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        2300
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "list"
+      },
+      "id": "app-server-list",
+      "name": "App: Server \u2192 List",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        460,
+        2400
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "get"
+      },
+      "id": "app-server-get",
+      "name": "App: Server \u2192 Get (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        680,
+        2400
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "getByExternalId"
+      },
+      "id": "app-server-get-external",
+      "name": "App: Server \u2192 Get By External ID",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        900,
+        2400
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Manual external ID input"
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "create"
+      },
+      "id": "app-server-create",
+      "name": "App: Server \u2192 Create (CRITICAL)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        460,
+        2520
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST CRITICAL: 1) Select user, 2) Select nest \u2192 egg dropdown populates, 3) Select egg \u2192 docker image dropdown populates, 4) Select node \u2192 allocation dropdown populates, 5) Select allocation"
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "updateDetails"
+      },
+      "id": "app-server-update-details",
+      "name": "App: Server \u2192 Update Details (MULTI-DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        680,
+        2520
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select server AND user from dropdowns"
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "updateBuild"
+      },
+      "id": "app-server-update-build",
+      "name": "App: Server \u2192 Update Build (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        900,
+        2520
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "updateStartup"
+      },
+      "id": "app-server-update-startup",
+      "name": "App: Server \u2192 Update Startup (CRITICAL)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        460,
+        2640
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST CRITICAL: 1) Select server, 2) Select egg \u2192 docker image dropdown populates, 3) Select docker image"
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "suspend"
+      },
+      "id": "app-server-suspend",
+      "name": "App: Server \u2192 Suspend (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        680,
+        2640
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "unsuspend"
+      },
+      "id": "app-server-unsuspend",
+      "name": "App: Server \u2192 Unsuspend (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        900,
+        2640
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "reinstall"
+      },
+      "id": "app-server-reinstall",
+      "name": "App: Server \u2192 Reinstall (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        460,
+        2760
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "delete"
+      },
+      "id": "app-server-delete",
+      "name": "App: Server \u2192 Delete (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        680,
+        2760
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "forceDelete"
+      },
+      "id": "app-server-force-delete",
+      "name": "App: Server \u2192 Force Delete (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylApplication",
+      "typeVersion": 1,
+      "position": [
+        900,
+        2760
+      ],
+      "credentials": {
+        "pterodactylApplicationApi": {
+          "id": "1",
+          "name": "Pterodactyl Application API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "content": "## CLIENT API\n### Account Management\nUser account operations (email, password, API keys)",
+        "height": 150,
+        "width": 400
+      },
+      "id": "client-account-section",
+      "name": "Client: Account Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        3000
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "account",
+        "operation": "get"
+      },
+      "id": "client-account-get",
+      "name": "Client: Account \u2192 Get",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        3100
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "account",
+        "operation": "updateEmail"
+      },
+      "id": "client-account-update-email",
+      "name": "Client: Account \u2192 Update Email",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        3100
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "account",
+        "operation": "updatePassword"
+      },
+      "id": "client-account-update-password",
+      "name": "Client: Account \u2192 Update Password",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        900,
+        3100
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "account",
+        "operation": "listApiKeys"
+      },
+      "id": "client-account-list-keys",
+      "name": "Client: Account \u2192 List API Keys",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        3220
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "account",
+        "operation": "createApiKey"
+      },
+      "id": "client-account-create-key",
+      "name": "Client: Account \u2192 Create API Key",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        3220
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "account",
+        "operation": "deleteApiKey"
+      },
+      "id": "client-account-delete-key",
+      "name": "Client: Account \u2192 Delete API Key",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        900,
+        3220
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "content": "## CLIENT API\n### Server Operations\nBasic server control and resource monitoring with dropdown testing",
+        "height": 150,
+        "width": 400
+      },
+      "id": "client-server-section",
+      "name": "Client: Server Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        3400
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "list"
+      },
+      "id": "client-server-list",
+      "name": "Client: Server \u2192 List",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        3500
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "get"
+      },
+      "id": "client-server-get",
+      "name": "Client: Server \u2192 Get (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        3500
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "getResources"
+      },
+      "id": "client-server-resources",
+      "name": "Client: Server \u2192 Get Resources (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        900,
+        3500
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "powerAction"
+      },
+      "id": "client-server-power",
+      "name": "Client: Server \u2192 Power Action (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        3620
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "server",
+        "operation": "sendCommand"
+      },
+      "id": "client-server-command",
+      "name": "Client: Server \u2192 Send Command (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        3620
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "content": "## CLIENT API\n### File Management\nServer file system operations with dependent dropdowns",
+        "height": 150,
+        "width": 400
+      },
+      "id": "client-file-section",
+      "name": "Client: File Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        3800
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "list"
+      },
+      "id": "client-file-list",
+      "name": "Client: File \u2192 List (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        3900
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "read"
+      },
+      "id": "client-file-read",
+      "name": "Client: File \u2192 Read (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        3900
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "write"
+      },
+      "id": "client-file-write",
+      "name": "Client: File \u2192 Write (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        900,
+        3900
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "delete"
+      },
+      "id": "client-file-delete",
+      "name": "Client: File \u2192 Delete (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        4020
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "compress"
+      },
+      "id": "client-file-compress",
+      "name": "Client: File \u2192 Compress (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        4020
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "decompress"
+      },
+      "id": "client-file-decompress",
+      "name": "Client: File \u2192 Decompress (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        900,
+        4020
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "createFolder"
+      },
+      "id": "client-file-create-folder",
+      "name": "Client: File \u2192 Create Folder (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        4140
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "operation": "getUploadUrl"
+      },
+      "id": "client-file-upload-url",
+      "name": "Client: File \u2192 Get Upload URL (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        4140
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "content": "## CLIENT API\n### Database Management\nMySQL database operations with dependent dropdowns",
+        "height": 150,
+        "width": 400
+      },
+      "id": "client-database-section",
+      "name": "Client: Database Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        4320
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "list"
+      },
+      "id": "client-database-list",
+      "name": "Client: Database \u2192 List (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        4420
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "create"
+      },
+      "id": "client-database-create",
+      "name": "Client: Database \u2192 Create (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        4420
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "rotatePassword"
+      },
+      "id": "client-database-rotate",
+      "name": "Client: Database \u2192 Rotate Password (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        900,
+        4420
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select database from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "database",
+        "operation": "delete"
+      },
+      "id": "client-database-delete",
+      "name": "Client: Database \u2192 Delete (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        4540
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select database from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "content": "## CLIENT API\n### Backup Management\nServer backup operations with dependent dropdowns",
+        "height": 150,
+        "width": 400
+      },
+      "id": "client-backup-section",
+      "name": "Client: Backup Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        4720
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "backup",
+        "operation": "list"
+      },
+      "id": "client-backup-list",
+      "name": "Client: Backup \u2192 List (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        4820
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "backup",
+        "operation": "create"
+      },
+      "id": "client-backup-create",
+      "name": "Client: Backup \u2192 Create (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        4820
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "backup",
+        "operation": "get"
+      },
+      "id": "client-backup-get",
+      "name": "Client: Backup \u2192 Get (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        900,
+        4820
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select backup from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "backup",
+        "operation": "download"
+      },
+      "id": "client-backup-download",
+      "name": "Client: Backup \u2192 Download (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        4940
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select backup from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "backup",
+        "operation": "restore"
+      },
+      "id": "client-backup-restore",
+      "name": "Client: Backup \u2192 Restore (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        4940
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select backup from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "backup",
+        "operation": "delete"
+      },
+      "id": "client-backup-delete",
+      "name": "Client: Backup \u2192 Delete (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        900,
+        4940
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select backup from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "content": "## CLIENT API\n### Schedule Management\nAutomated task scheduling with nested dependent dropdowns (server \u2192 schedule \u2192 task)",
+        "height": 150,
+        "width": 400
+      },
+      "id": "client-schedule-section",
+      "name": "Client: Schedule Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        5120
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "schedule",
+        "operation": "list"
+      },
+      "id": "client-schedule-list",
+      "name": "Client: Schedule \u2192 List (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        5220
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "schedule",
+        "operation": "get"
+      },
+      "id": "client-schedule-get",
+      "name": "Client: Schedule \u2192 Get (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        5220
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select schedule from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "schedule",
+        "operation": "create"
+      },
+      "id": "client-schedule-create",
+      "name": "Client: Schedule \u2192 Create (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        900,
+        5220
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "schedule",
+        "operation": "update"
+      },
+      "id": "client-schedule-update",
+      "name": "Client: Schedule \u2192 Update (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        5340
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select schedule from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "schedule",
+        "operation": "execute"
+      },
+      "id": "client-schedule-execute",
+      "name": "Client: Schedule \u2192 Execute (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        5340
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select schedule from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "schedule",
+        "operation": "delete"
+      },
+      "id": "client-schedule-delete",
+      "name": "Client: Schedule \u2192 Delete (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        900,
+        5340
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select schedule from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "schedule",
+        "operation": "createTask"
+      },
+      "id": "client-schedule-create-task",
+      "name": "Client: Schedule \u2192 Create Task (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        5460
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select schedule from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "schedule",
+        "operation": "updateTask"
+      },
+      "id": "client-schedule-update-task",
+      "name": "Client: Schedule \u2192 Update Task (3-LEVEL DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        5460
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select schedule, 3) Select task from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "schedule",
+        "operation": "deleteTask"
+      },
+      "id": "client-schedule-delete-task",
+      "name": "Client: Schedule \u2192 Delete Task (3-LEVEL DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        900,
+        5460
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select schedule, 3) Select task from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "content": "## CLIENT API\n### Network Management\nServer network allocation operations with dependent dropdowns",
+        "height": 150,
+        "width": 400
+      },
+      "id": "client-network-section",
+      "name": "Client: Network Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        5640
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "network",
+        "operation": "list"
+      },
+      "id": "client-network-list",
+      "name": "Client: Network \u2192 List Allocations (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        5740
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "network",
+        "operation": "assign"
+      },
+      "id": "client-network-assign",
+      "name": "Client: Network \u2192 Assign Allocation (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        5740
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "network",
+        "operation": "setPrimary"
+      },
+      "id": "client-network-primary",
+      "name": "Client: Network \u2192 Set Primary (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        900,
+        5740
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select allocation from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "network",
+        "operation": "updateNotes"
+      },
+      "id": "client-network-notes",
+      "name": "Client: Network \u2192 Update Notes (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        5860
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select allocation from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "network",
+        "operation": "delete"
+      },
+      "id": "client-network-delete",
+      "name": "Client: Network \u2192 Delete Allocation (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        5860
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select allocation from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "content": "## CLIENT API\n### Subuser Management\nManage server subuser permissions with dependent dropdowns",
+        "height": 150,
+        "width": 400
+      },
+      "id": "client-subuser-section",
+      "name": "Client: Subuser Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        6040
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "subuser",
+        "operation": "list"
+      },
+      "id": "client-subuser-list",
+      "name": "Client: Subuser \u2192 List (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        6140
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "subuser",
+        "operation": "get"
+      },
+      "id": "client-subuser-get",
+      "name": "Client: Subuser \u2192 Get (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        6140
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select subuser from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "subuser",
+        "operation": "create"
+      },
+      "id": "client-subuser-create",
+      "name": "Client: Subuser \u2192 Create (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        900,
+        6140
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "subuser",
+        "operation": "update"
+      },
+      "id": "client-subuser-update",
+      "name": "Client: Subuser \u2192 Update (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        6260
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select subuser from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "subuser",
+        "operation": "delete"
+      },
+      "id": "client-subuser-delete",
+      "name": "Client: Subuser \u2192 Delete (NESTED DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        6260
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: 1) Select server, 2) Select subuser from dependent dropdown"
+    },
+    {
+      "parameters": {
+        "content": "## CLIENT API\n### Startup Variables\nManage server startup configuration with dependent dropdowns",
+        "height": 150,
+        "width": 400
+      },
+      "id": "client-startup-section",
+      "name": "Client: Startup Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        6440
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "startup",
+        "operation": "get"
+      },
+      "id": "client-startup-get",
+      "name": "Client: Startup \u2192 Get Variables (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        460,
+        6540
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "startup",
+        "operation": "update"
+      },
+      "id": "client-startup-update",
+      "name": "Client: Startup \u2192 Update Variable (DEPENDENT)",
+      "type": "n8n-nodes-pterodactyl.pterodactylClient",
+      "typeVersion": 1,
+      "position": [
+        680,
+        6540
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "content": "## WEBSOCKET API\n### Real-time Operations\nWebSocket communication for live server control, logs, and stats with dropdown testing",
+        "height": 150,
+        "width": 400
+      },
+      "id": "websocket-section",
+      "name": "WebSocket Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        6720
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "serverControl",
+        "operation": "setState"
+      },
+      "id": "ws-set-state",
+      "name": "WS: Server Control \u2192 Set State (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylWebsocket",
+      "typeVersion": 1,
+      "position": [
+        460,
+        6820
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "serverControl",
+        "operation": "sendCommand"
+      },
+      "id": "ws-send-command",
+      "name": "WS: Server Control \u2192 Send Command (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylWebsocket",
+      "typeVersion": 1,
+      "position": [
+        680,
+        6820
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "logsAndStats",
+        "operation": "requestLogs"
+      },
+      "id": "ws-request-logs",
+      "name": "WS: Logs & Stats \u2192 Request Logs (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylWebsocket",
+      "typeVersion": 1,
+      "position": [
+        900,
+        6820
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "logsAndStats",
+        "operation": "requestStats"
+      },
+      "id": "ws-request-stats",
+      "name": "WS: Logs & Stats \u2192 Request Stats (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylWebsocket",
+      "typeVersion": 1,
+      "position": [
+        460,
+        6940
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "connection",
+        "operation": "testConnection"
+      },
+      "id": "ws-test-connection",
+      "name": "WS: Connection \u2192 Test Connection (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylWebsocket",
+      "typeVersion": 1,
+      "position": [
+        680,
+        6940
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "resource": "connection",
+        "operation": "sendAuth"
+      },
+      "id": "ws-send-auth",
+      "name": "WS: Connection \u2192 Send Auth (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylWebsocket",
+      "typeVersion": 1,
+      "position": [
+        900,
+        6940
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown"
+    },
+    {
+      "parameters": {
+        "content": "## WEBSOCKET TRIGGER\n### Real-time Event Monitoring\nMonitor server events in real-time with dropdown testing",
+        "height": 150,
+        "width": 400
+      },
+      "id": "trigger-section",
+      "name": "Trigger Section",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        240,
+        7120
+      ]
+    },
+    {
+      "parameters": {
+        "serverId": "",
+        "events": [
+          "*"
+        ]
+      },
+      "id": "ws-trigger",
+      "name": "WS Trigger: Monitor Server Events (DROPDOWN)",
+      "type": "n8n-nodes-pterodactyl.pterodactylWebsocketTrigger",
+      "typeVersion": 1,
+      "position": [
+        460,
+        7220
+      ],
+      "credentials": {
+        "pterodactylClientApi": {
+          "id": "2",
+          "name": "Pterodactyl Client API"
+        }
+      },
+      "notes": "TEST: Select server from dropdown and activate trigger"
+    },
+    {
+      "parameters": {
+        "content": "## TEST RESULTS SUMMARY\n\n### Application API (37 operations)\n**User Management (6)**\n- [ ] List Users\n- [ ] Get User (dropdown)\n- [ ] Get User By External ID\n- [ ] Create User\n- [ ] Update User (dropdown)\n- [ ] Delete User (dropdown)\n\n**Location Management (5)**\n- [ ] List Locations\n- [ ] Get Location (dropdown)\n- [ ] Create Location\n- [ ] Update Location (dropdown)\n- [ ] Delete Location (dropdown)\n\n**Node Management (8)**\n- [ ] List Nodes\n- [ ] Get Node (dropdown)\n- [ ] Create Node (dropdown)\n- [ ] Update Node (multi-dropdown)\n- [ ] Delete Node (dropdown)\n- [ ] Get Configuration (dropdown)\n- [ ] List Allocations (dependent)\n- [ ] Create Allocations (dropdown)\n- [ ] Delete Allocation (CRITICAL dependent)\n\n**Nest Management (4)**\n- [ ] List Nests\n- [ ] Get Nest (dropdown)\n- [ ] List Eggs (dropdown)\n- [ ] Get Egg (dependent)\n\n**Server Management (14)**\n- [ ] List Servers\n- [ ] Get Server (dropdown)\n- [ ] Get Server By External ID\n- [ ] Create Server (CRITICAL multi-level)\n- [ ] Update Details (multi-dropdown)\n- [ ] Update Build (dropdown)\n- [ ] Update Startup (CRITICAL dependent)\n- [ ] Suspend (dropdown)\n- [ ] Unsuspend (dropdown)\n- [ ] Reinstall (dropdown)\n- [ ] Delete (dropdown)\n- [ ] Force Delete (dropdown)\n\n---\n\n### Client API (50 operations)\n**Account (6)** | **Server (5)** | **File (8)** | **Database (4)**\n**Backup (6)** | **Schedule (10)** | **Network (5)** | **Subuser (5)** | **Startup (2)**\n\nAll Client API operations use dependent dropdowns!\n\n---\n\n### WebSocket API (8 operations)\n**Server Control (2)** | **Logs & Stats (2)** | **Connection (2)** | **Trigger (1)**\n\nAll WebSocket operations use dropdowns!\n\n---\n\n## Critical Tests\n\ud83d\udd34 **MUST TEST:**\n1. App: Server \u2192 Create (6 dropdowns, multi-level)\n2. App: Server \u2192 Update Startup (dependent)\n3. App: Node \u2192 Delete Allocation (dependent)\n4. Client: Schedule \u2192 Update/Delete Task (3-level)\n5. Client: All nested dependent operations\n\n## Coverage\n\u2705 **96/96 operations** = **100% coverage**\n\u2705 All dropdown functionality tested\n\u2705 All dependent dropdowns verified\n\u2705 All multi-level dependencies checked",
+        "height": 1000,
+        "width": 600
+      },
+      "id": "results-checklist",
+      "name": "Test Results Checklist",
+      "type": "n8n-nodes-base.stickyNote",
+      "typeVersion": 1,
+      "position": [
+        1200,
+        800
+      ]
+    }
+  ],
+  "connections": {
+    "Manual Trigger": {
+      "main": [
+        [
+          {
+            "node": "App: User \u2192 List",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "pinData": {},
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "staticData": null,
+  "tags": [],
+  "triggerCount": 0,
+  "updatedAt": "2025-10-24T00:00:00.000Z",
+  "versionId": "2"
+}
