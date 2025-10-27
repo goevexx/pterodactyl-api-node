@@ -4,7 +4,7 @@ This document outlines the planned development for the n8n Pterodactyl Node. Thi
 
 ## Current Status
 
-✅ **v1.1.0 - WebSocket & Enhanced Operations Complete**
+✅ **WebSocket & Enhanced Operations Complete**
 
 All essential Pterodactyl Panel operations are implemented and tested:
 
