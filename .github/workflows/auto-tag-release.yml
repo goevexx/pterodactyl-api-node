@@ -52,6 +52,7 @@ jobs:
         with:
           ref: main
           fetch-depth: 0 # Full history needed for tag creation
+          token: ${{ secrets.PAT_TOKEN }} # Use PAT to trigger publish workflow
 
       - name: Check if tag already exists
         if: steps.check.outputs.is_release == 'true'
