@@ -212,6 +212,426 @@ export class PterodactylClient implements INodeType {
 				noDataExpression: true,
 				displayOptions: {
 					show: {
+						resource: ['server'],
+					},
+				},
+				options: [
+					{
+						name: 'List',
+						value: 'list',
+						description: 'Get all accessible servers',
+						action: 'List servers',
+					},
+					{
+						name: 'Get',
+						value: 'get',
+						description: 'Get server details',
+						action: 'Get a server',
+					},
+					{
+						name: 'Power Action',
+						value: 'power',
+						description: 'Send power action to server',
+						action: 'Power action on server',
+					},
+					{
+						name: 'Send Command',
+						value: 'sendCommand',
+						description: 'Send console command to server',
+						action: 'Send command to server',
+					},
+					{
+						name: 'Get Resources',
+						value: 'getResources',
+						description: 'Get server resource usage',
+						action: 'Get server resources',
+					},
+				],
+				default: 'list',
+				description: 'The operation to perform',
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['file'],
+					},
+				},
+				options: [
+					{
+						name: 'List',
+						value: 'list',
+						description: 'List files in directory',
+						action: 'List files',
+					},
+					{
+						name: 'Read',
+						value: 'read',
+						description: 'Read file contents',
+						action: 'Read a file',
+					},
+					{
+						name: 'Write',
+						value: 'write',
+						description: 'Write file contents',
+						action: 'Write a file',
+					},
+					{
+						name: 'Delete',
+						value: 'delete',
+						description: 'Delete a file or directory',
+						action: 'Delete a file',
+					},
+					{
+						name: 'Compress',
+						value: 'compress',
+						description: 'Compress files',
+						action: 'Compress files',
+					},
+					{
+						name: 'Decompress',
+						value: 'decompress',
+						description: 'Decompress an archive',
+						action: 'Decompress files',
+					},
+					{
+						name: 'Create Folder',
+						value: 'createFolder',
+						description: 'Create a new folder',
+						action: 'Create a folder',
+					},
+					{
+						name: 'Get Upload URL',
+						value: 'getUploadUrl',
+						description: 'Get file upload URL',
+						action: 'Get upload URL',
+					},
+				],
+				default: 'list',
+				description: 'The operation to perform',
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['database'],
+					},
+				},
+				options: [
+					{
+						name: 'List',
+						value: 'list',
+						description: 'List all databases',
+						action: 'List databases',
+					},
+					{
+						name: 'Create',
+						value: 'create',
+						description: 'Create a new database',
+						action: 'Create a database',
+					},
+					{
+						name: 'Rotate Password',
+						value: 'rotatePassword',
+						description: 'Rotate database password',
+						action: 'Rotate database password',
+					},
+					{
+						name: 'Delete',
+						value: 'delete',
+						description: 'Delete a database',
+						action: 'Delete a database',
+					},
+				],
+				default: 'list',
+				description: 'The operation to perform',
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['backup'],
+					},
+				},
+				options: [
+					{
+						name: 'List',
+						value: 'list',
+						description: 'List all backups',
+						action: 'List backups',
+					},
+					{
+						name: 'Create',
+						value: 'create',
+						description: 'Create a new backup',
+						action: 'Create a backup',
+					},
+					{
+						name: 'Get',
+						value: 'get',
+						description: 'Get backup details',
+						action: 'Get a backup',
+					},
+					{
+						name: 'Download',
+						value: 'download',
+						description: 'Get backup download URL',
+						action: 'Download a backup',
+					},
+					{
+						name: 'Delete',
+						value: 'delete',
+						description: 'Delete a backup',
+						action: 'Delete a backup',
+					},
+					{
+						name: 'Restore',
+						value: 'restore',
+						description: 'Restore from backup',
+						action: 'Restore a backup',
+					},
+				],
+				default: 'list',
+				description: 'The operation to perform',
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['account'],
+					},
+				},
+				options: [
+					{
+						name: 'Get',
+						value: 'get',
+						description: 'Get account details',
+						action: 'Get account',
+					},
+					{
+						name: 'Update Email',
+						value: 'updateEmail',
+						description: 'Update account email',
+						action: 'Update email',
+					},
+					{
+						name: 'Update Password',
+						value: 'updatePassword',
+						description: 'Update account password',
+						action: 'Update password',
+					},
+					{
+						name: 'List API Keys',
+						value: 'listApiKeys',
+						description: 'List all API keys',
+						action: 'List API keys',
+					},
+					{
+						name: 'Create API Key',
+						value: 'createApiKey',
+						description: 'Create a new API key',
+						action: 'Create API key',
+					},
+					{
+						name: 'Delete API Key',
+						value: 'deleteApiKey',
+						description: 'Delete an API key',
+						action: 'Delete API key',
+					},
+				],
+				default: 'get',
+				description: 'The operation to perform',
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['schedule'],
+					},
+				},
+				options: [
+					{
+						name: 'List',
+						value: 'list',
+						description: 'List all schedules',
+						action: 'List schedules',
+					},
+					{
+						name: 'List Tasks',
+						value: 'listTasks',
+						description: 'List tasks for a schedule',
+						action: 'List schedule tasks',
+					},
+					{
+						name: 'Get',
+						value: 'get',
+						description: 'Get schedule details',
+						action: 'Get a schedule',
+					},
+					{
+						name: 'Create',
+						value: 'create',
+						description: 'Create a new schedule',
+						action: 'Create a schedule',
+					},
+					{
+						name: 'Update',
+						value: 'update',
+						description: 'Update a schedule',
+						action: 'Update a schedule',
+					},
+					{
+						name: 'Delete',
+						value: 'delete',
+						description: 'Delete a schedule',
+						action: 'Delete a schedule',
+					},
+					{
+						name: 'Execute',
+						value: 'execute',
+						description: 'Execute a schedule now',
+						action: 'Execute a schedule',
+					},
+					{
+						name: 'Create Task',
+						value: 'createTask',
+						description: 'Create a new task',
+						action: 'Create a task',
+					},
+					{
+						name: 'Update Task',
+						value: 'updateTask',
+						description: 'Update a task',
+						action: 'Update a task',
+					},
+					{
+						name: 'Delete Task',
+						value: 'deleteTask',
+						description: 'Delete a task',
+						action: 'Delete a task',
+					},
+				],
+				default: 'list',
+				description: 'The operation to perform',
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['network'],
+					},
+				},
+				options: [
+					{
+						name: 'List',
+						value: 'list',
+						description: 'List all allocations',
+						action: 'List allocations',
+					},
+					{
+						name: 'Assign',
+						value: 'assign',
+						description: 'Assign an allocation',
+						action: 'Assign allocation',
+					},
+					{
+						name: 'Set Primary',
+						value: 'setPrimary',
+						description: 'Set primary allocation',
+						action: 'Set primary allocation',
+					},
+					{
+						name: 'Delete',
+						value: 'delete',
+						description: 'Delete an allocation',
+						action: 'Delete allocation',
+					},
+					{
+						name: 'Update Notes',
+						value: 'updateNotes',
+						description: 'Update allocation notes',
+						action: 'Update allocation notes',
+					},
+				],
+				default: 'list',
+				description: 'The operation to perform',
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
+						resource: ['subuser'],
+					},
+				},
+				options: [
+					{
+						name: 'List',
+						value: 'list',
+						description: 'List all subusers',
+						action: 'List subusers',
+					},
+					{
+						name: 'Get',
+						value: 'get',
+						description: 'Get subuser details',
+						action: 'Get a subuser',
+					},
+					{
+						name: 'Create',
+						value: 'createSubuser',
+						description: 'Create a new subuser',
+						action: 'Create a subuser',
+					},
+					{
+						name: 'Update',
+						value: 'updateSubuser',
+						description: 'Update subuser permissions',
+						action: 'Update a subuser',
+					},
+					{
+						name: 'Delete',
+						value: 'delete',
+						description: 'Delete a subuser',
+						action: 'Delete a subuser',
+					},
+					{
+						name: 'Get Permissions',
+						value: 'getPermissions',
+						description: 'Get available permissions',
+						action: 'Get permissions',
+					},
+				],
+				default: 'list',
+				description: 'The operation to perform',
+			},
+			{
+				displayName: 'Operation',
+				name: 'operation',
+				type: 'options',
+				noDataExpression: true,
+				displayOptions: {
+					show: {
 						resource: ['startup'],
 					},
 				},
