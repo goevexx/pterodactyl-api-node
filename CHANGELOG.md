@@ -1,3 +1,10 @@
+## [1.3.0](https://github.com/goevexx/pterodactyl-api-node/compare/v1.2.0...v1.3.0) (2025-10-27)
+
+
+### Features
+
+* automate tag creation after release PR merge ([#29](https://github.com/goevexx/pterodactyl-api-node/issues/29)) ([d720f87](https://github.com/goevexx/pterodactyl-api-node/commit/d720f87a04e4c1dcf922eced4bf6d0fa79d6f32b)), closes [#1](https://github.com/goevexx/pterodactyl-api-node/issues/1)
+
 ## [1.2.0](https://github.com/goevexx/pterodactyl-api-node/compare/v1.1.0...v1.2.0) (2025-10-16)
 
 
