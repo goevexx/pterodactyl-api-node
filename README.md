@@ -371,7 +371,15 @@ See [ROADMAP.md](ROADMAP.md) for detailed plans.
 - Integrates with [Pterodactyl Panel](https://pterodactyl.io/)
 - Thanks to all contributors and users
 
-**Note:** This project is independently maintained and not officially affiliated with Pterodactyl Panel or n8n. Pterodactyl® is a registered trademark of Dane Everitt and contributors.
+---
+
+## Important Notice
+
+> **⚠️ Independent Project**
+>
+> This project is independently maintained and not officially affiliated with Pterodactyl Panel or n8n.
+>
+> Pterodactyl® is a registered trademark of Dane Everitt and contributors.
 
 ---
 
