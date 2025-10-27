@@ -379,7 +379,7 @@ See [ROADMAP.md](ROADMAP.md) for detailed plans.
 >
 > This project is independently maintained and not officially affiliated with Pterodactyl Panel or n8n.
 >
-> Pterodactyl® is a registered trademark of Dane Everitt and contributors.
+> Pterodactyl® is a registered trademark of Dane Everitt and contributors. The Pterodactyl logo is used under nominative fair use to indicate compatibility with the Pterodactyl Panel API.
 
 ---
 
