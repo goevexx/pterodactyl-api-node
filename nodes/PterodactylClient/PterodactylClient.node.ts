@@ -1,114 +1,4 @@
 import {
-	IExecuteFunctions,
-	ILoadOptionsFunctions,
-	INodeExecutionData,
-	INodePropertyOptions,
-	INodeType,
-	INodeTypeDescription,
-} from 'n8n-workflow';
-import {
-	listServers,
-	listServersOperation,
-	getServer,
-	getServerOperation,
-	powerAction,
-	powerActionOperation,
-	sendCommand,
-	sendCommandOperation,
-	getResources,
-	getResourcesOperation,
-} from './actions/server';
-import {
-	listFiles,
-	listFilesOperation,
-	readFile,
-	readFileOperation,
-	writeFile,
-	writeFileOperation,
-	deleteFile,
-	deleteFileOperation,
-	compressFiles,
-	compressFilesOperation,
-	decompressFile,
-	decompressFileOperation,
-	createFolder,
-	createFolderOperation,
-	getUploadUrl,
-	getUploadUrlOperation,
-} from './actions/file';
-import {
-	listDatabases,
-	listDatabasesOperation,
-	createDatabase,
-	createDatabaseOperation,
-	rotatePassword,
-	rotatePasswordOperation,
-	deleteDatabase,
-	deleteDatabaseOperation,
-} from './actions/database';
-import {
-	listBackups,
-	listBackupsOperation,
-	createBackup,
-	createBackupOperation,
-	getBackup,
-	getBackupOperation,
-	downloadBackup,
-	downloadBackupOperation,
-	deleteBackup,
-	deleteBackupOperation,
-	restoreBackup,
-	restoreBackupOperation,
-} from './actions/backup';
-import {
-	getAccount,
-	getAccountOperation,
-	updateEmail,
-	updateEmailOperation,
-	updatePassword,
-	updatePasswordOperation,
-	listApiKeys,
-	listApiKeysOperation,
-	createApiKey,
-	createApiKeyOperation,
-	deleteApiKey,
-	deleteApiKeyOperation,
-} from './actions/account';
-import {
-	listSchedules,
-	listSchedulesOperation,
-	listScheduleTasks,
-	listScheduleTasksOperation,
-	getSchedule,
-	getScheduleOperation,
-	createSchedule,
-	createScheduleOperation,
-	updateSchedule,
-	updateScheduleOperation,
-	deleteSchedule,
-	deleteScheduleOperation,
-	executeSchedule,
-	executeScheduleOperation,
-	createTask,
-	createTaskOperation,
-	updateTask,
-	updateTaskOperation,
-	deleteTask,
-	deleteTaskOperation,
-} from './actions/schedule';
-import {
-	listAllocations,
-	listAllocationsOperation,
-	assignAllocation,
-	assignAllocationOperation,
-	setPrimary,
-	setPrimaryOperation,
-	deleteAllocation,
-	deleteAllocationOperation,
-	updateNotes,
-	updateNotesOperation,
-} from './actions/network';
-import {
 	listSubusers,
 	listSubusersOperation,
 	createSubuser,
@@ -119,6 +9,8 @@ import {
 	updateSubuserOperation,
 	deleteSubuser,
 	deleteSubuserOperation,
+	getPermissions,
+	getPermissionsOperation,
 } from './actions/subuser';
 import {
 	getStartupVariables,
@@ -155,463 +47,16 @@ export class PterodactylClient implements INodeType {
 				noDataExpression: true,
 				options: [
 					{
-						name: 'Account',
-						value: 'account',
-						description: 'Manage account settings',
-					},
-					{
-						name: 'Backup',
-						value: 'backup',
-						description: 'Manage server backups',
-					},
-					{
-						name: 'Database',
-						value: 'database',
-						description: 'Manage server databases',
-					},
-					{
-						name: 'File',
-						value: 'file',
-						description: 'Manage server files',
-					},
-					{
-						name: 'Network',
-						value: 'network',
-						description: 'Manage network allocations',
-					},
-					{
-						name: 'Schedule',
-						value: 'schedule',
-						description: 'Manage server schedules and tasks',
-					},
-					{
-						name: 'Server',
-						value: 'server',
-						description: 'Manage game servers',
-					},
-					{
-						name: 'Startup',
-						value: 'startup',
-						description: 'Manage startup variables',
-					},
-					{
-						name: 'Subuser',
-						value: 'subuser',
-						description: 'Manage server subusers',
-					},
-				],
-				default: 'server',
-				description: 'The resource to operate on',
-			},
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: {
-					show: {
-						resource: ['server'],
-					},
-				},
-				options: [
-					{
-						name: 'List',
-						value: 'list',
-						description: 'Get all accessible servers',
-						action: 'List servers',
-					},
-					{
-						name: 'Get',
-						value: 'get',
-						description: 'Get server details',
-						action: 'Get a server',
-					},
-					{
-						name: 'Power Action',
-						value: 'power',
-						description: 'Send power action to server',
-						action: 'Power action on server',
-					},
-					{
-						name: 'Send Command',
-						value: 'sendCommand',
-						description: 'Execute command on server console',
-						action: 'Send command to server',
-					},
-					{
-						name: 'Get Resources',
-						value: 'getResources',
-						description: 'Get server resource usage',
-						action: 'Get server resources',
-					},
-				],
-				default: 'list',
-				description: 'The operation to perform',
-			},
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: {
-					show: {
-						resource: ['file'],
-					},
-				},
-				options: [
-					{
-						name: 'List',
-						value: 'list',
-						description: 'List files in directory',
-						action: 'List files',
-					},
-					{
-						name: 'Read',
-						value: 'read',
-						description: 'Read file contents',
-						action: 'Read file',
-					},
-					{
-						name: 'Write',
-						value: 'write',
-						description: 'Write file contents',
-						action: 'Write file',
-					},
-					{
-						name: 'Delete',
-						value: 'delete',
-						description: 'Delete files',
-						action: 'Delete files',
-					},
-					{
-						name: 'Compress',
-						value: 'compress',
-						description: 'Compress files into archive',
-						action: 'Compress files',
-					},
-					{
-						name: 'Decompress',
-						value: 'decompress',
-						description: 'Extract archive contents',
-						action: 'Decompress file',
-					},
-					{
-						name: 'Create Folder',
-						value: 'createFolder',
-						description: 'Create a new directory',
-						action: 'Create folder',
-					},
-					{
-						name: 'Get Upload URL',
-						value: 'getUploadUrl',
-						description: 'Get signed URL for file upload',
-						action: 'Get upload URL',
-					},
-				],
-				default: 'list',
-				description: 'The operation to perform',
-			},
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: {
-					show: {
-						resource: ['database'],
-					},
-				},
-				options: [
-					{
-						name: 'List',
-						value: 'list',
-						description: 'List all databases',
-						action: 'List databases',
-					},
-					{
-						name: 'Create',
-						value: 'create',
-						description: 'Create a new database',
-						action: 'Create database',
-					},
-					{
-						name: 'Rotate Password',
-						value: 'rotatePassword',
-						description: 'Rotate database password',
-						action: 'Rotate database password',
-					},
-					{
-						name: 'Delete',
-						value: 'delete',
-						description: 'Delete a database',
-						action: 'Delete database',
-					},
-				],
-				default: 'list',
-				description: 'The operation to perform',
-			},
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: {
-					show: {
-						resource: ['backup'],
-					},
-				},
-				options: [
-					{
-						name: 'List',
-						value: 'list',
-						description: 'List all backups',
-						action: 'List backups',
-					},
-					{
-						name: 'Create',
-						value: 'create',
-						description: 'Create a new backup',
-						action: 'Create backup',
-					},
-					{
-						name: 'Get',
-						value: 'get',
-						description: 'Get backup details',
-						action: 'Get backup',
-					},
-					{
-						name: 'Download',
-						value: 'download',
-						description: 'Get backup download URL',
-						action: 'Download backup',
-					},
-					{
-						name: 'Restore',
-						value: 'restore',
-						description: 'Restore backup to server',
-						action: 'Restore backup',
-					},
-					{
-						name: 'Delete',
-						value: 'delete',
-						description: 'Delete a backup',
-						action: 'Delete backup',
-					},
-				],
-				default: 'list',
-				description: 'The operation to perform',
-			},
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: {
-					show: {
-						resource: ['account'],
-					},
-				},
-				options: [
-					{
-						name: 'Get Account',
-						value: 'getAccount',
-						description: 'Get account details',
-						action: 'Get account',
-					},
-					{
-						name: 'Update Email',
-						value: 'updateEmail',
-						description: 'Update email address',
-						action: 'Update email',
-					},
-					{
-						name: 'Update Password',
-						value: 'updatePassword',
-						description: 'Change account password',
-						action: 'Update password',
-					},
-					{
-						name: 'List API Keys',
-						value: 'listApiKeys',
-						description: 'List all API keys',
-						action: 'List API keys',
-					},
-					{
-						name: 'Create API Key',
-						value: 'createApiKey',
-						description: 'Create a new API key',
-						action: 'Create API key',
-					},
-					{
-						name: 'Delete API Key',
-						value: 'deleteApiKey',
-						description: 'Delete an API key',
-						action: 'Delete API key',
-					},
-				],
-				default: 'getAccount',
-				description: 'The operation to perform',
-			},
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: {
-					show: {
-						resource: ['schedule'],
-					},
-				},
-				options: [
-					{
-						name: 'List',
-						value: 'list',
-						description: 'List all schedules for a server',
-						action: 'List schedules',
-					},
-					{
-						name: 'Get',
-						value: 'get',
-						description: 'Get schedule details',
-						action: 'Get a schedule',
-					},
-					{
-						name: 'Create',
-						value: 'create',
-						description: 'Create a new schedule',
-						action: 'Create schedule',
-					},
-					{
-						name: 'Update',
-						value: 'update',
-						description: 'Update a schedule',
-						action: 'Update schedule',
-					},
-					{
-						name: 'Delete',
-						value: 'delete',
-						description: 'Delete a schedule',
-						action: 'Delete schedule',
-					},
-					{
-						name: 'Execute',
-						value: 'execute',
-						description: 'Execute a schedule now',
-						action: 'Execute schedule',
-					},
-					{
-						name: 'List Tasks',
-						value: 'listTasks',
-						description: 'List all tasks for a schedule',
-						action: 'List schedule tasks',
-					},
-					{
-						name: 'Create Task',
-						value: 'createTask',
-						description: 'Create a schedule task',
-						action: 'Create task',
-					},
-					{
-						name: 'Update Task',
-						value: 'updateTask',
-						description: 'Update a schedule task',
-						action: 'Update task',
-					},
-					{
-						name: 'Delete Task',
-						value: 'deleteTask',
-						description: 'Delete a schedule task',
-						action: 'Delete task',
-					},
-				],
-				default: 'list',
-				description: 'The operation to perform',
-			},
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: {
-					show: {
-						resource: ['network'],
-					},
-				},
-				options: [
-					{
-						name: 'List',
-						value: 'listAllocations',
-						description: 'List network allocations',
-						action: 'List allocations',
-					},
-					{
-						name: 'Assign',
-						value: 'assignAllocation',
-						description: 'Assign a new allocation',
-						action: 'Assign allocation',
-					},
-					{
-						name: 'Set Primary',
-						value: 'setPrimary',
-						description: 'Set allocation as primary',
-						action: 'Set primary',
-					},
-					{
-						name: 'Update Notes',
-						value: 'updateNotes',
-						description: 'Update allocation notes',
-						action: 'Update notes',
-					},
-					{
-						name: 'Delete',
-						value: 'deleteAllocation',
-						description: 'Delete an allocation',
-						action: 'Delete allocation',
-					},
-				],
-				default: 'listAllocations',
-				description: 'The operation to perform',
-			},
-			{
-				displayName: 'Operation',
-				name: 'operation',
-				type: 'options',
-				noDataExpression: true,
-				displayOptions: {
-					show: {
-						resource: ['subuser'],
-					},
-				},
-				options: [
-					{
-						name: 'List',
-						value: 'listSubusers',
-						description: 'List server subusers',
-						action: 'List subusers',
-					},
-					{
-						name: 'Get',
-						value: 'getSubuser',
-						description: 'Get subuser details',
-						action: 'Get subuser',
-					},
-					{
-						name: 'Create',
-						value: 'createSubuser',
-						description: 'Create a subuser',
-						action: 'Create subuser',
-					},
-					{
-						name: 'Update',
-						value: 'updateSubuser',
-						description: 'Update subuser permissions',
-						action: 'Update subuser',
-					},
-					{
 						name: 'Delete',
 						value: 'deleteSubuser',
 						description: 'Delete a subuser',
 						action: 'Delete subuser',
+					},
+					{
+						name: 'Get Permissions',
+						value: 'getPermissions',
+						description: 'Get available permissions',
+						action: 'Get available permissions',
 					},
 				],
 				default: 'listSubusers',
@@ -693,6 +138,7 @@ export class PterodactylClient implements INodeType {
 			...getSubuserOperation,
 			...updateSubuserOperation,
 			...deleteSubuserOperation,
+			...getPermissionsOperation,
 			...getStartupVariablesOperation,
 			...updateStartupVariableOperation,
 		],
@@ -1056,6 +502,58 @@ export class PterodactylClient implements INodeType {
 					];
 				}
 			},
+
+			async getAvailablePermissions(
+				this: ILoadOptionsFunctions,
+			): Promise<INodePropertyOptions[]> {
+				try {
+					const { pterodactylApiRequest } = await import('../../shared/transport');
+					const response = await pterodactylApiRequest.call(
+						this as unknown as IExecuteFunctions,
+						'GET',
+						'/api/client',
+						'/permissions',
+						{},
+						{},
+						{},
+						0,
+					);
+
+					const permissions = response.permissions || {};
+					const options: INodePropertyOptions[] = [];
+
+					// Flatten permissions object into array of options
+					for (const [category, perms] of Object.entries(permissions)) {
+						if (Array.isArray(perms)) {
+							perms.forEach((perm: string) => {
+								options.push({
+									name: `${category}.${perm}`,
+									value: `${category}.${perm}`,
+								});
+							});
+						}
+					}
+
+					if (options.length === 0) {
+						return [
+							{
+								name: 'No permissions available',
+								value: '',
+							},
+						];
+					}
+
+					return options.sort((a, b) => a.name.localeCompare(b.name));
+				} catch (error) {
+					console.error('Error fetching available permissions:', error);
+					return [
+						{
+							name: `Error: ${(error as Error).message}`,
+							value: '',
+						},
+					];
+				}
+			},
 		},
 	};
 
@@ -1181,8 +679,10 @@ export class PterodactylClient implements INodeType {
 					} else if (operation === 'updateSubuser') {
 						responseData = await updateSubuser.call(this, i);
 					} else if (operation === 'deleteSubuser') {
-						responseData = await deleteSubuser.call(this, i);
-					}
+					responseData = await deleteSubuser.call(this, i);
+				} else if (operation === 'getPermissions') {
+					responseData = await getPermissions.call(this, i);
+				}
 				} else if (resource === 'startup') {
 					if (operation === 'getStartupVariables') {
 						responseData = await getStartupVariables.call(this, i);
