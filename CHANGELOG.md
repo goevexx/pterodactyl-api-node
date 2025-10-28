@@ -1,3 +1,10 @@
+## [1.3.2](https://github.com/goevexx/pterodactyl-api-node/compare/v1.3.1...v1.3.2) (2025-10-27)
+
+
+### Bug Fixes
+
+* correct operation value mismatches in account, network, and subuser resources ([#36](https://github.com/goevexx/pterodactyl-api-node/issues/36)) ([1889079](https://github.com/goevexx/pterodactyl-api-node/commit/188907913c67821d4fcc1856604abe48e446fbcd))
+
 ## [1.3.1](https://github.com/goevexx/pterodactyl-api-node/compare/v1.3.0...v1.3.1) (2025-10-27)
 
 
