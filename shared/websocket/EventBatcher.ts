@@ -19,14 +19,16 @@ export class EventBatcher {
 	}
 
 	/**
-	 * Add an event to the throttler
-	 * @param event - WebSocket event to throttle
+	 * Add an event to the batcher
+	 * @param event - WebSocket event to batch
 	 * @param emitFn - Function to call when events should be emitted (receives array of events)
 	 */
 	add(event: WebSocketEvent, emitFn: (events: WebSocketEvent[]) => void): void {
 		// Store emit function (should be consistent across calls)
 		if (!this.emitFn) {
 			this.emitFn = emitFn;
+		} else if (this.emitFn !== emitFn) {
+			console.warn('[EventBatcher] Different emit function provided - using first registered function');
 		}
 
 		// Add event to buffer

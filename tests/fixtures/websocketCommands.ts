@@ -223,6 +223,8 @@ export const mockNodeParameters = {
 		events: ['*'],
 		options: {
 			includeRawData: false,
+			// Internal parameter names remain "throttle*" for backward compatibility
+			// Display names use "batch" terminology (e.g., "Enable Event Batching")
 			throttleEnabled: true,
 			throttleInterval: 100,
 			throttleMaxBurst: 10,
