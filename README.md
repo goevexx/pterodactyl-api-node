@@ -5,6 +5,7 @@
 [![codecov](https://codecov.io/gh/goevexx/pterodactyl-api-node/branch/main/graph/badge.svg)](https://codecov.io/gh/goevexx/pterodactyl-api-node)
 [![Tests](https://github.com/goevexx/pterodactyl-api-node/actions/workflows/test.yml/badge.svg)](https://github.com/goevexx/pterodactyl-api-node/actions/workflows/test.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![n8n](https://img.shields.io/badge/n8n-community--node-orange)](https://n8n.io)
 
 > Automate your Pterodactyl Panel with n8n workflows - manage game servers, monitor resources in real-time, and control infrastructure via API.
 

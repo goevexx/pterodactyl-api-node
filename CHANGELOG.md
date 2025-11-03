@@ -1,4 +1,11 @@
-## [1.3.2](https://github.com/goevexx/pterodactyl-api-node/compare/v1.3.1...v1.3.2) (2025-10-27)
+## [1.3.3](https://github.com/goevexx/pterodactyl-api-node/compare/v1.3.2...v1.3.3) (2025-10-31)
+
+
+### Bug Fixes
+
+* add missing n8n badge ([#39](https://github.com/goevexx/pterodactyl-api-node/issues/39)) ([b77add2](https://github.com/goevexx/pterodactyl-api-node/commit/b77add2e5a26177c9d1fc32ea88bed4b9aeb6c34))
+
+## [1.3.2](https://github.com/goevexx/pterodactyl-api-node/compare/v1.3.1...v1.3.2) (2025-10-28)
 
 
 ### Bug Fixes
