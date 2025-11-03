@@ -255,6 +255,34 @@ describe('EventBatcher', () => {
 		});
 	});
 
+	describe('EmitFn validation', () => {
+		beforeEach(() => {
+			jest.useFakeTimers();
+			batcher = new EventBatcher({
+				interval: 100,
+				maxBurst: 3,
+				discardExcess: false,
+			});
+		});
+
+		test('should warn when different emit function is provided', () => {
+			const consoleSpy = jest.spyOn(console, 'warn').mockImplementation();
+
+			const firstEmitFn = jest.fn();
+			const secondEmitFn = jest.fn();
+
+			batcher.add(createConsoleEvent('1'), firstEmitFn);
+			expect(consoleSpy).not.toHaveBeenCalled();
+
+			batcher.add(createConsoleEvent('2'), secondEmitFn);
+			expect(consoleSpy).toHaveBeenCalledWith(
+				'[EventBatcher] Different emit function provided - using first registered function',
+			);
+
+			consoleSpy.mockRestore();
+		});
+	});
+
 	describe('Real-time behavior', () => {
 		test('should work with real timers', async () => {
 			// Use real timers for this test
