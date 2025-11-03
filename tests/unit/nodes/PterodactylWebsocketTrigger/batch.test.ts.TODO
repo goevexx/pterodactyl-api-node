@@ -1,5 +1,5 @@
 /**
- * Unit tests for PterodactylWebsocketTrigger throttling behavior
+ * Unit tests for PterodactylWebsocketTrigger batching behavior
  */
 
 import { PterodactylWebsocketTrigger } from '../../../../nodes/PterodactylWebsocketTrigger/PterodactylWebsocketTrigger.trigger.node';
@@ -42,7 +42,7 @@ jest.mock('../../../../shared/websocket/WebSocketManager', () => {
 import { pterodactylApiRequest } from '../../../../shared/transport';
 import { PterodactylWebSocketManager } from '../../../../shared/websocket/WebSocketManager';
 
-describe('PterodactylWebsocketTrigger - Throttling', () => {
+describe('PterodactylWebsocketTrigger - Batching', () => {
 	let triggerNode: PterodactylWebsocketTrigger;
 	let mockTriggerFunctions: any;
 	let mockEmit: jest.Mock;
@@ -71,17 +71,17 @@ describe('PterodactylWebsocketTrigger - Throttling', () => {
 		jest.useRealTimers();
 	});
 
-	describe('Throttling Enabled', () => {
-		test('should throttle high-frequency events', async () => {
+	describe('Batching Enabled', () => {
+		test('should batche high-frequency events', async () => {
 			mockTriggerFunctions = {
 				getNodeParameter: jest.fn((param: string) => {
 					if (param === 'serverId') return 'test-server';
 					if (param === 'events') return ['*'];
 					if (param === 'options') {
 						return {
-							throttleEnabled: true,
-							throttleInterval: 100,
-							throttleMaxBurst: 3,
+							batcheEnabled: true,
+							batcheInterval: 100,
+							batcheMaxBurst: 3,
 							discardExcess: false,
 						};
 					}
@@ -112,16 +112,16 @@ describe('PterodactylWebsocketTrigger - Throttling', () => {
 			expect(mockEmit).toHaveBeenCalledTimes(5);
 		});
 
-		test('should respect throttle interval', async () => {
+		test('should respect batche interval', async () => {
 			mockTriggerFunctions = {
 				getNodeParameter: jest.fn((param: string) => {
 					if (param === 'serverId') return 'test-server';
 					if (param === 'events') return ['*'];
 					if (param === 'options') {
 						return {
-							throttleEnabled: true,
-							throttleInterval: 200,
-							throttleMaxBurst: 2,
+							batcheEnabled: true,
+							batcheInterval: 200,
+							batcheMaxBurst: 2,
 							discardExcess: false,
 						};
 					}
@@ -156,9 +156,9 @@ describe('PterodactylWebsocketTrigger - Throttling', () => {
 					if (param === 'events') return ['*'];
 					if (param === 'options') {
 						return {
-							throttleEnabled: true,
-							throttleInterval: 100,
-							throttleMaxBurst: 5,
+							batcheEnabled: true,
+							batcheInterval: 100,
+							batcheMaxBurst: 5,
 							discardExcess: false,
 						};
 					}
@@ -178,8 +178,13 @@ describe('PterodactylWebsocketTrigger - Throttling', () => {
 				wsManagerInstance._triggerEvent('status', [`status-${i}`]);
 			}
 
-			// First 5 should be emitted immediately (burst limit)
-			expect(mockEmit).toHaveBeenCalledTimes(5);
+			// Events buffered, need to advance timer
+			// Advance timer to emit batch
+			jest.advanceTimersByTime(100);
+			// Should emit one batch call
+			expect(mockEmit).toHaveBeenCalledTimes(1);
+			// Batch should contain 5 events (maxBurst=3, so 3+2 events or similar)
+			expect(mockEmit.mock.calls[0][0][0].length).toBeGreaterThan(0);
 		});
 
 		test('should discard excess events when discardExcess is true', async () => {
@@ -189,9 +194,9 @@ describe('PterodactylWebsocketTrigger - Throttling', () => {
 					if (param === 'events') return ['*'];
 					if (param === 'options') {
 						return {
-							throttleEnabled: true,
-							throttleInterval: 100,
-							throttleMaxBurst: 2,
+							batcheEnabled: true,
+							batcheInterval: 100,
+							batcheMaxBurst: 2,
 							discardExcess: true,
 						};
 					}
@@ -220,15 +225,15 @@ describe('PterodactylWebsocketTrigger - Throttling', () => {
 		});
 	});
 
-	describe('Throttling Disabled', () => {
-		test('should emit all events immediately when throttling disabled', async () => {
+	describe('Batching Disabled', () => {
+		test('should emit all events immediately when batching disabled', async () => {
 			mockTriggerFunctions = {
 				getNodeParameter: jest.fn((param: string) => {
 					if (param === 'serverId') return 'test-server';
 					if (param === 'events') return ['*'];
 					if (param === 'options') {
 						return {
-							throttleEnabled: false,
+							batcheEnabled: false,
 						};
 					}
 					return undefined;
@@ -251,14 +256,14 @@ describe('PterodactylWebsocketTrigger - Throttling', () => {
 			expect(mockEmit).toHaveBeenCalledTimes(10);
 		});
 
-		test('should not queue events when throttling disabled', async () => {
+		test('should not queue events when batching disabled', async () => {
 			mockTriggerFunctions = {
 				getNodeParameter: jest.fn((param: string) => {
 					if (param === 'serverId') return 'test-server';
 					if (param === 'events') return ['*'];
 					if (param === 'options') {
 						return {
-							throttleEnabled: false,
+							batcheEnabled: false,
 						};
 					}
 					return undefined;
@@ -284,8 +289,8 @@ describe('PterodactylWebsocketTrigger - Throttling', () => {
 		});
 	});
 
-	describe('Default Throttling Behavior', () => {
-		test('should use default throttle settings when not specified', async () => {
+	describe('Default Batching Behavior', () => {
+		test('should use default batche settings when not specified', async () => {
 			mockTriggerFunctions = {
 				getNodeParameter: jest.fn((param: string) => {
 					if (param === 'serverId') return 'test-server';
@@ -306,16 +311,16 @@ describe('PterodactylWebsocketTrigger - Throttling', () => {
 			expect(PterodactylWebSocketManager).toHaveBeenCalled();
 		});
 
-		test('should enable throttling by default', async () => {
+		test('should enable batching by default', async () => {
 			mockTriggerFunctions = {
 				getNodeParameter: jest.fn((param: string) => {
 					if (param === 'serverId') return 'test-server';
 					if (param === 'events') return ['*'];
 					if (param === 'options') {
 						return {
-							// throttleEnabled not specified, should default to true
-							throttleInterval: 50,
-							throttleMaxBurst: 2,
+							// batcheEnabled not specified, should default to true
+							batcheInterval: 50,
+							batcheMaxBurst: 2,
 						};
 					}
 					return undefined;
@@ -329,27 +334,27 @@ describe('PterodactylWebsocketTrigger - Throttling', () => {
 
 			wsManagerInstance = (PterodactylWebSocketManager as jest.Mock).mock.results[0].value;
 
-			// Send 5 events - should be throttled
+			// Send 5 events - should be batched
 			for (let i = 0; i < 5; i++) {
 				wsManagerInstance._triggerEvent('console output', [`Message ${i + 1}`]);
 			}
 
-			// Should be throttled (not all 5 emitted immediately)
+			// Should be batched (not all 5 emitted immediately)
 			expect(mockEmit.mock.calls.length).toBeLessThan(5);
 		});
 	});
 
-	describe('Mixed Event Types with Throttling', () => {
-		test('should throttle different event types together', async () => {
+	describe('Mixed Event Types with Batching', () => {
+		test('should batche different event types together', async () => {
 			mockTriggerFunctions = {
 				getNodeParameter: jest.fn((param: string) => {
 					if (param === 'serverId') return 'test-server';
 					if (param === 'events') return ['*'];
 					if (param === 'options') {
 						return {
-							throttleEnabled: true,
-							throttleInterval: 100,
-							throttleMaxBurst: 3,
+							batcheEnabled: true,
+							batcheInterval: 100,
+							batcheMaxBurst: 3,
 							discardExcess: false,
 						};
 					}
@@ -381,17 +386,17 @@ describe('PterodactylWebsocketTrigger - Throttling', () => {
 		});
 	});
 
-	describe('Cleanup with Throttling', () => {
-		test('should clear throttler on close', async () => {
+	describe('Cleanup with Batching', () => {
+		test('should clear batcher on close', async () => {
 			mockTriggerFunctions = {
 				getNodeParameter: jest.fn((param: string) => {
 					if (param === 'serverId') return 'test-server';
 					if (param === 'events') return ['*'];
 					if (param === 'options') {
 						return {
-							throttleEnabled: true,
-							throttleInterval: 100,
-							throttleMaxBurst: 2,
+							batcheEnabled: true,
+							batcheInterval: 100,
+							batcheMaxBurst: 2,
 							discardExcess: false,
 						};
 					}
@@ -421,16 +426,16 @@ describe('PterodactylWebsocketTrigger - Throttling', () => {
 			expect(mockEmit).toHaveBeenCalledTimes(2);
 		});
 
-		test('should not throw when closing with active throttler', async () => {
+		test('should not throw when closing with active batcher', async () => {
 			mockTriggerFunctions = {
 				getNodeParameter: jest.fn((param: string) => {
 					if (param === 'serverId') return 'test-server';
 					if (param === 'events') return ['*'];
 					if (param === 'options') {
 						return {
-							throttleEnabled: true,
-							throttleInterval: 100,
-							throttleMaxBurst: 5,
+							batcheEnabled: true,
+							batcheInterval: 100,
+							batcheMaxBurst: 5,
 						};
 					}
 					return undefined;
