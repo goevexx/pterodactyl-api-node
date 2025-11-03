@@ -2,6 +2,31 @@ import { BatchOptions, WebSocketEvent } from './WebSocketTypes';
 
 /**
  * Event batcher to batch high-frequency events and reduce workflow executions
+ *
+ * Collects events in a buffer and emits them as batches at regular intervals,
+ * reducing the number of workflow executions in n8n while preserving all events.
+ *
+ * @example
+ * const batcher = new EventBatcher({
+ *   interval: 100,        // Emit batches every 100ms
+ *   maxBurst: 10,         // Maximum 10 events per batch
+ *   discardExcess: false  // Queue overflow events instead of discarding
+ * });
+ *
+ * // Add events - they will be buffered
+ * batcher.add(event1, (events) => {
+ *   console.log(`Emitting batch of ${events.length} events`);
+ * });
+ * batcher.add(event2, (events) => { /* same emit function *\/ });
+ *
+ * // After 100ms, both events emit together as a batch
+ *
+ * @remarks
+ * - First event starts the interval timer (no immediate emission)
+ * - Events accumulate in buffer until interval expires
+ * - Up to `maxBurst` events emitted per batch
+ * - If buffer exceeds `maxBurst`, additional batches are scheduled
+ * - When `discardExcess` is true, events beyond buffer limit are dropped
  */
 export class EventBatcher {
 	private buffer: WebSocketEvent[] = [];
