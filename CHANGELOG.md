@@ -1,3 +1,10 @@
+## [1.3.4](https://github.com/goevexx/pterodactyl-api-node/compare/v1.3.3...v1.3.4) (2025-11-03)
+
+
+### Bug Fixes
+
+* enhance EventBatcher documentation with usage examples ([#44](https://github.com/goevexx/pterodactyl-api-node/issues/44)) ([23feb5b](https://github.com/goevexx/pterodactyl-api-node/commit/23feb5b85af70252eb19b081f6fe440d2ddac600))
+
 ## [1.3.3](https://github.com/goevexx/pterodactyl-api-node/compare/v1.3.2...v1.3.3) (2025-10-31)
 
 
