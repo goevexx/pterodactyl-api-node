@@ -3,5 +3,5 @@
  */
 
 export { PterodactylWebSocketManager } from './WebSocketManager';
-export { EventThrottler } from './EventThrottler';
+export { EventBatcher } from './EventBatcher';
 export * from './WebSocketTypes';

@@ -27,12 +27,12 @@ export interface WebSocketCommand {
 }
 
 /**
- * Throttle configuration options
+ * Event batching configuration options
  */
-export interface ThrottleOptions {
-	/** Minimum milliseconds between emissions */
+export interface BatchOptions {
+	/** Batch interval in milliseconds */
 	interval: number;
-	/** Maximum events in a burst */
+	/** Maximum events per batch */
 	maxBurst: number;
 	/** Whether to discard excess events or queue them */
 	discardExcess?: boolean;
